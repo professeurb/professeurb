@@ -1,0 +1,140 @@
+---
+title: ROT13
+subtitle: Où l'on code des messages pour les rendre (un peu) secrets…
+tags: ["IPT Sup", ]
+---
+
+import Center from "components/Center.js";
+
+# Introduction
+
+Le ROT13 (de l'anglais «&nbsp;_rotate by 13 places_&nbsp;») est un cas particulier du chiffre de César, un algorithme simpliste de chiffrement de texte. Comme son nom l'indique, il s'agit de décaler chaque lettre du texte à chiffrer de 13 places. Son principal aspect pratique est que le codage et le décodage se font exactement de la même manière. En effet, puisque l'alphabet comporte 26 lettres, il suffit de décaler deux fois de 13 caractères pour revenir à la lettre de départ.
+
+Cependant, contrairement à d'autres méthodes de cryptographie (où l'intérêt réside dans le fait qu'il est difficile voire impossible de lire le message si l'on n'a pas le code pour le décoder), il s'agit plus ici de faire en sorte que le message ne soit pas lisible directement mais qu'il soit néanmoins possible de l'obtenir sans grosses difficultés.
+
+Démonstration&nbsp;:
+> Qu'est-ce qui fait nioc nioc ?  
+> Ha pnaneq dhv antr n y'rairef.
+
+Nous allons programmer cette méthode, ainsi que quelques variantes.
+
+# Caractères et code ASCII
+
+Les caractères usuels sont, dans la version la plus simple, codés par un entier compris en 32 et 126. Ce codage, qui date de 1963, s'appelle le code `py§ASCII` (pour _American Standard Code for Information Interchange_). Avec ce code, la virgule est le caractère numéro 44, le `py§A` est le caractère&nbsp;65.
+
+En Python, deux fonctions permettent de manipuler ces codes. La fonction `py§ord` permet d'obtenir le numéro d'un caractère donné, alors que `py§chr` permet d'avoir le caractère correspondant à un numéro
+donné.
+
+**Question** Essayez les commandes suivantes, pour vérifier que
+vous avez bien compris.
+
+```python
+>>> chr(63)
+>>> ord('A')
+>>> chr(ord('A') + 4)
+```
+
+**Question** Quel est le code ASCII du caractère `py§:`&nbsp;? Quel est le caractère de code&nbsp;48&nbsp;?
+
+**Question** Écrire une suite d'instruction pour que la variable `py§ascii`, de type `py§str`, contienne tous les caractères ASCII dans l'ordre.
+
+**Remarque** Le code ASCII comporte un gros inconvénient&nbsp;: Mis au point par les américains, il ne code pas les accents et plus généralement, les lettres avec _signes diacritiques_ (comme les accents, trémas, cédilles, etc.). C'est d'ailleurs compréhensible, car rien que pour les langues latines, le nombre de lettres avec signe diacritique est trop important pour qu'il soit possible de coder un caractères sur un octet. 
+
+Cela a eu pour conséquence facheuse qu'afin d'inclure les diacritiques, de nombreux codages ont été mis au point, incompatibles entre eux. La conséquence a été que pendant longtemps, à cause de ces problèmes de codage, il était fréquent de croiser des choses comme&nbsp;:
+
+> «&nbsp;La vie n'est bonne qu'Ã&nbsp;Ã©tudier et Ã&nbsp;enseigner les
+mathÃ©matiques.&nbsp;»  
+> — Blaise Pascal
+
+La situation s'améliore maintenant avec la création du code
+_Unicode_. En Python&nbsp;3, les chaînes de caractères sont codées en _utf-8_, la version usuelle de l'_Unicode_. Les caractères du code ASCII se retrouvent avec le même code en _utf-8_.
+
+**Remarque** En _utf-8_, les caractères accentués y sont codés sur deux octets. On peut le voir en Python&nbsp;2, qui n'est pas configuré par défaut pour utiliser l'_utf-8_, en tapant les instructions suivantes&nbsp;:
+
+```python
+>>> len("e")
+>>> len("é")
+```
+
+Mais Python&nbsp;3, plus habitué à l'_utf-8_, sait comment découper les chaînes de caractères, et donc voit `py§"é"` comme un unique caractère.
+
+Pour la suite du TP, on commencera par ne traîter que des chaînes de **caractères non accentués**.
+
+# L'implémentation du ROT13
+
+À partir de maintenant, nous allons écrire un ensemble de fonctions pour implémenter le codage ROT13. Les fonctions suivantes sont donc à écrire dans un ficher plutôt que dans la console.
+
+Commençons par les majuscules.
+
+**Question** Quels sont les lettres majuscules dont le chiffrage
+par ROT13 revient à ajouter 13 au code ASCII&nbsp;? Et celles pour lesquelles on retranche&nbsp;13&nbsp;? Quels sont les codes ASCII correspondants&nbsp;?
+
+**Question** Écrire une fonction `py§carrot13` (qui applique `py§rot13` aux caractères, ou `py§car`) qui prends en entrée un caractère `py§c`, et retourne un caractère qui est&nbsp;:
+
+* soit `py§c` si ce n'est pas une lettre majuscule
+* le caractère obtenu à partir de `py§c` après chiffrage par ROT13 si c'est une lettre majuscule.
+
+On veut par exemple avoir&nbsp;:
+```python
+>>> carrot13('i')
+'i'
+>>> carrot13('B')
+'O'
+>>> carrot13(',')
+','
+```
+
+**Question** Modifier la fonction précédente pour que le chiffrage ROT13 s'applique aussi aux lettres minuscules.
+
+**Question** Écrire une fonction `py§rot13` qui prends en entrée une chaîne de caractères et retourne la chaîne de caractères où toutes les lettres ont subi un chiffrage ROT13.
+
+**Question** Trouver la réponse à la question du début.
+
+## Une variante, le ROT47
+
+Une variante du chiffrage ROT13 et le ROT47, qui utilise tous les caractères du code ASCII excepté l'espace. Cela correspond donc aux caractères allant du code 33 au code 126 (en particulier, on laisse inchangé le caractère numéro 32, qui est l'espace). Cela représente donc $$126 - 33 + 1 = 94 = 2 \times 47$$ caractères. On décale donc tous les codes de 47, et deux décalages ramènent au caractère de départ.
+
+**Question pour les PTSI1** Programmez la méthode de chiffrage ROT47, et déchiffrez la phrase suivante&nbsp;:
+
+<!-- 
+
+<div class="text-center"><code>{6D !%$x` D@?E =6D >{}6:==6FCD]</code></div>
+ -->
+
+**Attention** Le caractère <code>&#96;</code> est un accent grave et non une apostrophe. Son code ASCII est&nbsp;96.
+
+**Question pour les PTSI2** Programmez la méthode de chiffrage ROT47, et déchiffrez la phrase suivante&nbsp;:
+
+<!--
+<div class="text-center"><code>{6D !%$xa D@?E =6D >{}6:==6FCD]</code></div>
+-->
+
+# Comment supprimer les accents et autres
+
+Jusqu'à présent, nous avons supposé que les textes à chiffrer ne contenaient aucun signe diacritique. Pour traiter des textes généraux, il faut tout d'abord les supprimer. Pour ne pas surcharger les fonctions qui suivent, on ne traîtera que les minuscules. L'ajout du traîtement des majuscules ne complique pas les fonctions, il ne fait que les allonger.
+
+**Question** Écrire une fonction `py§desaccente` qui, étant donné une chaîne de caractères, la retourne après avoir supprimé les accents et autres signes diacritiques.
+
+On rappelle qu'en français, les lettres _diacritées_ usuelles sont
+
+<Center>
+à â ä ç é è ê ë î ï ô ö ù û ü
+</Center>
+
+**Question** Modifiez la fonction `py§desaccente` pour qu'elle transforme les ligatures `py§æ` et `py§œ` en `py§ae` et `py§oe` respectivement.
+
+**Remarque** Sous Windows, on entrera les caractères æ et œ en tapant respectivement `py§alt + 0 2 3 0` et `py§alt + 0 1 5 6`. Sous MacOS&nbsp;X, on utilisera `py§alt + a` et `py§alt + o` et, sous Linux, `py§altGr + a` et `py§altGr + o`.
+
+# Le code de César
+
+Le chiffrage ROT13 consiste donc, si vous avez bien suivi, à décaler les
+lettres de 13 rangs, éventuellement en bouclant. Une telle méthode de
+chiffrage est appelée _code de César_, en mémoire de Jules César
+qui en utilisait un version, comme le montre la citation suivante&nbsp;:
+
+> «&nbsp;Il y employait, pour les choses tout à fait secrètes, une espèce de chiffre qui en rendait le sens inintelligible (les lettres étant disposées de manière à ne pouvoir jamais former un mot), et qui consistait, je le dis pour ceux qui voudront les déchiffrer, à changer le rang des lettres dans l'alphabet, en écrivant la quatrième pour la première, c'est-à-dire le&nbsp;d pour le&nbsp;a, et ainsi de suite.&nbsp;»  
+> — Suétone, Vie des douze Césars, Livre&nbsp;I, paragraphe&nbsp;56.
+
+César utilisait donc un décalage de&nbsp;4, et le ROT13 un décalage de&nbsp;13. On peut en fait utiliser pour effectuer le décalage tout entier compris entre&nbsp;1 et&nbsp;25.
+
+**Question** Écrire une fonction `py§cesar` qui prends en argument un tel entier `py§n` et une chaîne de caractère, et retourne le texte codé par un décalage des lettres de `py§n` places.

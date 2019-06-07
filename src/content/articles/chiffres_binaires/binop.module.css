@@ -1,0 +1,33 @@
+.truc {
+  padding: 10px 0px;
+  justify-content: space-around;
+  display: inline-flex;
+  width: 100%;
+}
+
+.binop {
+  display: grid;
+  padding: 5px;
+  grid-template-rows: 3fr 2fr 2fr 2fr;
+  grid-template-columns: repeat(6, 1fr);
+  width: 120px;
+}
+
+.header {
+  grid-row: 1;
+  grid-column-start: 1;
+  grid-column-end: span 6;
+  color: #aaa;
+  text-align: center;
+}
+
+.binop code {
+  background: #fff;
+  border: 0px solid #000;
+  border-radius: 0em;
+  color: #000;
+}
+
+.line {
+  border-bottom: 1px solid !important;
+}

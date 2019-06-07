@@ -1,0 +1,267 @@
+---
+title: Une histoire des logarithmes
+subtitle: Où l'on essaye de calculer les logarithmes…
+tags: ["Méthodes numériques", "IPT Sup"]
+---
+
+## Introduction — Prostaphérèse et intérêts composés
+
+Les problèmes de complexité existent depuis bien avant l'invention de l'informatique. Lorsque l'on voulait faire des calculs compliqués à la main, cela pouvait valoir la peine de réfléchir un peu pour trouver des méthodes de calculs raisonnablement complexes.
+
+Un domaine important d'amélioration des calculs concerne les multiplications, surtout lorsque l'on manipule des grands nombres (ou des nombres avec beaucoup de chiffres après la virgule). L'idée de transformer les multiplications en additions (beaucoup moins coûteuses) est en particulier une piste très intéressante. Une première méthode pour faire cela se nomme **prostaphérèse** et date de la fin du XVIème siècle. Elle repose sur l'utilisation d'identités trigonométriques comme&nbsp;:
+$$
+\cos a \cos b = \frac 1 2 \bigl(\cos(a - b) + \cos(a + b)\bigr)
+$$
+Par exemple, on veut multiplier $1,4243$ par $8,2001$. Notons tout d'abord que
+$$
+1,4243 \times 8,2001 = 100 \times 0,14243 \times 0,82001
+$$
+En cherchant dans les tables trigonométriques (on en disposait déjà à la fin de l'antiquité), on trouve que
+$$
+0,14243 = \cos (81,8115...) \qquad \mathrm{et} \qquad 0,82001 = \cos(34,9142...)
+$$
+où les angles sont exprimés en degrés, les radians n'existant pas encore. On en déduit que&nbsp;:
+
+<!-- $$
+\begin{aligned} 0,14243 \times 0,82001 & \simeq \frac {\cos(81,8115 - 34,9142) + \cos(81,8115 + 34,9142)} 2 \\\\ & \simeq \frac {\cos(46.8973) + \cos(116.7267)} 2 \\\\ & \simeq \frac {0,683308 - 0,449735} 2 \\\\ & \simeq 0,116787 \end{aligned}
+$$ -->
+
+On en déduit finalement&nbsp;que $ 1,4243 \times 8,2001 = 11,6787 $, à comparer au résultat exact $ 11,67940243 $. Ainsi, avec cette méthode, on trouve raisonnablement le produit de deux nombres en n'effectuant que des additions et des lectures de tables trigonométriques. Cette méthode sera encore en usage au milieu du XVIIème siècle, soit bien après l'invention des logarithmes.
+
+Elle souffre cependant d'un certain nombre de faiblesses. En particulier, pour élever une nombre à puissance entière $n$, on doit effectuer $n$ «&nbsp;aller-retours&nbsp;» avec les tables trigonométriques. Or, élever à une puissance $n$ est précisément le type d'opérations dont se servent les banquiers pour calculer les intérêts composés de leurs prêts et emprunts. Un autre problème de cette méthode est que l'on ne peut l'utiliser pour calculer des racines.
+
+Les mathématiciens vont alors développer les fonctions logarithmes que vous connaissez bien. Dans ce TP, nous allons présenter un certain nombre de méthodes utilisées pour calculer les logarithmes, et nous intéresser en particulier aux questions de leur efficacité (on dirait maintenant complexité, mais il faut avoir à l'esprit que l'on compte ici des opérations effectuées **à la main**).
+
+Pour visualiser la précision des calculs, on se basera sur une première fonction à programmer.
+
+**Question** Écrire une fonction `py§plpc` (pour «&nbsp;plus long préfixe commun&nbsp;») qui, étant donné deux chaînes de caractères, renvoie, comme son nom l'indique, le plus long préfixe commun aux deux chaînes. Par exemple, on veut le comportement suivant&nbsp;:
+
+```python
+>>> plpc('Bonjour', 'Bonsoir')
+'Bon'
+>>> plpc('2.718281828', '2.718253968')
+'2.7182'
+```
+
+Une fois cette fonction obtenue, on définira la fonction suivante&nbsp;:
+```python
+def affiche(i, a, b) :
+  stra = "{}".format(a)
+  strb = "{}".format(b)
+  print("{:2d} : {}".format(i, plpc(stra, strb)))
+```
+
+Un exemple d'utilisation est le suivant&nbsp;:
+```python
+>>> np.pi
+3.141592653589793
+>>> 355/113
+3.1415929203539825
+>>> affiche(0, np.pi, 355/113)
+ 0 : 3.141592
+```
+
+Dans la suite, on s'intéresse donc à des méthodes permettant de calculer de manière approchée des réels (en l'occurence, $\ln 2$), et l'appel de la fonction `py§affiche` permettre de mettre en évidence les chiffres corrects obtenus. Dans l'exemple précédent, on compare la valeur de $\pi$ à celle de $355/113$. On remarque donc que la fraction a en commun avec $\pi$ les 6 premiers chiffres après la virgule.
+
+La fonction prends trois arguments&nbsp;: le premier est un entier qui permet d'afficher une information comme le numéro de l'itération courante, et les deux arguments suivants sont des réels dont on affichera le plus grand préfixe commun de leur écriture décimale.
+
+**Remarques sur la fonction de formatage** On utilise la fonction `py§format` (ou, plus précisement, la méthode `py§format` de la classe `py§str`) dans la fonction `py§affiche`.
+
+Tout d'abord, pour convertir une flottant en chaîne de caractères. Cette façon de procéder est meilleure que la convertion directe à l'aide de la fonction `py§str`, car elle permet d'avoir plus de décimales&nbsp;:
+
+```python
+>>> np.sqrt(2)
+1.4142135623730951
+>>> str(np.sqrt(2))
+'1.41421356237'
+>>> "{}".format(np.sqrt(2))
+'1.4142135623730951'
+```
+
+Les accolades permettent d'indiquer où afficher les arguments de la fonction.
+
+```python
+>>> "{} ou {} ?".format("Fromage", "dessert")
+'Fromage ou dessert ?'
+```
+
+Enfin, dans la dernière ligne de la fonction `py§affiche`, les caractères entre les premières accolades donnent des informations supplémentaires sur l'affichage demandé (à droite de «&nbsp;`py§:`&nbsp;»). Ici, le «&nbsp;`py§d`&nbsp;» indique que l'on affiche un entier, et le «&nbsp;`py§2`&nbsp;» qui précède indique la largeur minimale à utiliser.
+
+```python
+>>> "{}".format(3)
+'3'
+>>> "{:10d}".format(3)
+'         3'
+```
+
+## La Méthode de Briggs
+
+Au début du XVIIème siècle, Henry Briggs publia une table de logarithmes. Ayant remarqué qu'une fonction logarithmique $\log$ (quelqu'en soit la base) vérifie les deux propriétés suivantes&nbsp;:
+
+* $\log \sqrt{a\,} = \frac 1 2 \log a$,
+* si $a$ est très proche de $0$, alors $\log (1 + a)$ est proportionnel à&nbsp;$a$ (le coefficient dépend de la base du logarithme),
+
+il procéda ainsi&nbsp;:
+
+1. on pose $u_0 = 2$ et $v_0 = 10$&nbsp;;
+2. on en calcule les racines carrées successives, soit en écriture moderne&nbsp;:
+    $$
+    \forall \, n \in \mathbf N, \ u_{n+1} = \sqrt{u_n} \ \mathrm{et} \  v_{n+1} = \sqrt{v_n}
+    $$
+3. le rapport $\dfrac {u_n - 1}{v_n - 1}$ converge alors vers $\dfrac {\ln 2}{\ln 10} = \log_{10} 2$.
+
+Briggs itérera le processus 54 fois (autrement dit, 54 fois deux calculs de racines carrées faits à la main).
+
+> **Petite explication mathématique** On a $u_n = 2^{\frac 1 {2^n}} \rightarrow 1$, donc
+> $$
+> \frac 1 {2^n} \ln 2 = \ln u_n \sim_{n \rightarrow \infty} u_n - 1
+> $$
+> et de même,
+> $$
+> v_n - 1 \sim_{n \rightarrow \infty} {\frac 1 {2^n}} \ln 10
+> $$
+> On en déduit que l'on a&nbsp;bien
+> $$
+> \frac {u_n - 1} {v_n - 1} \rightarrow_{n \rightarrow \infty} \frac {\ln 2}{\ln 10}
+> $$
+
+**Question** Écrire une fonction qui calcule une valeur approchée de $\log_{10}(2)$ à l'aide de cette méthode. Quelques remarques supplémentaires&nbsp;:
+* La fonction utilise le module `py§numpy` renommé en `py§np`. Il faudra donc avoir entré auparavant la commande `py§import numpy as np`&nbsp;;
+* La valeur «&nbsp;exacte&nbsp;» de $\log_{10}(2)$, calculée par l'expression `py§np.log(2) / np.log(10)` ne sert qu'à afficher les décimales correctes des résultats obtenus&nbsp;;
+* La racine carrée d'un flottant s'obtient avec la fonction `py§np.sqrt`.
+* Briggs a itéré le processus 54 fois. Essayez de retrouver le résultat qu'il a obtenu.
+
+Le programme à compléter est&nbsp;:
+
+```python
+...
+for i in range(55) :
+  affiche(i, np.log(2) / np.log(10), ...)
+  ...
+```
+Les points de suspension sont, bien sûr, ce qu'il faut modifier.
+
+Le début de l'affichage devra ressembler à ceci&nbsp;:
+
+```python
+ 0 : 0.
+ 1 : 0.
+ 2 : 0.
+ 3 : 0.
+ 4 : 0.
+ 5 : 0.
+ 6 : 0.
+ 7 : 0.
+ 8 : 0.
+ 9 : 0.30
+10 : 0.30
+11 : 0.30
+12 : 0.30
+13 : 0.30
+14 : 0.3010
+```
+
+Normalement, lors de l'exécution du programme (a priori correct) précédent, nous n'arrivez pas à faire aussi bien que Briggs. Le nombre de décimales correctes augmente jusqu'à la 27ème itération, puis diminue. 
+
+**Question** Pourquoi&nbsp;?
+
+De plus, à partir de la 54ème itération, même la partie `py§0.` n'est plus affichée. Il est même possible d'avoir un message d'erreur. La raison est, à nouveau, la taille finie de la mantisse. Pour illustrer cela, on a représenté dans le tableau suivant les racines itérées de $1.4$, avec la représentation en binaire. On voit clairement qu'entre le `py§1` de gauche et le `py§1` suivant, il y a des `py§0` dont le nombre augmente d'un à chaque étape.
+
+| Décimal | Binaire            |
+| ---     | :--                |
+| `py§1.40000` | `py§1.011001100110` |
+| `py§1.18322` | `py§1.001011101110` |
+| `py§1.08776` | `py§1.000101100111` |
+| `py§1.04296` | `py§1.000010101111` |
+| `py§1.02125` | `py§1.000001010111` |
+| `py§1.01057` | `py§1.000000101011` |
+| `py§1.00527` | `py§1.000000010101` |
+| `py§1.00264` | `py§1.000000001010` |
+| `py§1.00132` | `py§1.000000000101` |
+
+**Question** Expliquer l'origine du problème évoqué.
+
+**Question**
+
+1. Montrer que si $a - 1$ est compris entre $0$ et $2^{-n}$, alors $\sqrt {a\,} - 1$ est compris entre $0$ et $2^{-(n+1)}$ (on pourra utiliser la contraposée, soit si $a - 1 \geq 2^{-n}$, alors $a^2 - 1 \geq 2^{1-n}$).
+2. En déduire (approximativement) la taille de la mantisse utilisée pour représenter les nombres flottants.
+
+**Remarque** La taille de la mantisse s'obtient avec la commande suivante&nbsp;:
+```python
+>>> np.finfo(float).nmant
+52
+```
+
+## L'aire sous une courbe
+
+Les calculs précédents faisant intervenir les logarithmes en base&nbsp;$10$. Cependant, on découvrit un peu plus tard que l'aire sous la courbe de la fonction $x \mapsto \frac 1 x$ est aussi une fonction logarithme, que l'on appelle maintenant logarithme népérien. Cette fonction logarithmique est la plus pertinente mathématiquement.
+
+Nous allons programmer une méthode pour calculer $\ln 2$ de façon approchée à l'aide de l'intégrale de la fonction inverse entre $1$ et $2$, et en utilisant la bibliothèque `py§numpy`.
+
+**Question** Écrire une fonction `py§rect` qui calcule l'intégrale demandée à l'aide de la méthode des rectangles «&nbsp;à gauche.&nbsp;» Elle prendra comme argument un entier indiquant le nombre de rectangles à utiliser.
+
+C'est bien connu, la vitesse de convergence pour la méthode des rectangles est de l'ordre de $\frac 1 n$. Pour en voir une illustration, exécutez la commande suivante.
+```python
+for i in range(8) :
+  affiche(i, np.log(2), rect(10 ** i)) 
+```
+
+**Question** À quoi sert le `py§10 ** i`&nbsp;?
+
+Ainsi, à la dernière itération, l'intervalle $[1, 2]$ est découpé en $10^7 = 10000000$ rectangles. On a approximativement une nouvelle décimale correcte à chaque fois que l'on multiplie le nombre de subdivisions par $10$.
+
+On connaît une méthode plus efficace pour calculer des intégrales, puisqu'elle converge en $ \frac 1 {n^2} $. Tâchons de l'utiliser.
+
+**Question** Écrire une fonction `py§trap` qui calcule la même intégrale à l'aide de la méthode des trapèzes.
+
+Expérimentons cette fonction à l'aide de la commande&nbsp;:
+```python
+for i in range(8) :
+  affiche(i, np.log(2), trap(10 ** i)) 
+```
+
+Deux remarques s'imposent&nbsp;:
+* Difficile d'avoir plus d'une dizaine de décimales, alors que 52 bits de mantisse correspondent plutôt à une quinzaine.
+* Le nombre d'opérations pour obtenir une précision décente reste vraiment très élevé.
+
+## Calculs en séries
+
+Les progrés mathématiques du XVIIème vont permettre de développer de nouvelles techniques bien plus efficaces, notamment à l'aide des séries numériques.
+
+### Série de Mercator
+
+En 1668, dans son traîté «Logarithmotechnia», Nicolas Mercator (connu pour ses projections cartographiques) démontre la formule suivante (écrite de façon moderne)&nbsp;:
+$$
+\forall \, x \in \mathopen]-1,1], \ \ln (1 + x) = \sum_{n = 1}^\infty \frac {(-1)^{n+1} x^n} n
+$$
+Avec des points de suspension, cela donne&nbsp;:
+$$
+\ln (1 + x) = x - \frac {x^2} 2 + \frac {x^3} 3 - \frac {x^4} 4 + \frac {x^5} 5 - \frac {x^6} 6 + \ \cdots
+$$
+Pour $x = 1$, on reconnaît la série harmonique alternée&nbsp;:
+$$
+\ln 2 = 1 - \frac 1 2 + \frac 1 3 - \frac 1 4 + \frac 1 5 - \frac 1 6 + \ \cdots \ = \sum_{n = 0}^\infty \frac {(-1)^n} {n + 1}
+$$
+**Question** Écrire une fonction `py§mercator1` qui prends en argument un entier `py§n` et retourne la somme partielle précédente évaluée jusqu'à ce rang $n$.
+
+**Question** Pour évaluer son (in-)efficacité, modifier la fonction précédente pour qu'elle affiche (à l'aide de la bien-nommée fonction `py§affiche` que vous devez bien connaître maintenant) les valeurs approchées de $\ln 2$ obtenues à chaque itération.
+
+On peut être un peu déçu par cette méthode de calcul. Mais la formule précédente s'applique aussi à d'autres valeurs de $x$. Pour le calcul de $\ln 2$, on peut remarquer que l'on&nbsp;a&nbsp;:
+$$
+\ln 2 = - \ln \frac 1 2 = - \ln \Bigl(1 - \frac 1 2\Bigr).
+$$
+**Question** Écrire une fonction `py§mercator2` basée sur le calcul de $\ln 2$ vu comme $- \ln \bigl(1 - \frac 1 2\bigr)$, et visualiser l'efficacité de cette nouvelle méthode à l'aide d'un judicieux appel à la fonction `py§affiche`.
+
+Normalement on a, enfin, une méthode de calcul raisonnablement efficace.
+
+### Série de Gregory
+
+Une amélioration simple pour l'utilisation de la série de Mercator est dûe à James Gregory, qui utilise intelligemment les propriétés du logarithme. Il soutrait les séries correspondant à $\ln (1 + x)$ à $\ln (1 - x)$, pour obtenir&nbsp;:
+
+$$
+\forall \, x \in \mathopen]-1, 1\mathclose[, \ \ln \Bigl(\frac {1+x}{1-x}\Bigr) = 2 x + 2 \frac {x^3} 3 + 2 \frac {x^5} 5 + 2 \frac {x^7} 7 + \ \cdots \ = 2 \sum_{n = 0}^\infty \frac {x^{2n + 1}}{2n + 1}
+$$
+
+**Question** Pour quelle valeur de $x$ peut-on calculer $\ln 2$&nbsp;?
+
+**Question** Écrire une fonction `py§gregory` correspondant à cette méthode, et visualiser son efficacité.

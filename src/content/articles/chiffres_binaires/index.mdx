@@ -1,0 +1,430 @@
+---
+title: Jouons avec les chiffres binaires
+subtitle: Où l'on s'intéresse en particulier à la représentation d'ensembles à l'aide d'entiers…
+---
+
+import Additor from "./truc1.jsx";
+import Binop from "./truc2.jsx";
+import DeBruijn from "./truc3.jsx";
+import Center from "components/Center.js";
+
+Dans cet article, nous allons évoquer quelques éléments concernant l'écriture en binaire des entiers avec comme application la représentation d'ensembles à l'aide d'entiers.
+
+## Écriture binaire des entiers
+
+Il est possible d'obtenir facilement la représentation en binaire d'un entier à l'aide de la commande `py§bin`&nbsp;:
+
+```python
+>>> bin(23)
+'0b10111'
+```
+
+Cependant, pour les nombres négatifs, on n'obtient pas la représentation binaire du nombre en [complément à deux](https://fr.wikipedia.org/wiki/Complément_à_deux) mais une représentation binaire signée&nbsp;:
+
+```python
+>>> bin(-23)
+'-0b10111'
+```
+
+Cela vient probablement du fait qu'en Python (en Python 3, du moins), il n'y a pas de distinction entre «&nbsp;entiers normaux&nbsp;» (codés sur 32 ou 64 bits) et «&nbsp;entiers longs&nbsp;» qui sont arbitrairement grands (tout du moins, dans les limites de la place mémoire de la machine). Dans ce cas, la représentation binaire en complément à deux d'un nombre négatif serait infinie. Pour `py§-23`, cela serait `py§…11111111111111111101001`.
+
+Pour remédier à ce problème, nous allons utiliser la fonction suivante qui limite la taille des entiers à `py§bits` chiffres binaires&nbsp;:
+
+```python
+def bindigits(n, bits):
+  s = bin(n & (2**bits - 1))[2:]
+  return "0b" + ("0" * (bits - len(s))) + s
+```
+
+La fonction peut se décomposer ainsi&nbsp;: le calcul de `py§2**bits - 1` permet d'avoir l'entier dont l'écriture binaire comporte `py§bits` fois le chiffre `py§1` et rien d'autre&nbsp;:
+
+```python
+>>> digits = 10
+>>> 2**digits - 1
+1023
+>>> bin(2**digits - 1)
+'0b1111111111'
+```
+
+On effectue alors un _et_ bit-à-bit avec `py§n`. Pour finir, l'expression du `py§return` fait en sorte que l'on a bien `py§bits` chiffres binaires.
+
+On a maintenant le comportement espéré&nbsp;:
+
+```python
+>>> bindigits(23, 10)
+'0b0000010111'
+>>> bindigits(-23, 10)
+'0b1111101001'
+>>> bindigits(23, 20)
+'0b00000000000000010111'
+>>> bindigits(-23, 20)
+'0b11111111111111101001'
+```
+
+## Plus ou moins 1
+
+Regardons un instant comment se traduit l'addition ou la soustraction de `py§1` en représentation binaire.
+
+Si un nombre $n$ comporte au moins un `py§0` dans son écriture en binaire (autrement dit, $n \neq -1$), on peut mettre cette dernière sous la forme&nbsp;:
+
+$$
+n = {\color{#aaa}\mathtt{0b}}a\mathtt{01}^b
+$$
+
+Dans ce cas, l'ajout de `py§1` va se traduire par une propagation de la retenue jusqu'au premier chiffre `py§0`, d'où
+
+$$
+n + 1 = {\color{#aaa}\mathtt{0b}}a\mathtt{10}^b
+$$
+
+Par exemple, pour $n = 727 = {\color{#aaa}\mathtt{0b}}\mathtt{1011010111}$ que l'on peut écrire $n = {\color{#aaa}\mathtt{0b}}a\mathtt{01}^b$ avec $a = \mathtt{101101}$ et $b = 3$, on a $n + 1 = 728 = {\color{#aaa}\mathtt{0b}}\mathtt{1011011000} = {\color{#aaa}\mathtt{0b}}a\mathtt{10}^b$&nbsp;:
+
+<Center>
+  <Additor />
+</Center>
+
+De même, si un nombre $n$ comporte au moins un `py§1` dans son écriture en binaire, on peut écrire $n = {\color{#aaa}\mathtt{0b}}a\mathtt{10}^b$, auquel cas $n - 1 = {\color{#aaa}\mathtt{0b}}a\mathtt{01}^b$.
+
+### Negation et opposé
+
+Revenons un instant sur la technique du [complément à deux](https://fr.wikipedia.org/wiki/Complément_à_deux) pour représenter l'opposé d'un entier.
+
+Si $\overline n$ représente l'entier en effectuant la négation bit à bit de l'écriture binaire de $n$, alors
+$$ -n = \overline n + 1 $$
+Il y a plusieurs avantages à cela. Tout d'abord, un codage avec un simple bit de signe aurait impliqué une complication pour la représentation du zéro (car sinon `py§-0` et `py§+0` auraient eu des codages différents).
+
+De plus, si l'on oublie un bit de signe et qu'on le considère comme un chiffre binaire normal (celui de poids le plus fort, correspondant typiquement à $2^{64}$), alors les entiers correspondants sont égaux modulo $2^{64}$. Par exemple, considèrons (en 16 bits pour faciliter la lisibilité), l'entier $-1752$. Puisque
+
+$$
+1752 = {\color{#aaa}\mathtt{0b}}\mathtt{0000011011011000}
+$$
+
+on en déduit que
+
+$$
+\overline{1752} = {\color{#aaa}\mathtt{0b}}\mathtt{1111100100100111}
+$$
+
+et donc
+
+$$
+-1752 = \overline{1752} + 1 = {\color{#aaa}\mathtt{0b}}\mathtt{1111100100101000}
+$$
+
+Or si l'on oublie que le bit de poids fort correspond à un poids fort, on a
+
+$$
+63784 = {\color{#aaa}\mathtt{0b}}\mathtt{1111100100101000}
+$$
+
+et $-1752 = 63784 - 2^{16} $, soit comme annoncé&nbsp;:
+
+$$
+-1752 \equiv 63784 \bigl[2^{16}\bigr]
+$$
+
+Cette égalité a pour conséquences agréables que les sommes et produits de deux entiers se calculent de la même façon pour des entiers signés ou non, seules l'interprétation du bit de poids fort et la gestion des dépassements diffèrent.
+
+Mais dans la suite, nous allons étudier d'autres conséquences de ce codage.
+
+## Codage d'ensembles en binaire
+
+On peut voir le codage d'un entier en binaire comme une suite de chiffres `py§0` et `py§1` repérés par leur position, et la présence d'un chiffre `py§1` se traduit par la présence de l'élément correspondant à la position du `py§1` en question. Ainsi, un entier écrit sous forme binaire peut être vu comme la représentation d'un ensemble. Par exemple,
+
+$$
+1752 = {\color{#aaa}\mathtt{0b}}\mathtt{0000011011011000} = 2^4 + 2^5 + 2^7 + 2^8 + 2^{10} + 2^{11}
+$$
+
+et donc l'entier $1752$ correspond à l'ensemble d'entiers $\{ 4, 5, 7, 8, 10, 11 \}$.
+
+### «&nbsp;Et logique&nbsp;», «&nbsp;ou logique&nbsp;» et «&nbsp;ou exclusif&nbsp;»
+
+Ces trois opérations sont «&nbsp;_bit à bit_&nbsp;», ce qui signifie que les tables ci-dessous peuvent être prises colonne par colonne.
+
+Il est clair qu'en termes d'ensembliste, on a les correspondances suivantes&nbsp;:
+
+<Center>
+  <Binop />
+</Center>
+
+| Opérations sur les entiers | Opération ensembliste |
+| :------------------------: | :-------------------: |
+|        _et_ logique        |     intersection      |
+|        _ou_ logique        |         union         |
+|       _ou_ exclusif        | différence symétrique |
+
+Pour illustrer cela, considèrons les entiers $1879$ et $1955$, qui représentent respectivement les ensembles $\{0, 1, 2, 4, 6, 8, 9, 10\}$ et $\{0, 1, 5, 7, 8, 9, 10\}$.
+
+Appliquons-leurs les opérations précédentes&nbsp;:
+
+```python
+>>> for s in ["1879", "1955", "1879 & 1955", "1879 | 1955", "1879 ^ 1955"]:
+...      v = eval(s)
+...      b = bindigits(v, 12)
+...      print("{0:>11s} = {1:>4}: {2}".format(s, v, b))
+...
+       1879 = 1879: 0b011101010111
+       1955 = 1955: 0b011110100011
+1879 & 1955 = 1795: 0b011100000011
+1879 | 1955 = 2039: 0b011111110111
+1879 ^ 1955 =  244: 0b000011110100
+```
+
+### Complément ensembliste
+
+La discussion précédente sur la représentation binaire de l'opposé d'un entier nous permet de calculer simplement le complémentaire, ce qui correspond à l'opération binaire de _négation_ (que l'on a commencé à noter $\overline n$ pour la négation bit-à-bit de $n$). Comme on a vu que $\overline n = - n - 1$, cela nous fournit une méthode simple pour calculer le complément&nbsp;:
+
+```python
+>>> for v in [1879, -1879 - 1]:
+...     b = bindigits(v, 12)
+...     print("{0:>5}: {1}".format(v, b))
+...
+ 1879: 0b011101010111
+-1880: 0b100010101000
+```
+
+### Quelques opérations supplémentaires
+
+En combinant la négation et la soustraction de $1$, on obtient les nombres suivants&nbsp;:
+
+<!--
+$$
+\begin{aligned}
+n & = 0ba\mathtt{10}^b &
+n - 1 & = 0ba\mathtt{01}^b \\
+-n & = 0b\overline a \mathtt{10}^b &
+-n - 1 & = 0b\overline a \mathtt{01}^b \\
+\end{aligned}
+$$
+-->
+
+Deux combinaisons sont intéressantes. Tout d'abord, partant de $n = {\color{#aaa}\mathtt{0b}}a\mathtt{10}^b$, si l'on calcule $n \ \& \ (n - 1)$, on obtient le nombre ${\color{#aaa}\mathtt{0b}}a\mathtt{00}^b$, autrement dit on a transformé le&nbsp;`py§1` le plus à droite en&nbsp;`py§0`. À l'inverse, si l'on calcule $n \ \& \ -n$, on obtient ${\color{#aaa}\mathtt{0b}}\mathtt{10}^b$... on n'a cette fois conservé que le&nbsp;`py§1` le plus à droite.
+
+```python
+>>> for s in ["936", "936 & 935", "936 & -936"]:
+...       v = eval(s)
+...       b = bindigits(v, 12)
+...       print("{0:>11s} = {1:>4}: {2}".format(s, v, b))
+...
+        936 =  936: 0b001110101000
+  936 & 935 =  928: 0b001110100000
+ 936 & -936 =    8: 0b000000001000
+```
+
+La première (`py§936 & 935`) permet d'annuler le `py§1` le plus à droite (correspondant à la plus petite puissance), tandis que la seconde ne garde que ce `py§1`.
+
+On peut en déduire une fonction qui convertit un entier représentant un ensemble en son cardinal, autrement dit qui renvoie le nombre de chiffres `py§1` de l'écriture binaire du nombre.
+
+```python
+def cardinal(n):
+    c = 0
+    while n:
+        c += 1
+        n &= n - 1
+    return c
+```
+
+Une variation renvoie la décomposition d'un nombre en somme de puissances de&nbsp;2&nbsp;:
+
+```python
+def decompose(n):
+  l = []
+  while n:
+    l.append(n & -n)
+    n &= n - 1
+  return l
+```
+
+```python
+>>> decompose(1879)
+[1, 2, 4, 16, 64, 256, 512, 1024]
+```
+
+Une dernière étape pour la représentation d'un ensemble à l'aide d'un entier nécessite de remplacer une puissance de $2$ par l'exposant correspondant, déterminer les éléments de l'ensemble. C'est l'objet de la dernière partie…
+
+## Logarithme binaire
+
+On souhaite maintenant écrire une fonction `py§binlog` telle que `py§binlog(2**k)` soit égal à&nbsp;`py§k`. Le terme _logarithme binaire_ est un peu abusif cependant, car nous ne comptons l'utiliser que pour des puissances de $2$, autrement qu'à des entiers dont l'écriture en binaire ne comporte qu'un seul&nbsp;`py§1`.
+
+### Méthode naïve
+
+Une première méthode, très simple, consiste à décaler vers la droite de nombre jusqu'à supprimer le chiffre binaire&nbsp;`py§1` et donc obtenir&nbsp;`py§0`. Le _logarithme binaire_ est alors, à 1 près, le nombre de décalages nécessaires&nbsp;:
+
+```python
+def binlog1(n):
+  # il faut n != 0
+  compteur = -1
+  while n:
+    compteur += 1
+    n >>= 1
+  return compteur
+```
+
+On a par exemple&nbsp;:
+
+```python
+>>> binlog1(1)
+0
+>>> binlog1(2048)
+11
+```
+
+Cette méthode calcule en fait la position du&nbsp;`py§1` de plus grand poids d'un entier&nbsp;`py§n` et donc d'obtenir un encadrement de&nbsp;`py§n` entre deux puissances de&nbsp;$2$ consécutives&nbsp;:
+
+```python
+>>> binlog1(123456)
+16
+>>> 2**16
+65536
+>>> 2**17
+131072
+```
+
+On a bien l'encadrement voulu, puisque $2^{16} \leq 123456 < 2^{17}$.
+
+Cette méthode a le désavantage de ne pas être en temps constant puisque l'on fait un tour de boucle par chiffre binaire avant d'arriver à&nbsp;`py§0`. Ainsi, le calcul de `py§binlog1(2**k)` si fait en $O(k)$.
+
+Nous allons pour finir présenter deux autres méthodes plus efficaces, mais qui ne s'appliquent qu'à des puissances de&nbsp;$2$ jusqu'à un exposant maximal.
+
+### Par calcul de modulo
+
+Une première méthode utilise le reste de la division euclidienne, le «&nbsp;_modulo_&nbsp;». L'idée est la suivante&nbsp;: si on l'on considère les puissances $2^0, 2^1, 2^2, \ldots, 2^n$ et que l'on a un entier $m$ tel que les restes $2^k \,[m]$ sont tous distincts, on peut retrouver la valeur de $k$ à partir de celle de $2^k \, [m]$ (il y a au plus $m$ valeurs, ce qui implique que $n \leq m$).
+
+Pour trouver un tel entier $m$, une façon est d'utiliser un nombre premier ayant $2$ comme [racine primitive](https://fr.wikipedia.org/wiki/Racine_primitive_modulo_n). Le mathématicien Emil Artin a conjecturé qu'il y en avait une infinité ce qui, en pratique, signifie que l'on peut en trouver d'aussi grand que l'on veut. Le début de leur [liste](https://oeis.org/A001122) est&nbsp;:
+
+```python
+  3,   5,  11,  13,  19,  29,  37,  53, 59,
+ 61,  67,  83, 101, 107, 131, 139, 149, 163,
+173, 179, 181, 197, 211, 227, 269, 293, 317,
+347, 349, 373, 379, 389, 419, 421, 443, 461,
+467, 491, 509, 523, 541, 547, 557, 563, 587,
+613, 619, 653, 659, 661, 677, 701, 709, 757,
+773, 787, 797, ...
+```
+
+Pour des puissances allant jusqu'à $2^{63}$ inclus, on peut prendre `py§m = 67`. Les modulos des différentes puissances ne sont, bien sûr, pas dans le bon ordre&nbsp;:
+
+```python
+>>> [2 ** i % 67 for i in range(64)]
+[ 1,  2,  4,  8, 16, 32, 64, 61, 55, 43, 19,
+ 38,  9, 18, 36,  5, 10, 20, 40, 13, 26, 52,
+ 37,  7, 14, 28, 56, 45, 23, 46, 25, 50, 33,
+ 66, 65, 63, 59, 51, 35,  3,  6, 12, 24, 48,
+ 29, 58, 49, 31, 62, 57, 47, 27, 54, 41, 15,
+ 30, 60, 53, 39, 11, 22, 44, 21, 42]
+```
+
+Il est facile de remédier à cela, en utilisant une liste qui servira à retrouver le bon résultat&nbsp;:
+
+```python
+>>> l = [-1] * 67
+>>> for i in range(64):
+...     l[2 ** i % 67] = i
+...
+>>> l
+[-1,  0,  1, 39,  2, 15, 40, 23,  3, 12, 16, 59,
+ 41, 19, 24, 54,  4, -1, 13, 10, 17, 62, 60, 28,
+ 42, 30, 20, 51, 25, 44, 55, 47,  5, 32, -1, 38,
+ 14, 22, 11, 58, 18, 53, 63,  9, 61, 27, 29, 50,
+ 43, 46, 31, 37, 21, 57, 52,  8, 26, 49, 45, 36,
+ 56,  7, 48, 35,  6, 34, 33]
+```
+
+On en déduit notre fonction&nbsp;:
+
+```python
+def binlog2(n):
+  return l[n % 67]
+```
+
+La fonction obtenue n'est pas en temps constant mais presque (le modulo ayant un coût logarithmique en la taille des arguments, c'est relativement négligeable), et nous pouvons faire mieux…
+
+### Avec une suite de _de Bruijn_
+
+La dernière méthode, en temps constant, repose sur la notion de [suite de _de Bruijn_](https://fr.wikipedia.org/wiki/Suite_de_de_Bruijn). Il s'agit d'une suite de symboles (des&nbsp;`py§0` et des&nbsp;`py§1` par exemple) qui contient toutes les séquences de ces symboles d'une longueur fixée à l'avance.
+
+Dans l'exemple ci-dessous, la suite `py§0000100110101111` permet d'obtenir tous les nombres entre 0 et 15 en binaire en faisant glisser une fenêtre de 4 caractères.
+
+<Center>
+  <DeBruijn />
+</Center>
+
+Si l'on a une suite de _de Bruijn_ suffisamment longue, on peut l'utiliser pour programmer le logarithme binaire. En effet, si l'on a un nombre de la forme $2^k$, alors la multiplication par ce nombre correspond en binaire à un décalage vers la gauche de $n$ positions. Il suffit alors de récupérer le sous-mots en sélectionnant gardant la bonne portion de la suite.
+
+Illustrons cela avec le mot de l'animation&nbsp;:
+
+```python
+>>> mot = 0b0000100110101111
+>>> mot
+2479
+```
+
+Il s'agit d'une suite de Bruijn qui fait 16 bits de long et comporte toutes les séquences possibles de 4 bits. On peut utiliser cette suite de la façon suivante&nbsp;: Partant du produit de `py§mot * n` (où&nbsp;`py§n` est une puissance de $2$), on fait son _and_ avec le masque `py§0b1111111111111111` (soit `py§65535` ou encore $2^{16} - 1$), puis on décale le tout de 12 positions ($12$ étant égal à $16 - 4$).
+
+On obtient les résultats suivants&nbsp;:
+
+```python
+>>> for i in range(16):
+...     bin_log = ((2479 * 2**i) & 65535) >> 12
+...     print("{:2} -> {:2}".format(i, bin_log))
+...
+ 0 ->  0
+ 1 ->  1
+ 2 ->  2
+ 3 ->  4
+ 4 ->  9
+ 5 ->  3
+ 6 ->  6
+ 7 -> 13
+ 8 -> 10
+ 9 ->  5
+10 -> 11
+11 ->  7
+12 -> 15
+13 -> 14
+14 -> 12
+15 ->  8
+```
+
+On obtient tous les entiers entre $0$ et $15$… mais pas forcément dans le bon ordre (ce que l'on avait déjà vu dans l'animation précédente). Pour obtenir le bon résultat, il suffit d'appliquer la bonne permutation, ce que l'on peut faire en temps constant à l'aide d'un tableau.
+
+On en déduit une dernière méthode pour obtenir le logarithme binaire d'un nombre&nbsp;:
+
+```python
+def binlog3(n):
+    tab = [0, 1, 2, 5, 3, 9, 6, 11, 15, 4, 8, 10, 14, 7, 13, 12]
+    return tab[((2479 * n) & 65535) >> 12]
+```
+
+Vérifions que la fonction obtenue est correcte&nbsp;:
+
+```python
+>>> [binlog3(2**i) for i in range(16)]
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+```
+
+Bien sûr, on peut définir cette fonction avec une suite de de Bruijn plus longue, pour avoir des exposants supérieurs à&nbsp;15.
+
+On peut finalement obtenir facilement la liste des positions des&nbsp;`py§1` présents dans l'écriture binaire d'un nombre, autrement dit, dans le cadre d'un ensemble représenté par un entier, la conversion de la représentation d'un ensemble en la liste de ses éléments&nbsp;:
+
+```python
+def decomposition_2(n):
+  r = []
+  while n > 0:
+    # on rappelle que n & -n ne garde que le 1 le plus à droite
+    r.append(binlog3(n & -n))
+    # ... et n & (n - 1) revient à supprimer ce 1.
+    n &= n - 1
+  return r
+```
+
+Par exemple,
+
+```python
+>>> 2**2 + 2**3 + 2**7 + 2**9 + 2**14
+17036
+>>> decomposition_2(17036)
+[2, 3, 7, 9, 14]
+```
+
+La complexité obtenue est linéaire en le nombre d'éléments contenu dans l'ensemble représenté par l'entier, ce qui est optimal.

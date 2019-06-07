@@ -1,0 +1,12 @@
+body {
+  counter-reset: question;
+}
+/* 
+.question {
+  font-weight: bold;
+} */
+
+.question::before {
+  counter-increment: question;
+  content: "Question " counter(question);
+}

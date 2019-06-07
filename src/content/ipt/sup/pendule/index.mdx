@@ -1,0 +1,207 @@
+---
+title: Simulation d'un pendule simple
+subtitle: Où l'on joue avec la méthode d'Euler
+tags: ["Méthodes numériques", "Méthode d'Euler", "Sup"]
+---
+
+Dans ce TP, nous allons voir comment simuler correctement le mouvement d'un pendule simple grâce à la méthode d'Euler.
+
+<!-- \begin{wrapfigure}{l}{2cm}
+\begin{tikzpicture}
+\draw [thin, dashed, black!60] (0,0) -- (0,-2) ;
+\draw (0,0) -- (-60:1.8) ;
+\shade [shading = ball, ball color = black] (-60:1.8) circle (3pt) ;
+\draw [-latex] (-90:1) arc (-90:-60:1) node [midway, below] {$\theta$};
+\shade [top color = white, bottom color = black!40, color = white!0] (-1,0.2) rectangle (1,0) ;
+\end{tikzpicture}
+\end{wrapfigure} -->
+
+Un pendule simple correspond à une masse fixée à l'extrémité d'un fil sans masse et inextensible, l'autre extrémité du fil étant supposée fixe dans un repère galiléen. Si l'on néglige les frottements, l'équation d'un pendule simple est celle-ci&nbsp;:
+$$
+\ddot \theta = - \omega_0^2 \sin \theta \qquad \mathrm{pour} \qquad \omega_0 = \sqrt{\frac g l}
+$$
+avec $g$ l'accélération due à la pesanteur et $l$ la longueur du fil du pendule.
+
+# Modélisation initiale
+
+Commençons, dans un nouveau fichier, par importer quelques modules et fonctions et de définir quelques constantes&nbsp;:
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+from math import sin, cos, pi
+
+omega_0 = 1
+duree = 40 # secondes
+dt = 0.01 # secondes
+```
+**Question** Définir une liste `py§temps` qui contient tous les instants allant de `py§0` (inclus) à `py§duree` (inclus) pour un pas de `py§dt`.
+
+**Question** Écrire une fonction `py§euler` qui, étant donné deux arguments correspondant aux valeurs de $\theta$ et $\dot \theta$ au temps $t$, retourne les valeurs de $\theta$ et $\dot \theta$ actualisées pour le temps $t + \mathrm{d} t$.
+
+```python
+def euler(theta, theta_point):
+	...
+	return (nouveau_theta, nouveau_theta_point)
+```
+
+**Question** On souhaite écrire une fonction `py§simule` qui prends en entrée deux arguments `py§theta_0` et `py§theta_point_0` correspondant aux conditions initiales du pendule, et qui renvoie deux listes correspondant aux valeurs successives de $\theta$ et de&nbsp;$\dot \theta$ durant la simulation. Les listes doivent avoir la même longueur de la liste `py§temps` définie précédemment. 
+```python
+def simule(theta_0, theta_point_0):
+	...
+	return (liste_theta, liste_theta_point)
+```
+Voici quelques questions que l'on pourra se poser lors de l'écriture de cette fonction&nbsp;:
+
+1. Comment initialiser les listes `py§liste_theta` et `py§liste_theta_point`&nbsp;?
+1. Quel type de boucle utiliser pour remplir ces listes&nbsp;? Comment la définir&nbsp;?
+1. À chaque itération de la boucle, quelles nouvelles valeurs ajoutera-t-on à ces listes&nbsp;? Comment obtient-on ces valeurs&nbsp;?
+
+**Question** Tracer les trajectoires (autrement dit les courbes avec le temps en abscisse et la valeur de l'angle en ordonnée) pour des vitesses initiales nulles et des angles initiaux allant de $0$ à $2$ avec un pas de $0.1$.
+
+Nous allons, l'espace d'un instant, considérer l'oscillateur harmonique plutôt que le pendule simple. Concrètement, cela revient à utiliser l'équation de mouvement suivant&nbsp;:
+$$
+\ddot \theta = - \omega_0^2 \theta
+$$
+
+**Question** Modifier la fonction `py§euler` en une fonction `py§euler_harmo` pour simuler un oscillateur harmonique, et tracer les trajectoires pour des vitesses initiales nulles et des angles initiaux allant de $0$ à $2$ avec un pas de $0.1$.
+
+Revenons maintenant à l'équation de mouvement initial et la fonction `py§euler` correspondante.
+
+# Un peu d'exploitation
+
+## Le diagramme de phases
+
+**Question** Tracer le diagramme de phases (c'est à dire l'ensemble des points de coordonnées&nbsp;$(\theta, \dot \theta)$) pour, à nouveau, les trajectoires correspondant à des vitesses initiales nulles et des angles initiaux allant de $0$ à $2$ avec un pas de $0.1$.
+
+L'énergie totale d'un pendule est donnée par la formule suivante&nbsp;:
+
+<!-- $$
+E = \underbrace{\frac 1 2 m l^2 \dot \theta^2}_{E_C} + \underbrace{\vphantom{\frac 1 2}m g l (1 - \cos \theta)}_{E_P}
+$$ -->
+
+$$
+E = \frac 1 2 m l^2 \dot \theta^2 + m g l (1 - \cos \theta)
+$$
+
+**Question** Écrire une fonction `py§energie` en supposant que le produit $m l^2$ est égal à $1$ dans les unités utilisées.
+
+```python
+def energie(theta, theta_point):
+	...
+```
+
+**Question** Tracer l'énergie en fonction du temps pour les pendules d'angle initiaux allant de $0$ à $2$ avec un pas de $0.1$ et une vitesse initiale nulle.
+
+**Question** Tracer maintenant les trajectoires comme précédemment, avec toujours une vitesse initiale nulle, mais des angles initiaux allant cette fois de $0$ à $3$ avec un pas de $0.1$. Que remarque-t-on&nbsp;? Est-ce normal&nbsp;?
+
+# Une amélioration de la méthode d'Euler
+
+Les questions précédentes montre que dans notre simulation, l'énergie du pendule n'est pas constante, mais augmente avec le temps. Pourtant, physiquement, il y a au contraire conservation de l'énergie.
+
+Cela illustre une caractéristique générale de la modélisation de systèmes physiques basée sur la méthode d'Euler explicite.
+
+Comme il est important de pouvoir simuler efficacement des tels systèmes physiques, c'est un problème qui a été étudié de près, et plusieurs solutions existent pour y rémédier. Nous allons en présenter une particulièrement simple et adaptée à notre situation.
+
+## La méthode d'Euler semi-implicite
+
+On peut voir le système décrivant notre pendule comme un système différentiel d'ordre&nbsp;$1$ avec deux composantes $u$ et $v$ dont l'évolution est décrite par les équations
+
+$$
+u'(t) = \varphi(v(t)) \qquad \qquad v'(t) = \psi(u(t))
+$$
+
+<!-- $$
+\left\{
+\begin{array}{r@{\ }l}
+u'(t) & = \varphi(v(t)) \\
+v'(t) & = \psi(u(t))
+\end{array} \right.
+$$ -->
+
+**Question** Si $u$ est $\theta$ et $v$ est $\dot \theta$, expliciter les fonctions $\varphi$ et $\psi$.
+
+La méthode d'Euler _explicite_ peut alors s'écrire de la façon suivante&nbsp;:
+
+$$
+u_{n + 1} = u_n + \varphi(v_n) \Delta t \qquad \qquad v_{n+1} = v_n + \psi(u_n) \Delta t
+$$
+
+<!-- $$ \left\{
+	\begin{array}{r@{\ }l}
+u_{n+1} & = u_n + \varphi(v_n) \Delta t \\
+v_{n+1} & = v_n + \psi(u_n) \Delta t
+	\end{array}
+\right. $$ -->
+
+Elle est _explicite_ car les fonctions $\varphi$ et $\psi$ sont appliquées aux suites $(u_n)$ et $(v_n)$ au rang $n$ pour déterminer leur valeurs au rang $n+1$. En particulier, un calcul direct permet de trouver les valeurs au rang $n+1$.
+
+La version _implicite_ de la méthode d'Euler applique les fonctions $\varphi$ et $\psi$ aux suites au rang $n+1$ pour déterminer leur valeur au rang $n+1$&nbsp;:
+
+$$
+u_{n + 1} = u_n + \varphi(v_{n + 1}) \Delta t \qquad \qquad v_{n+1} = v_n + \psi(u_{n + 1}) \Delta t
+$$
+
+<!-- $$ \left\{
+	\begin{array}{r@{\ }l}
+u_{n+1} & = u_n + \varphi(v_{n+1}) \Delta t \\
+v_{n+1} & = v_n + \psi(u_{n+1}) \Delta t
+	\end{array}
+\right. $$ -->
+
+Il faut donc résoudre des équations pour obtenir les valeurs des suites au rang $n + 1$ à partir du rang $n$.
+
+La méthode _semi-implicite_ est un mélange des deux&nbsp;: l'une des deux équations décrivant l'évolution est faite de façon explicite, et l'autre implicite. Il y a deux possibilités pour cela&nbsp;:
+$$
+u_{n + 1} = u_n + \varphi(v_{n + 1}) \Delta t \qquad \qquad v_{n + 1} = v_n + \psi(u_{n}) \Delta t
+$$
+ou
+$$
+u_{n + 1} = u_n + \varphi(v_{n}) \Delta t \qquad \qquad v_{n + 1} = v_n + \psi(u_{n + 1}) \Delta t
+$$
+
+<!-- $$ \left\{
+	\begin{array}{r@{\ }l}
+u_{n+1} & = u_n + \varphi(v_{n+1}) \Delta t \\
+v_{n+1} & = v_n + \psi(u_n) \Delta t
+	\end{array}
+\right. \qquad \hbox{ou} \qquad
+\left\{
+	\begin{array}{r@{\ }l}
+u_{n+1} & = u_n + \varphi(v_n) \Delta t \\
+v_{n+1} & = v_n + \psi(u_{n+1}) \Delta t
+	\end{array}
+\right.
+$$ -->
+
+On peut prouver mathématiquement (mais c'est assez compliqué) qu'avec la méthode semi-implicite, l'énergie est «&nbsp;globalement&nbsp;» conservée&nbsp;: elle n'est pas constante, mais ses variations restent bornées. En comparaison, pour la méthode explicite, l'énergie augmente indéfiniment et pour la méthode implicite, elle converge vers $0$.
+
+## Application au pendule simple
+
+**Question** Modifier la fonction `py§euler` précédente pour obtenir une nouvelle fonction `py§euler_2` correspondant à la méthode semi-implicite de votre choix (la modification a effectuer étant, dans chaque cas, vraiment très simple).
+
+**Question** Transformer de même la fonction `py§simule` en une fonction `py§simule_2` qui utilise `py§euler_2`.
+
+**Question** Reprendre les tracés des questions précédentes, avec à chaque fois des vitesses initiales nulles et des angles initiaux allant de $0$ à $3$ avec un pas de $0.1$.
+
+1. Tracer les trajectoires&nbsp;;
+1. Tracer l'énergie en fonction du temps&nbsp;;
+1. Tracer le diagramme de phases.
+
+## Comportement au voisinage de la verticale
+
+Nous allons maintenant nous intéresser au comportement d'un pendule dont la position initiale est très proche de la verticale (le pendule est presque en haut) avec une vitesse nulle.
+
+**Question** Tracer sur un même schéma les trajectoires du pendule pour une vitesse initialle nulle et un angle initiale égal à $\pi - 2^{-n}$ pour $n$ allant de $0$ à $30$ (inclus).
+
+Une étude théorique montre que si la position initiale est de $\pi - a$ avec $a > 0$, alors la période d'oscillation $T$ en fonction de $a$ est telle que
+$$
+T \sim_{a \rightarrow 0^+} - \frac {4 \ln (a)}{\omega_0}
+$$
+
+**Question** Peut-on retrouver qualitativement ce résultat dans le tracé précédent&nbsp;?
+
+**Question** Dans le tracé précédent, combien de courbes doit-on avoir&nbsp;? Vérifier cela.
+
+Reprendre le tracé précédent, pour des angles initiaux de $\pi - 4^{-n}$, avec toujours $n$ allant de $0$ à $30$ inclus.
+
+**Question** A-t-on encore le bon nombre de courbes&nbsp;? Expliquer cela.

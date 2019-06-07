@@ -1,0 +1,218 @@
+---
+title: Gravity
+subtitle: Où l'on simule la trajectoire de corps célestes…
+tags: ["Simulation numérique", "Méthode d'Euler", "IPT Spé"]
+---
+
+import fig1 from './fig1.svg'
+import fig2 from './fig2.svg'
+import fig3 from './fig3.svg'
+import fig4 from './fig4.svg'
+import Center from 'components/Center.js'
+
+## Rappels de physique&nbsp;: La loi universelle de la gravitation
+
+La loi universelle de la gravitation nous apprends qu'étant donnés deux corps&nbsp;$1$ et&nbsp;$2$ (que l'on supposera ponctuels), le premier attire le second avec une force
+
+$$
+\vec F_{1,2} = - \frac {G m_1 m_2}{d^2} {\vec u}_{1, 2}
+$$
+
+où $m_1$ et $m_2$ sont les masses respectives des deux corps, $d$ la distance les séparant et ${\vec u}_{1, 2}$ est le vecteur unitaire pointant du corps&nbsp;$1$ vers le corps&nbsp;$2$. Enfin, $G$ est la **constante gravitationnelle**.
+
+<Center>
+  <img src={fig1} style={{ width: '60%', height: 'auto' }} />
+</Center>
+
+D'après la relation fondamentale de la dynamique, on a donc (si aucunes autres forces n'agissent sur ces corps) pour le corps&nbsp;$1$&nbsp;:
+
+$$
+m_1 \vec a_1 = - \frac {G m_1 m_2}{d^2} \vec u_{2, 1}
+$$
+
+d'où
+
+$$
+\vec a_1 = - \frac {G m_2}{d^2} \vec u_{2, 1}.
+$$
+
+Dans la suite, nous nommerons **accélération induite** par le corps&nbsp;$2$ sur le corps&nbsp;$1$ le vecteur $- \frac {G m_2}{d^2} \vec u_{2, 1}$.
+
+Nous définirons de plus&nbsp;:
+
+```python
+G = 1 # Constante gravitationnelle
+```
+
+Cela permet d'avoir des simulations basées sur la loi universelle avec des distances et des temps de l'ordre de l'unité, tout en conservant des trajectoires correctes.
+
+## Fonctions sur les vecteurs
+
+Nous avons besoin du produit scalaire entre deux vecteurs représentés par des listes de longueur&nbsp;2, et de la multiplication d'un vecteur par un scalaire.
+
+**Question** Écrire des fonctions qui font cela.
+
+Maintenant que vous avez réussi, sachez que nous ne les utiliserons pas. À la place, nous allons utiliser les `np.array` de `numpy`&nbsp;:
+
+```python
+>>> a = np.array([1, 2], dtype=float)
+>>> 2.1 * a
+array([ 2.1,  4.2])
+>>> b = np.array([2, -3], dtype=float)
+>>> np.dot(a, b) # Produit scalaire
+-4.0
+```
+
+**Question** Écrire une fonction `acceleration_induite(m1, p1, p2)` qui, étant donné un corps de masse `m1` et de position `p1`, et un autre corps de position `p2`, renvoie l'_accélération induite_ par l'attraction exercée par le corps&nbsp;$1$ sur le corps&nbsp;$2$.
+
+**Question** Écrire une fonction `rotation(vecteur, angle)` qui renvoie le vecteur obtenu à partir de `vecteur` après une rotation d'`angle`.
+
+```python
+>>> a = np.array([1, 0])
+>>> rotation(a, np.pi/3)
+array([ 0.5, 0.8660254])
+```
+
+## Mise en place de la simulation
+
+Nous allons représenter les positions et vitesses de nos corps par un `np.array` où sont placés pour chaque corps par ordre de numéro croissante la position du corps (abscisse puis ordonnée) suivie de la vitesse (abscisse puis ordonnée). Voici un exemple&nbsp;:
+
+<Center>
+  <img src={fig2} style={{ width: '25%' }} />
+</Center>
+
+qui sera représenté ainsi&nbsp;:
+
+```python
+np.array([-1, 2, 3, -1, 3, -1, -1, -1])
+```
+
+On rappelle que l'on peut accéder aux différentes composantes d'un `np.array` comme s'il s'agissait d'un tableau. De plus, la commande `np.concatenate` permet de construire facilement de telles représentations à partir des différents vecteurs, comme illustré dans l'exemple suivant&nbsp;:
+
+```python
+>>> pos1 = np.array([-1,  2])
+>>> vit1 = np.array([ 3, -1])
+>>> pos2 = np.array([ 3, -1])
+>>> vit2 = np.array([-1, -1])
+>>> np.concatenate((pos1, vit1, pos2, vit2))
+array([-1,  2,  3, -1,  3, -1, -1, -1])
+```
+
+**Question** Recopier et compléter le code ci-dessous pour simuler l'évolution du système composé de deux corps de masses respectives `m1` et `m2`. Il prend en entrée un `np.array` comme décrit précédemment, et renvoie sa dérivée découlant de l'attraction universelle.
+
+```python
+def simulation(p, t):
+	pos1 = p[0:2]
+	vit1 = p[2:4]
+	pos2 = p[4:6]
+	vit2 = p[6:8]
+	acc1 = ... # à compléter
+	acc2 = ... # à compléter
+	res  = ... # à compléter
+	return(res)
+```
+
+**Question** Compléter de même le programme suivant, qui implémente la méthode d'Euler en utilisant le même format qu'`odeint`. Ainsi, `f` est la fonction d'évolution (la fonction `simulation` pouvant jouer ce rôle), `p` représente les conditions initiales et le tableau `temps` contient les valeurs du temps où l'on veut l'état du système simulé.
+
+```python
+def euler(f, p, temps):
+	s = p
+	solution = [s.copy()]
+	for i in range(1, len(temps)):
+		dt = ... # à compléter
+		s += ... # à compléter
+		solution.append(s.copy())
+	return np.array(solution)
+```
+
+## Expérimentations gravitationnelles
+
+Nous allons utiliser toute cette mise en place pour simuler quelques situations mettant en œuvre la gravitation universelle.
+
+### Deux corps en orbite circulaire
+
+On peut montrer que deux corps de masses respectives $m_1$ et $m_2$ peuvent évoluer de long d'une orbite circulaire autour de leur barycentre à une fréquence $$ \omega = \sqrt{G \dfrac {m_1 + m_2}{r^3}} $$ où $r$ désigne la distance entre les deux corps.
+
+On utilisera le placement initial suivant&nbsp;:
+
+<Center>
+<img src={fig3} style={{ width: '40%', height: 'auto' }} />
+</Center>
+
+avec&nbsp;:
+
+$$
+r_1 = \frac {m_2}{m_1 + m_2} r \qquad r_2 = \frac {m_1}{m_1 + m_2} r
+$$
+
+Nous allons de plus utiliser les valeurs suivantes&nbsp;:
+
+```python
+# Définition des corps
+m1 = 1
+m2 = 0.0009546 # rapport des masses Jupiter/Soleil
+r = 1
+
+# Vecteur temps de la simulation
+temps = np.linspace(0, 1000, 10001)
+```
+
+**Question** Définir `r1`, `r2` et `omega` en fonction de `G`, `m1`, `m2` et&nbsp;`r`.
+
+**Question** Définir les positions initiales `p1` et `p2` pour correspondre à la situation de la figure.
+
+**Question** Écrire une fonction `vitesse_initiale` qui, étant donné un point de l'espace, retourne sa vitesse sachant qu'il tourne autour de l'origine dans le sens trigonométrique à une fréquence&nbsp;$\omega$ représentée par la variation `omega`.
+
+**Question** Définir les vitesses initiales `v1` et&nbsp;`v2`.
+
+**Question** Simuler le mouvement des deux corps pour vérifier que l'on obtient bien des orbites circulaires. On utilisera successivement les fonctions `euler` et `odeint` en comparant les résultats. Quelle fonction vaut-il mieux utiliser par la suite&nbsp;?
+
+**Question** **(subsidiaire, sur laquelle vous pouvez revenir plus tard)** Pour être vraiment sûr·e que les corps suivent une trajectoire circulaire à vitesse constante, on peut tracer leur trajectoire dans le repère tournant à vitesse $\omega$, où elles doivent être réduites à un point.
+
+### Un troisième corps
+
+Nous allons maintenant ajouter un troisième corps dont la masse est négligeable par rapport aux deux premiers. Concrètement, seul le corps&nbsp;$1$ agira sur le corps&nbsp;$2$, et vice-versa, alors les corps&nbsp;$1$ et&nbsp;$2$ agiront tous deux sur le corps&nbsp;$3$.
+
+Un cas bien connu de points correspondant à des orbites stables est celui-ci des [points de Lagranges](https://fr.wikipedia.org/wiki/Point_de_Lagrange) $L_4$ et $L_5$. Ces points sont situés aux troisièmes sommets des triangles équilatéreux du plan dont les corps&nbsp;$1$ et&nbsp;$2$ sont aussi sommets.
+
+<Center>
+<img src={fig4} style={{ width: '30%', height: 'auto' }} />
+</Center>
+
+On peut montrer qu'un corps de masse négligeable situé en l'un de ces points et tournant autour du barycentre des deux corps massifs à la vitesse angulaire $\omega$ y reste indéfiniment dans le repère tournant, l'attraction gravitationnelle et la force centrifuge se compensant exactement.
+
+**Question** Vérifier cela expérimentalement à l'aide d'une simulation numérique, de préférence dans le repère tournant.
+
+De plus, le voisinage des points $L_4$ et $L_5$ ont une certaine stabilité. En effet, si un corps est à proximité de $L_4$ ou de $L_5$, il y reste de la même façon.
+
+**Question** Vérifier cela expérimentalement. On pourra, pour cela, considérer un point de départ obtenu à partir de $L_5$ ou $L_4$ en faisant une rotation d'un petit angle autour du barycentre.
+
+## Bonus, un exemple d'animation en Python
+
+```python
+def anime(positions):
+	plt.clf()
+	fig, ax = plt.subplots()
+	# Fenêtre graphique
+	ax.set_xlim(-1.2, 1.2)
+	ax.set_ylim(-1.2, 1.2)
+	line, = ax.plot([], [], 'o')
+
+	def init():
+		line.set_data(positions[0, 0::4], positions[0, 1::4])
+		return line,
+
+	def animate(i):
+		line.set_data(positions[i, 0::4], positions[i, 1::4])
+		return line,
+
+	ani = animation.FuncAnimation(
+			fig,
+			animate,
+			np.arange(1, len(positions)),
+			interval=25,
+			blit=True,
+			init_func=init)
+
+	plt.show()
+```
