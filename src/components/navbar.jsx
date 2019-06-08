@@ -6,7 +6,9 @@ import {
     NavbarMenu,
     NavbarItem,
     NavbarBrand,
-    NavbarEnd
+    NavbarStart,
+    NavbarEnd,
+    NavbarBurger
 } from "bloomer";
 import { FaTwitter, FaEnvelope } from 'react-icons/fa'
 
@@ -15,8 +17,7 @@ const NavBar = () => (
         <Container>
             <NavbarBrand>
                 <NavbarItem>Professeur B.</NavbarItem>
-            </NavbarBrand>
-            <NavbarMenu>
+                {/* <NavbarStart> */}
                 <NavbarItem>
                     <Link to="/articles">Articles</Link>
                 </NavbarItem>
@@ -26,11 +27,35 @@ const NavBar = () => (
                 <NavbarItem>
                     <Link to="/ipt/spe">IPT Spé</Link>
                 </NavbarItem>
+                {/* </NavbarStart> */}
+            </NavbarBrand>
+            <NavbarMenu>
+                <NavbarEnd>
+                    <NavbarItem><a href="mailto:professeurb at free.fr"><FaEnvelope /></a></NavbarItem>
+                    <NavbarItem><a href="https://twitter.com/professeur_b/"><FaTwitter /></a></NavbarItem>
+                </NavbarEnd>
             </NavbarMenu>
-            <NavbarEnd>
-                <NavbarItem><a href="mailto:professeurb at free.fr"><FaEnvelope /></a></NavbarItem>
-                <NavbarItem><a href="https://twitter.com/professeur_b/"><FaTwitter /></a></NavbarItem>
-            </NavbarEnd>
+            {/* <NavbarBrand>
+                <NavbarItem>Professeur B.</NavbarItem>
+                <NavbarBurger />
+            </NavbarBrand>
+            <NavbarMenu>
+                <NavbarStart>
+                    <NavbarItem>
+                        <Link to="/articles">Articles</Link>
+                    </NavbarItem>
+                    <NavbarItem>
+                        <Link to="/ipt/sup">IPT Sup</Link>
+                    </NavbarItem>
+                    <NavbarItem>
+                        <Link to="/ipt/spe">IPT Spé</Link>
+                    </NavbarItem>
+                </NavbarStart>
+                <NavbarEnd>
+                    <NavbarItem><a href="mailto:professeurb at free.fr"><FaEnvelope /></a></NavbarItem>
+                    <NavbarItem><a href="https://twitter.com/professeur_b/"><FaTwitter /></a></NavbarItem>
+                </NavbarEnd>
+            </NavbarMenu>*/}
         </Container>
     </Navbar>
 );
