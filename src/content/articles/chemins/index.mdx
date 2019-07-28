@@ -1,0 +1,81 @@
+---
+title: Recherche de chemin dans un labyrinthe
+subtitle: Où l'on essaye de sortir…
+---
+
+import { Moves } from "./mouvements1.js";
+import Mapper from "./map.jsx";
+import Sim from "./sim_naive.jsx";
+
+Nous allons explorer quelques moyens plus ou moins simples et efficaces pour trouver son chemin dans un labyrinthe.
+
+## Plantons le décor
+
+## Méthodes simples
+
+### On suit les murs
+
+On a plusieurs cas possibles&nbsp;:
+
+- si il y a un mur juste devant le robot, alors il tourne à gauche (pour avoir le mur à sa droite)
+- sinon, si le robot a un mur à sa droite, il avance
+- sinon, si il a un mur à sa droite derrière lui, il tourne à droite
+- enfin, si il n'y a pas de mur à sa droite, ou à sa droite derrière, il avance tout droit.
+
+<Moves />
+
+Blabla
+
+<Mapper grid={[[0, 0, 0, 1, 1], [1, 0, 1, 2, 0]]} />
+
+Blibli
+
+<Mapper grid={[[0, 0, 1, 1], [0, 1, 2, 0]]} size={0} />
+
+aaa
+
+<Mapper grid={[[0, 1, 1], [1, 2, 0]]} size={2} />
+
+aaa
+
+<Sim
+  grid={[
+    [1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 1, 1],
+    [1, 0, 1, 1, 0, 0, 2],
+    [1, 0, 0, 1, 0, 0, 1],
+    [1, 1, 1, 1, 1, 1, 1]
+  ]}
+  x={3}
+  y={2}
+  orient={0}
+  size={2}
+/>
+
+<Sim
+  grid={[
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 1, 1, 0, 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 1, 1, 0, 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 1, 1, 0, 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 1, 1, 0, 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+  ]}
+  x={4}
+  y={4}
+  orient={180}
+  size={0}
+/>
