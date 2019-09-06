@@ -99,3 +99,7 @@ code.inlinecode {
   padding-bottom: 1.5px !important;
   font-size: 0.95em;
 }
+
+table {
+  font-variant-numeric: tabular-nums slashed-zero;
+}

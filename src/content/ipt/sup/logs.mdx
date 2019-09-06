@@ -9,17 +9,23 @@ tags: ["Méthodes numériques", "IPT Sup"]
 Les problèmes de complexité existent depuis bien avant l'invention de l'informatique. Lorsque l'on voulait faire des calculs compliqués à la main, cela pouvait valoir la peine de réfléchir un peu pour trouver des méthodes de calculs raisonnablement complexes.
 
 Un domaine important d'amélioration des calculs concerne les multiplications, surtout lorsque l'on manipule des grands nombres (ou des nombres avec beaucoup de chiffres après la virgule). L'idée de transformer les multiplications en additions (beaucoup moins coûteuses) est en particulier une piste très intéressante. Une première méthode pour faire cela se nomme **prostaphérèse** et date de la fin du XVIème siècle. Elle repose sur l'utilisation d'identités trigonométriques comme&nbsp;:
+
 $$
 \cos a \cos b = \frac 1 2 \bigl(\cos(a - b) + \cos(a + b)\bigr)
 $$
+
 Par exemple, on veut multiplier $1,4243$ par $8,2001$. Notons tout d'abord que
+
 $$
 1,4243 \times 8,2001 = 100 \times 0,14243 \times 0,82001
 $$
+
 En cherchant dans les tables trigonométriques (on en disposait déjà à la fin de l'antiquité), on trouve que
+
 $$
 0,14243 = \cos (81,8115...) \qquad \mathrm{et} \qquad 0,82001 = \cos(34,9142...)
 $$
+
 où les angles sont exprimés en degrés, les radians n'existant pas encore. On en déduit que&nbsp;:
 
 <!-- $$
@@ -44,6 +50,7 @@ Pour visualiser la précision des calculs, on se basera sur une première foncti
 ```
 
 Une fois cette fonction obtenue, on définira la fonction suivante&nbsp;:
+
 ```python
 def affiche(i, a, b) :
   stra = "{}".format(a)
@@ -52,6 +59,7 @@ def affiche(i, a, b) :
 ```
 
 Un exemple d'utilisation est le suivant&nbsp;:
+
 ```python
 >>> np.pi
 3.141592653589793
@@ -98,38 +106,44 @@ Enfin, dans la dernière ligne de la fonction `py§affiche`, les caractères ent
 
 Au début du XVIIème siècle, Henry Briggs publia une table de logarithmes. Ayant remarqué qu'une fonction logarithmique $\log$ (quelqu'en soit la base) vérifie les deux propriétés suivantes&nbsp;:
 
-* $\log \sqrt{a\,} = \frac 1 2 \log a$,
-* si $a$ est très proche de $0$, alors $\log (1 + a)$ est proportionnel à&nbsp;$a$ (le coefficient dépend de la base du logarithme),
+- $\log \sqrt{a\,} = \frac 1 2 \log a$,
+- si $a$ est très proche de $0$, alors $\log (1 + a)$ est proportionnel à&nbsp;$a$ (le coefficient dépend de la base du logarithme),
 
 il procéda ainsi&nbsp;:
 
 1. on pose $u_0 = 2$ et $v_0 = 10$&nbsp;;
 2. on en calcule les racines carrées successives, soit en écriture moderne&nbsp;:
-    $$
-    \forall \, n \in \mathbf N, \ u_{n+1} = \sqrt{u_n} \ \mathrm{et} \  v_{n+1} = \sqrt{v_n}
-    $$
+   $$
+   \forall \, n \in \mathbf N, \ u_{n+1} = \sqrt{u_n} \ \mathrm{et} \  v_{n+1} = \sqrt{v_n}
+   $$
 3. le rapport $\dfrac {u_n - 1}{v_n - 1}$ converge alors vers $\dfrac {\ln 2}{\ln 10} = \log_{10} 2$.
 
 Briggs itérera le processus 54 fois (autrement dit, 54 fois deux calculs de racines carrées faits à la main).
 
 > **Petite explication mathématique** On a $u_n = 2^{\frac 1 {2^n}} \rightarrow 1$, donc
+>
 > $$
 > \frac 1 {2^n} \ln 2 = \ln u_n \sim_{n \rightarrow \infty} u_n - 1
 > $$
+>
 > et de même,
+>
 > $$
 > v_n - 1 \sim_{n \rightarrow \infty} {\frac 1 {2^n}} \ln 10
 > $$
+>
 > On en déduit que l'on a&nbsp;bien
+>
 > $$
 > \frac {u_n - 1} {v_n - 1} \rightarrow_{n \rightarrow \infty} \frac {\ln 2}{\ln 10}
 > $$
 
 **Question** Écrire une fonction qui calcule une valeur approchée de $\log_{10}(2)$ à l'aide de cette méthode. Quelques remarques supplémentaires&nbsp;:
-* La fonction utilise le module `py§numpy` renommé en `py§np`. Il faudra donc avoir entré auparavant la commande `py§import numpy as np`&nbsp;;
-* La valeur «&nbsp;exacte&nbsp;» de $\log_{10}(2)$, calculée par l'expression `py§np.log(2) / np.log(10)` ne sert qu'à afficher les décimales correctes des résultats obtenus&nbsp;;
-* La racine carrée d'un flottant s'obtient avec la fonction `py§np.sqrt`.
-* Briggs a itéré le processus 54 fois. Essayez de retrouver le résultat qu'il a obtenu.
+
+- La fonction utilise le module `py§numpy` renommé en `py§np`. Il faudra donc avoir entré auparavant la commande `py§import numpy as np`&nbsp;;
+- La valeur «&nbsp;exacte&nbsp;» de $\log_{10}(2)$, calculée par l'expression `py§np.log(2) / np.log(10)` ne sert qu'à afficher les décimales correctes des résultats obtenus&nbsp;;
+- La racine carrée d'un flottant s'obtient avec la fonction `py§np.sqrt`.
+- Briggs a itéré le processus 54 fois. Essayez de retrouver le résultat qu'il a obtenu.
 
 Le programme à compléter est&nbsp;:
 
@@ -139,6 +153,7 @@ for i in range(55) :
   affiche(i, np.log(2) / np.log(10), ...)
   ...
 ```
+
 Les points de suspension sont, bien sûr, ce qu'il faut modifier.
 
 Le début de l'affichage devra ressembler à ceci&nbsp;:
@@ -161,23 +176,23 @@ Le début de l'affichage devra ressembler à ceci&nbsp;:
 14 : 0.3010
 ```
 
-Normalement, lors de l'exécution du programme (a priori correct) précédent, nous n'arrivez pas à faire aussi bien que Briggs. Le nombre de décimales correctes augmente jusqu'à la 27ème itération, puis diminue. 
+Normalement, lors de l'exécution du programme (a priori correct) précédent, nous n'arrivez pas à faire aussi bien que Briggs. Le nombre de décimales correctes augmente jusqu'à la 27ème itération, puis diminue.
 
 **Question** Pourquoi&nbsp;?
 
 De plus, à partir de la 54ème itération, même la partie `py§0.` n'est plus affichée. Il est même possible d'avoir un message d'erreur. La raison est, à nouveau, la taille finie de la mantisse. Pour illustrer cela, on a représenté dans le tableau suivant les racines itérées de $1.4$, avec la représentation en binaire. On voit clairement qu'entre le `py§1` de gauche et le `py§1` suivant, il y a des `py§0` dont le nombre augmente d'un à chaque étape.
 
-| Décimal | Binaire            |
-| ---     | :--                |
-| `py§1.40000` | `py§1.011001100110` |
-| `py§1.18322` | `py§1.001011101110` |
-| `py§1.08776` | `py§1.000101100111` |
-| `py§1.04296` | `py§1.000010101111` |
-| `py§1.02125` | `py§1.000001010111` |
-| `py§1.01057` | `py§1.000000101011` |
-| `py§1.00527` | `py§1.000000010101` |
-| `py§1.00264` | `py§1.000000001010` |
-| `py§1.00132` | `py§1.000000000101` |
+| Décimal | Binaire        |
+| :-----: | :------------: |
+| 1.40000 | 1.**0**11001100110 |
+| 1.18322 | 1.**00**1011101110 |
+| 1.08776 | 1.**000**101100111 |
+| 1.04296 | 1.**0000**10101111 |
+| 1.02125 | 1.**00000**1010111 |
+| 1.01057 | 1.**000000**101011 |
+| 1.00527 | 1.**0000000**10101 |
+| 1.00264 | 1.**00000000**1010 |
+| 1.00132 | 1.**000000000**101 |
 
 **Question** Expliquer l'origine du problème évoqué.
 
@@ -187,6 +202,7 @@ De plus, à partir de la 54ème itération, même la partie `py§0.` n'est plus 
 2. En déduire (approximativement) la taille de la mantisse utilisée pour représenter les nombres flottants.
 
 **Remarque** La taille de la mantisse s'obtient avec la commande suivante&nbsp;:
+
 ```python
 >>> np.finfo(float).nmant
 52
@@ -201,9 +217,10 @@ Nous allons programmer une méthode pour calculer $\ln 2$ de façon approchée �
 **Question** Écrire une fonction `py§rect` qui calcule l'intégrale demandée à l'aide de la méthode des rectangles «&nbsp;à gauche.&nbsp;» Elle prendra comme argument un entier indiquant le nombre de rectangles à utiliser.
 
 C'est bien connu, la vitesse de convergence pour la méthode des rectangles est de l'ordre de $\frac 1 n$. Pour en voir une illustration, exécutez la commande suivante.
+
 ```python
 for i in range(8) :
-  affiche(i, np.log(2), rect(10 ** i)) 
+  affiche(i, np.log(2), rect(10 ** i))
 ```
 
 **Question** À quoi sert le `py§10 ** i`&nbsp;?
@@ -215,14 +232,16 @@ On connaît une méthode plus efficace pour calculer des intégrales, puisqu'ell
 **Question** Écrire une fonction `py§trap` qui calcule la même intégrale à l'aide de la méthode des trapèzes.
 
 Expérimentons cette fonction à l'aide de la commande&nbsp;:
+
 ```python
 for i in range(8) :
-  affiche(i, np.log(2), trap(10 ** i)) 
+  affiche(i, np.log(2), trap(10 ** i))
 ```
 
 Deux remarques s'imposent&nbsp;:
-* Difficile d'avoir plus d'une dizaine de décimales, alors que 52 bits de mantisse correspondent plutôt à une quinzaine.
-* Le nombre d'opérations pour obtenir une précision décente reste vraiment très élevé.
+
+- Difficile d'avoir plus d'une dizaine de décimales, alors que 52 bits de mantisse correspondent plutôt à une quinzaine.
+- Le nombre d'opérations pour obtenir une précision décente reste vraiment très élevé.
 
 ## Calculs en séries
 
@@ -231,25 +250,33 @@ Les progrés mathématiques du XVIIème vont permettre de développer de nouvell
 ### Série de Mercator
 
 En 1668, dans son traîté «Logarithmotechnia», Nicolas Mercator (connu pour ses projections cartographiques) démontre la formule suivante (écrite de façon moderne)&nbsp;:
+
 $$
 \forall \, x \in \mathopen]-1,1], \ \ln (1 + x) = \sum_{n = 1}^\infty \frac {(-1)^{n+1} x^n} n
 $$
+
 Avec des points de suspension, cela donne&nbsp;:
+
 $$
 \ln (1 + x) = x - \frac {x^2} 2 + \frac {x^3} 3 - \frac {x^4} 4 + \frac {x^5} 5 - \frac {x^6} 6 + \ \cdots
 $$
+
 Pour $x = 1$, on reconnaît la série harmonique alternée&nbsp;:
+
 $$
 \ln 2 = 1 - \frac 1 2 + \frac 1 3 - \frac 1 4 + \frac 1 5 - \frac 1 6 + \ \cdots \ = \sum_{n = 0}^\infty \frac {(-1)^n} {n + 1}
 $$
+
 **Question** Écrire une fonction `py§mercator1` qui prends en argument un entier `py§n` et retourne la somme partielle précédente évaluée jusqu'à ce rang $n$.
 
 **Question** Pour évaluer son (in-)efficacité, modifier la fonction précédente pour qu'elle affiche (à l'aide de la bien-nommée fonction `py§affiche` que vous devez bien connaître maintenant) les valeurs approchées de $\ln 2$ obtenues à chaque itération.
 
 On peut être un peu déçu par cette méthode de calcul. Mais la formule précédente s'applique aussi à d'autres valeurs de $x$. Pour le calcul de $\ln 2$, on peut remarquer que l'on&nbsp;a&nbsp;:
+
 $$
 \ln 2 = - \ln \frac 1 2 = - \ln \Bigl(1 - \frac 1 2\Bigr).
 $$
+
 **Question** Écrire une fonction `py§mercator2` basée sur le calcul de $\ln 2$ vu comme $- \ln \bigl(1 - \frac 1 2\bigr)$, et visualiser l'efficacité de cette nouvelle méthode à l'aide d'un judicieux appel à la fonction `py§affiche`.
 
 Normalement on a, enfin, une méthode de calcul raisonnablement efficace.

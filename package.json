@@ -40,6 +40,7 @@
     "remark-math": "^1.0.6",
     "remark-react": "^5.0.1",
     "remark-rehype": "^4.0.0",
+    "to-style": "^1.3.3",
     "typeface-francois-one": "^0.0.71",
     "typeface-oswald": "^0.0.54",
     "unified": "^7.1.0"
