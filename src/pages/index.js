@@ -1,17 +1,5 @@
 import React from "react";
 import { Link } from "gatsby";
-import {
-  Title,
-  Section,
-  Container,
-  Columns,
-  Column,
-  Content,
-  Media,
-  MediaContent,
-  MediaLeft,
-  Tag
-} from "bloomer";
 
 import Layout from "../components/layout";
 

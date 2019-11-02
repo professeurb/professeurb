@@ -1,5 +1,5 @@
 export default function generateCards(len = 50) {
-  const items = [...Array(len).keys()].slice(1)
+  const items = [...Array(len).keys()].slice(1);
 
   let cards = items.map(index => ({
     id: index,
@@ -7,27 +7,27 @@ export default function generateCards(len = 50) {
     left: 60 * index + 37,
     zIndex: 1,
     rotate: 2 * Math.random() - 1,
-    value: '',
-    pos: '',
-  }))
+    value: "",
+    pos: ""
+  }));
 
   // initialize random values
-  let cnt = 1
+  let cnt = 1;
 
   for (let i = cards.length - 1; i >= 0; i--) {
-    cnt = cnt + Math.floor(Math.random() * 6)
-    cards[i].value = cnt
+    cnt = cnt + Math.floor(Math.random() * 6);
+    cards[i].value = cnt;
   }
 
   // pre-shuffle cards
   for (let i = cards.length - 1; i >= 1; i--) {
-    let j = Math.floor(Math.random() * (i + 1))
+    let j = Math.floor(Math.random() * (i + 1));
     if (j < i) {
-      let x = cards[i]
-      cards[i] = cards[j]
-      cards[j] = x
+      let x = cards[i];
+      cards[i] = cards[j];
+      cards[j] = x;
     }
   }
 
-  return cards
+  return cards;
 }

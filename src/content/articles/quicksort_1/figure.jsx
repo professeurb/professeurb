@@ -5,7 +5,6 @@ import style from './figure.module.css'
 
 function Figure() {
     let valeurs = [37, 16, 12, 28, 35, 14, 28, 31, 12, 76, 26, 22, 47, 33, 12, 41, 67, 53, 42]
-    console.log("Bonjour")
     return (
         <svg width="500pt" height="60pt" viewBox="0 0 500 60">
             <line x1={10} x2={466} y1={40} y2={40} style={{ stroke: "#000" }} />
