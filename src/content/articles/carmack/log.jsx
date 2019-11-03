@@ -18,7 +18,6 @@ function Logu() {
     let data = range(21).map(index => {
         return { x: index / 20, y: Math.log2(1 + index / 20) - index / 20 }
     })
-    console.log(data)
     return (
         <Line
             {...commonProperties}

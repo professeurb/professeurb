@@ -270,9 +270,8 @@ function Logo() {
                 legendOffset: -50,
                 legendPosition: 'middle'
             }}
-            lineWidth={4}
+            // lineWidth={4}
             sliceTooltip={({ slice }) => {
-                console.log(slice)
                 return (
                     <div
                         style={{
@@ -284,7 +283,7 @@ function Logo() {
                         <div><strong style={{ fontSize: 'medium', fontFamily: 'Source Code Pro' }}>0x{(1593507840 + 8192 * slice.id).toString(16)}</strong></div>
                         <table>
                             {slice.points.map(point => (
-                                <tr key={point.id} style={{ fontSize: 'small', borderStyle: 'none'}}>
+                                <tr key={point.id} style={{ fontSize: 'small', borderStyle: 'none' }}>
                                     <td style={{ color: point.color, borderStyle: 'none' }}>&#9632;</td>
                                     <td style={{ borderStyle: 'none' }}>{point.serieId}</td>
                                     <td style={{ fontSize: 'small', fontFamily: 'Source Code Pro', borderStyle: 'none' }}>{String(point.data.yFormatted).substr(0, 10)}</td>
@@ -293,9 +292,7 @@ function Logo() {
                         </table>
                     </div>
                 );
-            }
-            }
-
+            }}
         />
     )
 }

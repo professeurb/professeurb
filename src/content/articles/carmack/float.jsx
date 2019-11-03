@@ -16,7 +16,7 @@ function Floto() {
             <text x={3 + 10 * 14} y={30} className={style.small}>{"22"}</text>
             <text x={3 + 32 * 14} y={30} className={style.small}>{"00"}</text>
             <text x={3 + 21 * 14} y={15} className={style.basic}>{"M"}</text>
-            <text x={3 + (2 + 9) * 7} y={15} className={style.basic}>{"e"}</text>
+            <text x={3 + (2 + 9) * 7} y={15} className={style.basic}>{"127 + e"}</text>
             <text x={17} y={15} className={style.basic}>{"0"}</text>
         </svg >
     )
