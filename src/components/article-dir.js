@@ -21,8 +21,8 @@ import Helmet from "react-helmet";
 import Header from "./article-header";
 
 function PageTemplate({ data: { mdx, allMdx } }) {
-  console.log(mdx);
-  console.log(allMdx);
+  // console.log(mdx);
+  // console.log(allMdx);
   return (
     <MDXProvider
       components={{
@@ -117,6 +117,7 @@ export const pageQuery = graphql`
         title
         subtitle
         tags
+        date
       }
       fields {
         slug
@@ -134,6 +135,7 @@ export const pageQuery = graphql`
             subtitle
             tags
             type
+            date
           }
           fields {
             slug
