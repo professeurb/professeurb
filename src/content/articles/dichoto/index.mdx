@@ -35,10 +35,10 @@ Pour bien comprendre le comportement de l'algorithme et donc le programmer corre
 
 ### Invariants de boucle, petit rappel
 
-Rappelons brièvement quelques idées sur les invariants de boucle. On peut les voir comme la version _«&nbsp;preuve de programmes&nbsp;»_ de l'hypothèse de récurrence. Dans une preuve par récurrence, on a typiquement une _hypothèse de récurrence_ $P_n$ que l'on utilise dans deux étapes&nbsp;:
+Exposons brièvement quelques idées sur les invariants de boucle. On peut les voir comme la version _«&nbsp;preuve de programmes&nbsp;»_ de l'hypothèse de récurrence. Dans une démonstration par récurrence, on a typiquement une _hypothèse de récurrence_ $P_n$ que l'on utilise dans deux étapes&nbsp;:
 
 - lors de l'initialisation, pour montrer qu'à un certain rang $n_0$ de départ, l'hypothèse de récurrence est bien vérifiée,
-- lors de l'hérédité, pour montrer que que si l'hypothèse de récurrence est vrai à un certain rang&nbsp;$n$, elle est aussi vraie au rang suivant $n + 1$&nbsp;:
+- lors de l'hérédité, pour montrer que que si l'hypothèse de récurrence est vrai à un certain rang&nbsp;$n$ (supérieur ou égal à $n_0$), elle est aussi vraie au rang suivant $n + 1$&nbsp;:
 $$
 P_n \implies P_{n + 1}
 $$
@@ -94,8 +94,8 @@ Après avoir défini `py§m`, examinons les tests successifs. Tout d'abord, si l
 
 Maintenant, deux cas sont possibles&nbsp;:
 
-- si `py§t[m] < v`, puisque `py§t` est trié, si `py§v in t[a:b + 1]`, alors nécessairement `py§v in t[m + 1:b + 1]`. Ainsi, en posant `py§a = m + 1`, on a `py§v in t[a:b + 1]`.
-- Sinon, ayant de plus `py§t[m] != v`, cela signifie que `py§t[m] > v` et donc que si `py§v in t[a:b + 1]`, alors `py§v in t[a:m]`. Ainsi, en posant `py§b = m - 1`, on a `py§v in t[a:b + 1]`.
+- si `py§t[m] < v`, puisque `py§t` est trié, la valeur `py§v` ne peut pas être présente dans `py§t[a:m + 1]`. Ainsi, si `py§v in t[a:b + 1]`, alors nécessairement `py§v in t[m + 1:b + 1]`. Ainsi, en posant `py§a = m + 1`, on a `py§v in t[a:b + 1]`.
+- Sinon, sachant de plus que `py§t[m] != v`, cela signifie que `py§t[m] > v` et donc que si `py§v in t[a:b + 1]`, alors `py§v in t[a:m]`. Ainsi, en posant `py§b = m - 1`, on a `py§v in t[a:b + 1]`.
 
 Dans tous les cas, à la fin de l'exécution de la boucle (si l'on y est toujours), la propriété
 
@@ -107,19 +107,25 @@ est encore vérifiée. C'est donc bien un invariant de la boucle.
 
 Ce que l'on vient de prouver correspond à la phase d'hérédité d'une démonstration par récurrence. Pour terminer ce type de démonstration, il faut aussi une phase d'initialisation. Ainsi, si notre hypothèse de récurrence est vérifiée pour un certain rang, et qu'elle est préservée en passant d'un rang au suivant, alors elle est vérifiée pour tous les rangs suivants.
 
-De même, vérifions que notre invariant est vérifié avant d'entrer dans la boucle. À ce moment, on a `py§a == 0` et `py§b == len(t) - 1` et donc `py§t[a:b + 1] == t[0:len(t)] == t`. Notre invariant est donc bien vérifiée.
+De même, vérifions que notre invariant est vérifié avant d'entrer dans la boucle. À ce moment, on a `py§a == 0` et `py§b == len(t) - 1` et donc `py§t[a:b + 1] == t[0:len(t)] == t`. Notre invariant correspond alors à la tautologie
+
+$$
+\mathtt v \in \mathtt t \implies \mathtt v \in \mathtt{t},
+$$
+
+il est donc bien vérifié.
 
 Pour résumer, notre propriété est vérifiée en entrée de boucle et c'est un invariant de la boucle. En conséquent, elle reste vérifiée en sortant de la boucle (quelque soit le nombre d'itérations effectué). De plus, à ce moment, on a `py§a > b` et donc `py§t[a:b + 1] = []` et on peut donc affirmer que `py§v in t => v in []`.
 
 Comme `py§v in []` est nécessairement faux, puisque la liste vide ne contient aucune valeur, on en déduit que `py§v not in t`&nbsp;: on peut conclure qu'en sortie de boucle, `py§v` n'est pas présent dans la liste.
 
-Comme annoncé précédemment, notre invariant de boucle ne permet pas de montrer la correction en cas de succés (puisque l'on a effectivement trouvé un indice `py§m` tel que `py§t[m] == v`) mais en cas d'échec&nbsp;: bien que l'on n'a pas inspecté toutes les valeurs de `py§t`, on a prouvé que `py§v` n'est pas présent dans `py§t`. On a cherché aux bons endroits et puisque l'on n'a pas trouvé cette valeur, cela signifie qu'elle n'y est pas.
+Comme annoncé précédemment, notre invariant de boucle ne sert pas à montrer la correction en cas de succés (puisque l'on a effectivement trouvé un indice `py§m` tel que `py§t[m] == v`) mais en cas d'échec&nbsp;: bien que l'on n'a pas inspecté toutes les valeurs de `py§t`, on a prouvé que `py§v` n'est pas présent dans `py§t`. On a cherché aux bons endroits et puisque l'on n'a pas trouvé cette valeur, cela signifie qu'elle n'y est pas.
 
 ### Terminaison
 
 Insistons sur le fait que la présence d'un invariant de boucle ne présume en rien de la terminaison de l'algorithme&nbsp;; il ne prouve pas que l'on va sortir de la boucle. Par contre, si l'on sort de la boucle, alors le résultat est correct.
 
-Pour la terminaison, prouvons que si au début d'une itération, `py§a` et `py§b` sont tels que $b - a \leq 2^n - 2$, alors à la fin de l'itération, on&nbsp;a
+Pour la terminaison, prouvons que si au début d'une itération, `py§a` et `py§b` sont tels que $b - a \leq 2^n - 2$ pour un certain entier&nbsp;$n$, alors à la fin de l'itération, on&nbsp;a
 $$
 b - a \leq 2^{n - 1} - 2
 $$
@@ -135,7 +141,7 @@ $$
 b - a \leq 2^{n - 1} - 2
 $$
 
-Après un nombre suffisamment grand d'itération, l'écart `py§b - a` va forcément devenir négatif, ce qui est incompatible avec la condition de boucle `py§b >= a`.
+L'exposant de $2$ dans la majoration décroit donc de&nbsp;$1$ à chaque itération, etaprès un nombre suffisamment grand d'itérations, l'écart `py§b - a` va donc devenir négatif, ce qui est incompatible avec la condition de boucle `py§b >= a`.
 
 Ainsi, on est sûr de sortir de la boucle, l'algorithme termine.
 
@@ -168,7 +174,7 @@ def dicho2(t, v):
     return t[a] == v
 ```
 
-On pourra noter que sur la page Wikipedia indiquée plus haut, le test pour savoir si la liste est vide ne figure pas. L'algorithme est donc faux. Cela va dans le sens de la remarque initiale&nbsp;: la recherche par dichotomie, sous son apparente simplicité, est délicate à programmer.
+On pourra noter que sur la page Wikipedia indiquée plus haut, le test pour savoir si la liste est vide ne figure pas. L'algorithme est donc faux. Cela va dans le sens de la remarque initiale&nbsp;: la recherche par dichotomie, sous son apparente simplicité, est plus délicate à programmer que l'on croit.
 
 Cette fois-ci, l'invariant de boucle est
 $$ \mathtt v \in \mathtt t \implies \mathtt v \in \mathtt{t[a:b]} $$
@@ -258,9 +264,11 @@ Une petite comparaison de temps d'exécution illustre le gain de temps&nbsp;:
 
 Comme indiqué au début de l'article, l'implémentation de la recherche dichotomique est très délicate. L'exemple avec l'erreur dans la présentation par Wikipedia de l'algorithme amélioré en est un bon exemple.
 
-Pour finir, en dépit de tout le soin apporté aux preuves de correction de boucle et de terminaison, les fonctions que j'ai présentées sont incorrectes… dans la plupart des langages de programmation. Bien sûr, la grande majorité des cas, elles retourneront le bon résultat… mais dans l'absolu, il peut arriver que ce ne soit pas le cas.
+Pour finir, en dépit de tout le soin apporté aux preuves de correction de boucle et de terminaison, les fonctions que j'ai présentées sont incorrectes… dans la plupart des langages de programmation. Bien sûr, la grande majorité des cas, elles retourneront le bon résultat mais, dans l'absolu, il peut arriver que ce ne soit pas le cas.
 
 Le problème vient de l'addition des indices `py§a` et `py§b` pour en trouver calculer la moyenne. En général, `py§a` et `py§b` sont des pointeurs, des adresses mémoires. Et leur somme peut dépasser la taille de représentation des adresses. En effet, ce n'est pas parce que `py§a` et `py§b` sont représentables en 64 bits que `py§a + b` l'est aussi. Il peut y avoir un dépassement. Dans ce cas (qui peut arriver en pratique), le résultat obtenu en effectuant `py§(a + b) // 2` ne correspondra pas à la moyenne attendue.
+
+Cette erreur est restée pendant plusieurs décennies dans divers bibliothèques (en Java, notamment) avant d'être détectée, comme raconté [ici](https://ai.googleblog.com/2006/06/extra-extra-read-all-about-it-nearly.html) en anglais.
 
 Pour éviter cela, une version rigoureuse est
 

@@ -21,7 +21,7 @@ export default class DichoBox extends Component {
     await sync();
 
     let a = 1
-    let b = 13
+    let b = 12
 
     while (a <= b) {
       let m = Math.floor((a + b) / 2)
