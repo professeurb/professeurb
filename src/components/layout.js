@@ -1,7 +1,7 @@
-import React from "react"
-import { Link } from "gatsby"
+import React from 'react'
+import { Link } from 'gatsby'
 
-import { rhythm, scale } from "../utils/typography"
+import { rhythm, scale } from '../utils/typography'
 
 class Layout extends React.Component {
   render() {
@@ -26,18 +26,13 @@ class Layout extends React.Component {
             }}
             to={`/`}
           >
-            {title}
+            Prat, le {title}
           </Link>
         </h1>
       )
     } else {
       header = (
-        <h3
-          style={{
-            fontFamily: `Montserrat, sans-serif`,
-            marginTop: 0,
-          }}
-        >
+        <h3>
           <Link
             style={{
               boxShadow: `none`,
@@ -46,26 +41,21 @@ class Layout extends React.Component {
             }}
             to={`/`}
           >
-            {title}
+            Prout, le {title}
           </Link>
         </h3>
       )
     }
     return (
-      <div
-        style={{
-          marginLeft: `auto`,
-          marginRight: `auto`,
-          maxWidth: rhythm(24),
-          padding: `${rhythm(1.5)} ${rhythm(3 / 4)}`,
-        }}
-      >
+      <div>
         <header>{header}</header>
-        <main>{children}</main>
+        <main>
+          <div class='w-2/3 ml-auto mr-auto'>{children}</div>
+        </main>
         <footer>
           © {new Date().getFullYear()}, Built with
           {` `}
-          <a href="https://www.gatsbyjs.org">Gatsby</a>
+          <a href='https://www.gatsbyjs.org'>Gatsby</a>
         </footer>
       </div>
     )

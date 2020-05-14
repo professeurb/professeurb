@@ -1,0 +1,51 @@
+.table {
+  width: 400px;
+}
+
+.row:nth-child(3n + 1) .col {
+  border-top: 3px solid black;
+  margin-top: -1.5px;
+}
+
+.row:nth-child(3n) .col {
+  border-bottom: 3px solid black;
+  margin-bottom: -1.5px;
+}
+
+.row:after {
+  clear: both;
+  content: '';
+  display: table;
+}
+
+.col {
+  height: 43px;
+  width: 40px;
+  float: left;
+  border: 1px solid;
+  margin-left: -1px;
+  margin-top: -1px;
+  text-align: center;
+  border-color: #000;
+  font-size: 20pt;
+  vertical-align: middle;
+  font-family: 'Fira Mono';
+}
+
+.col:nth-child(3n) {
+  border-right: 3px solid black;
+  margin-right: -1.5px;
+}
+
+.col:nth-child(3n + 1) {
+  border-left: 3px solid black;
+  margin-left: -1.5px;
+}
+
+.cell {
+  color: #999999;
+}
+
+.cell2 {
+  color: #f00;
+}

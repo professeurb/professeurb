@@ -1,0 +1,204 @@
+/**
+ * prism.js default theme for JavaScript, CSS and HTML
+ * Based on dabblet (http://dabblet.com)
+ * @author Lea Verou
+ */
+
+/**
+  https://github.com/PrismJS/prism-themes/blob/master/themes/prism-nord.css
+*/
+
+@import '../../node_modules/typeface-fira-mono/index.css';
+
+@import './nord.scss';
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/web/eot/JetBrainsMono-Regular.eot')
+      format('embedded-opentype'),
+    url('https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/web/woff2/JetBrainsMono-Regular.woff2')
+      format('woff2'),
+    url('https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/web/woff/JetBrainsMono-Regular.woff')
+      format('woff'),
+    url('https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/ttf/JetBrainsMono-Regular.ttf')
+      format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+// * {
+//   -webkit-font-feature-settings: "liga" on, "calt" on;
+//   -webkit-font-smoothing: antialiased;
+//   text-rendering: optimizeLegibility;
+//   font-family: 'JetBrains Mono';
+// }
+
+code[class*='language-'],
+pre[class*='language-'] {
+  // background: none;
+  // text-shadow: 0 1px white;
+  font-family: 'JetBrains Mono', 'Fira Mono', Consolas, Monaco, 'Andale Mono',
+    'Ubuntu Mono', monospace;
+  -webkit-font-feature-settings: 'liga' off, 'calt' off;
+  font-size: 1em; // 13px; // 1em;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.5;
+
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+// pre[class*='language-']::-moz-selection,
+// pre[class*='language-'] ::-moz-selection,
+// code[class*='language-']::-moz-selection,
+// code[class*='language-'] ::-moz-selection {
+//   text-shadow: none;
+//   background: #b3d4fc;
+// }
+
+// pre[class*='language-']::selection,
+// pre[class*='language-'] ::selection,
+// code[class*='language-']::selection,
+// code[class*='language-'] ::selection {
+//   text-shadow: none;
+//   background: #b3d4fc;
+// }
+
+// @media print {
+//   code[class*='language-'],
+//   pre[class*='language-'] {
+//     text-shadow: none;
+//   }
+// }
+
+/* Code blocks */
+pre[class*='language-'] {
+  padding: 1em 1.4em;
+  margin: 0.5em 0;
+  overflow: auto;
+}
+
+// :not(pre) > code[class*='language-'],
+pre[class*='language-'] {
+  background: $nord0;
+  color: $nord6;
+  border-radius: 10px;
+  // border-color: rgb(240, 240, 240);
+  // border-width: 2px;
+}
+
+/* Inline code */
+:not(pre) > code[class*='language-'] {
+  background-color: rgba(236, 239, 244, 0.45);
+  // background: $nord4;
+  color: $nord1;
+  padding: 0.1em 0.25em;
+  border-radius: 0.3em;
+  white-space: normal;
+  font-size: 0.85em; // 13px; // 1em;
+}
+
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: &nord3;
+}
+
+.namespace {
+  opacity: 0.7;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.symbol,
+.token.deleted {
+  color: $nord15;
+}
+
+.token.selector,
+.token.attr-name,
+.token.char,
+.token.inserted {
+  color: $nord4;
+}
+
+.token.operator {
+  color: $nord9;
+}
+
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: #9a6e3a;
+  /* background: hsla(0, 0%, 100%, 0.5); */
+}
+
+.token.atrule,
+.token.attr-value {
+  color: #8959a8;
+}
+
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+.token.class-name {
+  color: $nord7;
+}
+
+.token.function {
+  color: $nord8;
+}
+
+.token.comment {
+  color: $nord3;
+  font-style: italic;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+.token.variable {
+  color: $nord4;
+}
+
+.token.constant {
+  color: $nord4;
+}
+
+.token.keyword {
+  color: $nord9;
+}
+
+.token.regex {
+  color: $nord13;
+}
+
+.token.string {
+  color: $nord14;
+}
+
+.token.number {
+  color: $nord15;
+}
+
+pre[class*='language-'] > .token.punctuation {
+  color: $nord4;
+}

@@ -1,0 +1,156 @@
+---
+title: Détermination de la médiane en temps linéaire
+subtitle: Où l'on explique comment ce miracle est possible…
+tags: ['IPT Spé', 'Complexité']
+date: '2019-12-19'
+---
+
+<!-- // import InsertSortBisBox from './InsertSortBis.js' -->
+
+Le problème est le suivant&nbsp;: on a un tableau de $n$ valeurs, et on veut en déterminer la $p$-ème plus petite, autrement dit, la valeur en position $p$ si l'on trie le tableau. On suppose dans la suite que $n \geq p$.
+
+# Premières méthodes
+
+## Tri du tableau
+
+D'après l'énoncé, une solution très simple à ce problème est de
+
+1. trier le tableau&nbsp;
+2. retourner la valeur en position&nbsp$p$.
+
+Comme le tri d'un tableau de $n$ valeurs se fait en $\mathrm{O}(n \ln n)$, on obtient une fonction de même complexité pour résoudre le problème.
+
+## Adaptation du tri par insertion
+
+Cependant, si l'on veut obtenir la plus petite valeur du tableau, on peut faire cela en temps linéaire&nbsp;:
+
+```python
+def minimum(t):
+    m = t[0]
+    for v in t[1:]:
+        if v < m:
+            m = v
+    return m
+```
+
+Si l'on veut la deuxième plus petite valeur, c'est à peine plus compliqué&nbsp;:
+
+```python
+def deuxieme(t):
+    # initialisation
+    if t[0] <= t[1]:
+        m1, m2 = t[0], t[1]
+    else:
+        m1, m2 = t[1], t[0]
+    for v in t[2:]:
+        if v < m2:
+            if v < m1:
+                m2 = m1
+                m1 = v
+            else: # m1 <= v < m2
+                m2 = v
+    return m2
+```
+
+À nouveau, cela s'effectue en temps linéaire. De façon plus générale, on peut adapter l'algorithme de tri par insertion, en ne maintenant que les $p$ premiers éléments du tableau trié.
+
+Voici une illustration de la recherche de la 5ème plus petite valeur d'un tableau de 13 éléments&nbsp;:
+
+<!-- <InsertSortBisBox countOfCards={13} /> -->
+
+Voici une implémentation de cette méthode&nbsp;:
+
+```python
+def p_eme(t, p):
+    # Phase I.
+    # on trie les p premieres valeurs
+    for i in range(1, p):
+        v = t[i]
+        j = i
+        k = i - 1
+        while k >= 0 and t[k] > v:
+            t[j] = t[k]
+            j = k
+            k = k - 1
+        t[j] = v
+    # Phase II.
+    # on parcourt le reste du tableau faisant en sorte
+    # d'avoir les p plus petites valeurs du tableau triées
+    # et dans les p premières cellules
+    for i in range(p, len(t)):
+        v = t[i]
+        j = i
+        k = p - 1 # différence avec partie I.
+        while k >= 0 and t[k] > v:
+            t[j] = t[k]
+            j = k
+            k = k - 1
+        t[j] = v
+    return t[p - 1]
+```
+
+### Étude de la complexité
+
+Dans le pire des cas, par exemple si l'on prends un tableau classé par ordre décroissant, à chaque valeur dans la partie II, il faut décaler les $p$ premières valeurs pour mettre la nouvelle à la place, à l'indice&nbsp;$0$. On a donc une complexité en $\mathrm O(n p)$ et, pour $p$ fixé, l'algorithme est linéaire.
+
+Le réel problème arrive si $p$ dépendant de $n$, par exemple si l'on veut déterminer la médiane du tableau, ou le 10ème percentile. Dans ce cas, pour $p = \lambda n$ avec $\lambda \in \mathopen]0, 1\mathclose[$, on obtient une complexité en $\mathrm O (n^2)$.
+
+Pour la complexité en moyenne, dans la phase II, si l'on a inspecté les $k$ premières valeurs du tableau (avec $k \geq p$), toute nouvelle valeur a une probabilité $\dfrac 1 k$ d'être en position
+
+Lors de la phase 1, on a du
+
+$$
+\sum_{m = 2}^p \sum_{k = 1}^m \frac k m = \frac {p^2 + 3 p - 4} 4
+$$
+
+Pour la phase 2, on a ensuite
+
+$$
+\sum_{m = p + 1}^n \Bigl(1 - \frac p m + \sum_{k = 1}^p \frac k m\Bigr) = n - p + \frac {p^2 - p} 2 \bigl(H_n - H_p\bigr)
+$$
+
+À nouveau, pour une valeur de $p$ fixée (indépendement de $n$), on a au total du $\mathrm O(n)$. Mais pour $p = \lambda n$, celle-ci redevient $ \mathrm O\bigl(n^2\bigr) $, ce qui est moins qu'avec un tri initial.
+
+# La récurrence à la rescousse
+
+Nous avons annoncé dans le titre de l'article que l'on peut résoudre cela en temps linéaire. Avant d'y arriver, réfléchissons à la manière d'améliorer la première méthode que nous avons vue, où l'on commence par trier le tableau avant de regarder la valeur à l'indice&nbsp;$p$.
+
+Clairement, il n'est pas nécessaire de trier le tableau en entier. En effet, si l'on reprend l'idée de QuickSort, et que l'on effectue une phase de partition de part et d'autre d'un pivot,
+
+- si le pivot est à l'indice&nbsp;$p$, alors on a trouvé la valeur recherchée&nbsp;;
+- sinon, soit la position du pivot est inférieure à&nbsp;$p$, auquel cas il faut continuer de chercher dans la partie du tableau _après_ le pivot, soit la position du pivot est supérieur à&nbsp;$p$, auquel cas on doit chercher dans le tableau _avant_ le pivot. À chaque fois, on ne s'intéresse qu'à un des côtés du tableau délimités par le pivot.
+
+Bien sûr, l'un des problèmes de QuickSort est que l'on peut choisir un mauvais pivot, qui va couper le tableau en deux parts trop inégales, cause de la complexité en $\mathrm O(n^2)$ de QuickSort dans le pire des cas.
+
+Néanmoins, étudions la complexité que l'on obtiendrait si l'on avait un moyen de toujours trouver le pivot au milieu du tableau en temps linéaire, autrement dit de trouver la médiane à coup sûr.
+
+La complexité total serait donc, au maximum (en négligeant les arrondis)
+
+$$
+n + \frac n 2 + \frac n 4 + \frac n 8 + \ \cdots \ = 2 n
+$$
+
+On a bien une complexité linéaire.
+
+```python
+a = True
+b = "Bonjour"
+
+def fibo(n):
+    if n <= 1:
+        return n
+    return fibo(n - 1) + fibo(n - 2)
+```
+
+```ocaml
+let rec fibo n =
+    let stringue = "Coucou" in
+    if n <= 1 then n else fibo (n - 1) + fibo (n - 2)
+and fibu y = y + 1
+
+let ll = 1 :: 2 :: []
+and l = ref 1 in
+l := 2
+```
+
+Ce lambda est-il un $\lambda$~? Et lui&nbsp;: &lambda;&nbsp;?
