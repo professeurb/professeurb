@@ -5,8 +5,6 @@ tags: ["Méthodes numériques", "Méthode d'Euler", "Sup"]
 date: "2019-03-14"
 ---
 
-import Question from '@components/question/Question.jsx'
-
 
 Dans ce TP, nous allons voir comment simuler correctement le mouvement d'un pendule simple grâce à la méthode d'Euler.
 
@@ -38,9 +36,8 @@ omega_0 = 1
 duree = 40 # secondes
 dt = 0.01 # secondes
 ```
-<Question />
 
-Définir une liste `py§temps` qui contient tous les instants allant de `py§0` (inclus) à `py§duree` (inclus) pour un pas de `py§dt`.
+**Question** Définir une liste `py§temps` qui contient tous les instants allant de `py§0` (inclus) à `py§duree` (inclus) pour un pas de `py§dt`.
 
 **Question** Écrire une fonction `py§euler` qui, étant donné deux arguments correspondant aux valeurs de $\theta$ et $\dot \theta$ au temps $t$, retourne les valeurs de $\theta$ et $\dot \theta$ actualisées pour le temps $t + \mathrm{d} t$.
 

@@ -70,7 +70,10 @@ class BlogIndex extends React.Component {
     const posts = data.allMdx.edges
 
     return (
-      <Layout title={siteTitle} subtitle="…surtout des choses liées à l'informatique.">
+      <Layout
+        title='Articles'
+        subtitle="Où le professeur B. parle de choses et d'autres…"
+      >
         <InputGroup>
           <InputGroup.Prepend>
             <InputGroup.Text>
@@ -108,7 +111,10 @@ export const pageQuery = graphql`
         title
       }
     }
-    allMdx(sort: { fields: [frontmatter___date], order: DESC }) {
+    allMdx(
+      filter: { fields: { slug: { regex: "/articles/" } } }
+      sort: { fields: [frontmatter___date], order: DESC }
+    ) {
       edges {
         node {
           excerpt

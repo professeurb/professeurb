@@ -1,230 +1,82 @@
 @charset "utf-8";
 
-// @tailwind base;
+@import '~katex/dist/katex.css';
 
-// @use "sass:color";
+// @import '~typeface-alegreya-sans/index.css';
+// @import '~typeface-alegreya-sans-sc/index.css';
 
-@import '../../node_modules/katex/dist/katex.css';
+// https://bootswatch.com
 
-// @import '../../node_modules/gatsby-remark-mathjax-ssr/mathjax.css';
+@import '~bootswatch/dist/simplex/variables';
 
-// @import '../../node_modules/typeface-merriweather/index.css';
-// @import '../../node_modules/typeface-spectral/index.css';
-// @import '../../node_modules/typeface-spectral-sc/index.css';
+$primary: $blue;
 
-@import '../../node_modules/typeface-alegreya/index.css';
-@import '../../node_modules/typeface-alegreya-sc/index.css';
+$jumbotron-bg: $cyan;
+$jumbotron-color: $white;
 
-@import '../../node_modules/typeface-alegreya-sans/index.css';
-@import '../../node_modules/typeface-alegreya-sans-sc/index.css';
+@import '~bootstrap/scss/bootstrap';
+@import '~bootswatch/dist/simplex/bootswatch';
 
-// @import '../../node_modules/typeface-inter/index.css';
-
-// @import '../../node_modules/typeface-open-sans/index.css';
-// @import '../../node_modules/typeface-open-sans-condensed/index.css';
-
-// @import '../../node_modules/typeface-oswald/index.css';
-
-@import './nord.scss';
-
-// @import '@styles/myprism.css';
-
-p,
-li {
-  font-family: 'Alegreya Sans'; // 'Spectral';
-  font-weight: 400;
-  font-size: 1.25em;
-  line-height: 1.2;
-  color: $nord2;
+.gatsby-highlight .card {
+  margin-bottom: 1rem;
 }
 
-small {
-  font-family: 'Alegreya Sans SC'; // 'Spectral';
-  font-weight: 400;
-  text-transform: lowercase;
-  font-size: 0.95em;
-  line-height: 1.2;
-  color: $nord2;
+.cardtainer {
+  margin-bottom: 1rem;
 }
 
-
-blockquote p {
-  font-family: 'Alegreya'; // 'Spectral';
-  font-style: normal ;
-  font-weight: 400;
-  font-size: 1.05em !important;
-  line-height: 1.2;
-  color: $nord2;
+.cardtainer .card-footer {
+  padding-left: 0.8rem !important;
+  padding-top: 0.8rem !important;
+  padding-bottom: 0.8rem !important;
 }
 
-ul li::before {
-  content: 'a. ';
+.btn-group {
+  margin-right: 0.8rem;
 }
-
-ol li::before {
-  content: 'a. ';
-}
-
-h1 {
-  font-family: 'Alegreya Sans';
-  font-weight: 300;
-  font-variant-ligatures: none;
-  -webkit-font-feature-settings: 'liga' off;
-  @apply text-3xl tracking-wider text-center mb-8 mt-20;
-}
-
-.bubu h1::after {
-  content: '';
-  display: block;
-  height: 1px;
-  width: 70%;
-  margin-top: 1.2rem;
-  margin-left: auto;
-  margin-right: auto;
-  background-color: $nord2;
-}
-
-h2 {
-  font-family: 'Alegreya Sans';
-  font-weight: 500;
-  font-variant-ligatures: none;
-  color: $nord10;
-  @apply text-2xl tracking-wide text-center mb-6 mt-16;
-}
-
-h3 {
-  font-family: 'Alegreya'; // Spectral SC';
-  font-weight: 500;
-  @apply text-xl text-center tracking-wide my-2 mt-10;
-}
-
-header h1 {
-  font-family: 'Alegreya Sans';
-  font-weight: 600;
-  // font-style: italic;
-  // font-family: 'Alegreya Sans Condensed';
-  @apply text-4xl tracking-wide my-0;
-}
-
-header h2 {
-  font-family: 'Alegreya Sans';
-  // font-style: italic;
-  color:white;
-  @apply text-2xl font-light tracking-wide mt-8 mb-0;
-}
-
-p {
-  @apply my-4;
-}
-
-pre {
-  @apply rounded-lg;
-}
-
-// pre code {
-//   font-size: 0.95em !important;
-// }
 
 button {
-  @apply border-solid border-gray-300 h-10 py-1 px-2 bg-white border-2 inline-flex items-center;
+  border-color: #f0f0f0 !important;
 }
 
-button:hover {
-  @apply bg-gray-300 text-gray-700;
+code.inlinecode {
+  font-size: 0.98em;
 }
 
-button:disabled {
-  @apply text-gray-400;
+.gatsby-highlight code.inlinecode {
+  font-size: 0.92em;
 }
 
-button:disabled:hover {
-  @apply bg-white;
+// .card-columns {
+//   column-count: 1;
+// }
+
+.card-columns {
+  @include media-breakpoint-only(xs) {
+    column-count: 1;
+  }
+  @include media-breakpoint-only(sm) {
+    column-count: 1;
+  }
+
+  @include media-breakpoint-only(md) {
+    column-count: 2;
+  }
+  @include media-breakpoint-only(lg) {
+    column-count: 2;
+  }
 }
 
-a {
-  // font-family: 'Spectral SC';
-  // text-transform: lowercase;
-  color: $nord10;
-  font-weight: 500;
-  // border-style: none;
-  box-shadow: none;
+.badge {
+  margin-right: 0.2rem;
 }
-
-.navbar a {
-  font-family: 'Alegreya Sans SC';
-  font-weight: 400;
-  text-transform: lowercase;
-  font-size: 1.2em;
-  color: $nord3;
-  margin-right: 8pt;
-}
-
-a:hover {
-  // background-color: rgba(236, 239, 244, 0.45);
-  color: $nord3;
-  text-decoration: underline $nord4;
-}
-
-a:active {
-  // background-color: rgba(236, 239, 244, 0.45);
-  color: $nord3;
-  // text-decoration: underline $nord4;
-}
-
-.navbar a:hover {
-  // background-color: rgba(236, 239, 244, 0.45);
-  color: $nord0;
-  text-decoration: underline $nord8;
-}
-
-// @tailwind components;
 
 .katex {
   font-size: 1.21em !important;
-  color: $nord1;
 }
 
-p .katex,
-li .katex {
-  font-size: 1.05em !important;
+.katex .mathtt {
+  font-family: 'JetBrains Mono', 'Fira Mono', Consolas, Monaco, 'Andale Mono',
+    'Ubuntu Mono', monospace !important;
+  font-size: 0.83em !important;
 }
-
-// Petite incompatibilité avec tailwind
-
-.katex .frac-line {
-  border-color: #000000;
-}
-
-.hh {
-  // background-color: $nord3;
-}
-
-.hh h1 {
-  // color: $nord6;
-}
-
-.hh h2 {
-  // color: $nord5;
-}
-
-// .katex .mathdefault,
-// .katex .mpunct,
-// .katex .mopen,
-// .katex .mclose,
-// .katex *:not(.inner) > .mrel {
-//   font-family: 'Spectral';
-//   font-weight: 400;
-// }
-
-
-// .katex .mord {
-//   font-family: 'Spectral';
-//   font-weight: 400;
-// }
-
-// .katex .mtight {
-//   font-family: 'Spectral';
-//   font-weight: 500;
-// }
-
-// @tailwind utilities;
