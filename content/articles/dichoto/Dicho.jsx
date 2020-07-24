@@ -17,7 +17,7 @@ export default class DichoBox extends Component {
       let card = {
         id: i,
         top: 145,
-        left: 10 + 51 * (i - 1),
+        left: 17 + 51 * (i - 1),
         zIndex: 1,
         rotate: 1 - 2 * Math.random(),
         value: cnt,
@@ -28,9 +28,10 @@ export default class DichoBox extends Component {
       }
       cards.push(card)
     })
-    cards[0].left = 10
+    cards[0].left = 15
     cards[0].top = 10
-    cards[0].rotate = 10
+    cards[0].rotate = 8
+    cards[0].zIndex = 2
 
     cards[0].value =
       cards[1].value +
@@ -201,11 +202,10 @@ export default class DichoBox extends Component {
 
   render() {
     return (
-      <Card className='cardtainer' style={{ width: 677 }}>
+      <Card className='cardtainer' style={{ width: 691 }}>
         <Card.Body
           style={{
             height: 227,
-            // transform: 'scale(0.8)',
           }}
         >
           {this.state.cards.map(card => (

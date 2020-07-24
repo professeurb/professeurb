@@ -35,7 +35,6 @@ export const pageQuery = graphql`
         title
         subtitle
         date(formatString: "DD/MM/YYYY")
-        description
       }
     }
   }

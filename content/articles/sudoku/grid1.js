@@ -42,7 +42,6 @@ export default class Grid1 extends Component {
   }
 
   async step(sync, change) {
-    
     // Reinitialize the grid
     await change(grid => {
       return grid.map(l => {

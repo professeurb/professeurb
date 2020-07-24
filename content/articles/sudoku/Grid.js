@@ -25,7 +25,7 @@ export default class Grid extends Component {
                       : ''
                   }
                 >
-                  {grid[i][j] !== 0 ? (grid[i][j] % 10) : ''}
+                  {grid[i][j] !== 0 ? grid[i][j] % 10 : ''}
                 </div>
               </div>
             ))}

@@ -31,6 +31,10 @@ $jumbotron-color: $white;
   padding-bottom: 0.8rem !important;
 }
 
+.cardtainer .card-body p {
+  margin-bottom: 0;
+}
+
 .btn-group {
   margin-right: 0.8rem;
 }
@@ -80,3 +84,26 @@ code.inlinecode {
     'Ubuntu Mono', monospace !important;
   font-size: 0.83em !important;
 }
+
+.sidebar {
+  display: none;
+}
+@include media-breakpoint-up(lg) {
+  .sidebar {
+    display: block;
+  }
+}
+
+.cardtainer {
+  width: 691 !important;
+  // transform: translateX(-86.25px) scale(0.75);
+}
+
+// @include media-breakpoint-up(md) {
+//   .cardtainer {
+//     transform: scale(1);
+//   }
+//   .cardtainer .card-body {
+//     height: 227 !important;
+//   }
+// }

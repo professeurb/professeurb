@@ -12,10 +12,10 @@ class Layout extends React.Component {
     return (
       <>
         <Header title={title} subtitle={subtitle}></Header>
-        <Container fluid>
+        <Container className='container-md'>
           <Row>
-            <Col xs={1} md={2}></Col>
-            <div style={{ width: 677 }}>
+            <Col></Col>
+            <Col lg={9}>
               <MDXProvider
                 components={{
                   pre: props => (
@@ -23,12 +23,17 @@ class Layout extends React.Component {
                       <Card.Body {...props} />
                     </Card>
                   ),
+                  blockquote: props => (
+                    <Card className='cardtainer'>
+                      <Card.Body {...props} />
+                    </Card>
+                  ),
                 }}
               >
                 {children}
               </MDXProvider>
-            </div>
-            <Col xs={1} md={2}></Col>
+            </Col>
+            <Col></Col>
           </Row>
         </Container>
       </>

@@ -9,14 +9,14 @@ const Header = ({ title, subtitle }) => (
   <>
     <NaviBar />
     <Jumbotron fluid>
-      <Container fluid>
+      <Container className='container-md'>
         <Row>
-          <Col xs={1} md={2}></Col>
-          <Col xs={10} md={8}>
+          <Col></Col>
+          <Col lg={9}>
             <h1>{title}</h1>
-            {subtitle && <p className="lead">{subtitle}</p>}
+            {subtitle && <p className='lead'>{subtitle}</p>}
           </Col>
-          <Col xs={1} md={2}></Col>
+          <Col></Col>
         </Row>
       </Container>
     </Jumbotron>

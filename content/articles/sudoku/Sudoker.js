@@ -1,6 +1,11 @@
 import React, { Component } from 'react'
 import Grid from './Grid.js'
 import { AnimButton } from '@components/animation/AnimButton.jsx'
+import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
+import Button from 'react-bootstrap/Button'
+import ButtonGroup from 'react-bootstrap/ButtonGroup'
+import Card from 'react-bootstrap/Card'
+import anime from 'animejs'
 
 export default class Sudoker extends Component {
   constructor(props) {
@@ -46,16 +51,18 @@ export default class Sudoker extends Component {
 
   render() {
     return (
-      <>
-        <div class='flex flex-wrap justify-center'>
+      <Card className='cardtainer'>
+        <Card.Body className='text-center'>
           <Grid grid={this.state.grid} resolve={this.state.resolve} />
+        </Card.Body>
+        <Card.Footer>
           <AnimButton
             name='Résoudre'
             anim={this.anim.bind(this)}
             disabled={this.state.animButtonDisabled}
           />
-        </div>
-      </>
+        </Card.Footer>
+      </Card>
     )
   }
 }
