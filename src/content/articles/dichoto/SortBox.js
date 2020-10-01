@@ -9,7 +9,7 @@ function generateCards(len = 50) {
   let cards = [];
   let cnt = 1;
 
-  range(len - 1).forEach(i => {
+  range(len - 1).forEach((i) => {
     cnt = cnt + Math.floor(Math.random() * 6 + 1);
     let card = {
       id: i + 1,
@@ -17,7 +17,7 @@ function generateCards(len = 50) {
       left: 60 * (i + 1) + 37,
       opacity: 1,
       value: cnt,
-      pos: i + 1
+      pos: i + 1,
     };
     cards.push(card);
   });
@@ -30,7 +30,7 @@ function generateCards(len = 50) {
       Math.floor(Math.random() * (cards[len - 2].value - cards[0].value) + 0.5),
     opacity: 1,
     top: 10,
-    pos: ""
+    pos: "",
   });
 
   return cards;
@@ -48,17 +48,17 @@ export default class SortBox extends Component {
       cards: generateCards(this.count),
       duration: 1000,
       animate: true,
-      resolve: () => {}
+      resolve: () => {},
     };
   }
 
   async animState(newState, duration) {
-    await new Promise(resolve => {
+    await new Promise((resolve) => {
       this.setState({
         ...newState,
         animate: true,
         duration: duration,
-        resolve: resolve
+        resolve: resolve,
       });
     });
   }

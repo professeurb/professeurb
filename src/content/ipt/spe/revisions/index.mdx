@@ -1,0 +1,109 @@
+---
+title: Révisions d'algorithmique
+subtitle: Où l'on se dérouille au retour des vacances...
+tags: ["IPT Spé"]
+date: "2020-09-15"
+---
+
+import revfig1 from './revfig1.svg'
+import revfig2 from './revfig2.svg'
+import Center from 'components/Center.js'
+
+# Échauffement
+
+Pour l'écriture des fonctions des deux questions suivantes, on n'utilisera pas les fonctions déjà existantes, la seule opération autorisée sur les listes est la construction de la forme&nbsp;:
+```python
+for element in liste:
+	...
+```
+
+**Question 1** Réécrire, en utilisant la forme précédent et sans utiliser les fonctions prédéfinies de Python, les fonctions usuelles suivantes sur les listes&nbsp;:
+- `py§maximum` qui retourne le plus grand élément d'une liste,
+- `py§somme` qui retourne la somme de tous les éléments d'une liste d'entiers,
+- `py§contient` qui, étant donné une liste `py§l` et une donnée `py§e`, retourne `py§True` si `py§e` est présent dans `py§l`, et `py§False` sinon.
+
+**Question 2** Écrire une fonction `py§moyenne_olympique` qui, étant donné une liste `py§l` de nombres de longueur au moins 3, retourne la moyenne des valeurs de `py§l` calculée _après_ en avoir retiré la plus grande et la plus petite valeurs.
+
+```python
+>>> moyenne_olympique([13, 12, 1, 12, 19, 11])
+12.0
+```
+
+Vous avez maintenant le droit, à nouveau, d'utiliser toutes les fonctions Python que vous voulez.
+
+# Sur la route
+
+Le long d'une route se trouvent $n$ maisons dont les positions sont données par des réels $x_0$ à&nbsp;$x_{n - 1}$ (pas forcément dans l'ordre). Elles sont représentées en Python par un tableau&nbsp;`py§positions`.
+
+**Question 3** Écrire une fonction&nbsp;`py§plus_proches` (resp.&nbsp;`py§plus_eloignees`) qui, étant donné un tableau de positions de maisons, renvoie la distance des deux maisons les plus proches (resp. éloignées). Quelle est sa complexité&nbsp;? Est-elle optimale&nbsp;?
+
+```python
+>>> pos = [42, 35, 85, 4, 18, 73, 58]
+>>> plus_proches(pos)
+7
+>>> plus_eloignees(pos)
+81
+```
+
+**Question 4** Définir une fonction&nbsp;`py§distances` qui, étant donné un tableau&nbsp;`py§pos`, renvoie un tableau à double entrée dont la case d'indices&nbsp;$(i, j)$ contient la distance&nbsp;$\bigl|x_i - x_j\bigr|$.
+
+```python
+>>> distances([42, 35, 18, 49])
+[[0, 7, 24, 7], [7, 0, 17, 14], [24, 17, 0, 31], [7, 14, 31, 0]]
+```
+
+**Question 5** Écrire une fonction&nbsp;`py§plus_eloignees2` qui, étant donné un tableau de distances comme obtenu dans la question précédente, renvoie la distance maximale entre deux maisons.
+
+**Question 6** Pouvez-vous faire cela en temps linéaire&nbsp;? Prouvez la correction du programme proposé.
+
+# Des hauts et des bas
+
+Dans les exercices suivants, nous allons travailler avec une liste d'entiers que l'on pourra voir comme un profil topographique (autrement dit, une coupe d'un relief).
+
+## Plateaux
+
+Étant donné une liste d'entiers, un **plateau** est un succession de valeurs égales. La largeur du plateau est alors le nombre de valeurs successives égales (un plateau peut être de largeur 1).
+
+**Question 7** Écrire une fonction `py§plateau` qui, étant donné une liste d'entiers donnée en argument, retourne la valeur du plateau le plus large (on prendra la première valeur si plusieurs plateaux sont une largeur maximale).
+
+Ainsi, dans l'exemple suivant, les plateaux les plus larges sont de largeur&nbsp;3, de valeurs 2 puis 8.
+
+## Sommets
+
+Étant donné une liste d'entiers `py§l`, le `py§i`-ème élément de la liste est un **sommet** si `py§l[i]` est strictement supérieur à `py§l[i - 1]` et à `py§l[i + 1]` (ces deux valeurs devant nécessairement être définies).
+
+Ainsi, dans l'exemple suivant, la liste a 3 sommets&nbsp;:
+
+<Center>
+  <img src={revfig1} style={{ width: '50%' }} />
+</Center>
+
+**Question 8** Écrire une fonction `py§sommets` qui renvoie le nombre de sommets de la liste donnée en argument.
+
+Ainsi, pour l'exemple précédent,
+
+```python
+>>> sommets([1, 2, 3, 2, 1, 2, 3, 4, 3, 4, 5, 2])
+3
+```
+
+## Creux
+
+Nous allons à nouveau considérer une liste d'entiers positifs que l'on voit comme la forme d'un relief. On y trouve des sommets et des creux. Si l'on verse de l'eau, les creux se remplissent, comme dans l'exemple suivant&nbsp;:
+
+<Center>
+  <img src={revfig2} style={{ width: '50%' }} />
+</Center>
+
+Le nombre de carrés remplis d'eau est égal à&nbsp;$5$.
+
+**Question 9** Écrire une fonction `py§remplissage` qui, étant donné une liste d'entier, retourne le nombre de carrés remplis d'eau avec cette procédure.
+
+Pour reprendre l'exemple précédent, on&nbsp;veut&nbsp;:
+
+```python
+>>> remplissage([1, 2, 3, 2, 1, 2, 3, 4, 3, 4, 5, 2])
+5
+```
+
+**Question 10** Pouvez-vous faire cela en temps linéaire&nbsp;?

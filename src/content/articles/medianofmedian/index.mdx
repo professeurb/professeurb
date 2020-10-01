@@ -1,0 +1,384 @@
+---
+title: Détermination de la médiane en temps linéaire
+subtitle: Où l'on explique un très beau résultat de complexité…
+tags: ["IPT Spé", "Complexité"]
+date: "2019-12-19"
+---
+
+import InsertSortBisBox from "./InsertSortBis.js";
+import QuickSortBisBox from "./QuickSortBis.js";
+import MomBox from "./Mom.js";
+
+Le problème est le suivant&nbsp;: étant donné un tableau de $n$ valeurs, on veut en déterminer la $p$-ème plus petite valeur, autrement dit la valeur en position $p$ si l'on trie le tableau.
+
+Un cas important d'utilisation est lorsque que $p$ est défini sous la forme $\lambda n$ avec $\lambda \in [0, 1]$ (en arrondissant éventuellement). Par exemple, pour obtenir la médiane, on utilise $\lambda = \frac 1 2$, pour avoir le premier décile, on prends $\lambda = \frac 1 {10}$, etc.
+
+On appelle ce problème **le problème de la sélection**, et nous allons étudier quelques façons de le résoudre.
+
+# L'idée de départ
+
+Une manière très simple de résoudre ce problème est le suivant&nbsp;:
+
+1. on trie le tableau&nbsp;;
+2. on retourne la valeur à la position&nbsp;$p$.
+
+Comme le tri d'un tableau de $n$ valeurs se fait en $\mathrm{O}(n \ln n)$, on obtient une fonction de même complexité pour résoudre le problème. C'est assez satisfaisant, mais peut-on faire mieux&nbsp;?
+
+Notons tout d'abord qu'il est illusoire de résoudre ce problème avec une complexité inférieure à $\mathrm{O}(n)$ puisque, le tableau étant supposé dans un ordre quelconque, il faut inspecter chaque valeur au moins une fois, d'où une complexité minimale en $\mathrm{O}(n)$. La question est donc&nbsp;:
+
+<center>Peut-on obtenir cette complexité&nbsp;?</center>
+<br />
+
+Une manière d'arriver à cela est de modifier un algorithme de tri, pour ne pas tout trier, mais au contraire ne trier que _ce qui est nécessaire_. Nous allons étudier des variantes pour deux algorithmes de tri&nbsp;: le tri par insertion, puis le tri rapide.
+
+Parmi les algorithmes de tri restant, le tri fusion n'est pas adapté car il faut de l'espace mémoire supplémentaire, et le tri par tas ne permet pas vraiment l'idée de _tri partiel_ puisque la première phase du tri, qui aboutit à la création d'un tas, nécessite de traîter le tableau en entier.
+
+# Adaptation du tri par insertion
+
+Pour obtenir la plus petite valeur du tableau, on peut faire cela en temps linéaire en effectuant un simple parcours du tableau&nbsp;:
+
+```python
+def minimum(t):
+    m = t[0]
+    for v in t[1:]:
+        if v < m:
+            m = v
+    return m
+```
+
+Si l'on veut la deuxième plus petite valeur, c'est à peine plus compliqué. On considère deux variables `py§m1` et `py§m2` qui correspondent respectivement à la plus petite valeur et la deuxième plus petite valeur.
+
+```python
+def deuxieme(t):
+    # initialisation
+    if t[0] <= t[1]:
+        m1, m2 = t[0], t[1]
+    else:
+        m1, m2 = t[1], t[0]
+    for v in t[2:]:
+        if v < m2:
+            if v < m1:
+                m2 = m1
+                m1 = v
+            else: # m1 <= v < m2
+                m2 = v
+    return m2
+```
+
+À nouveau, cela s'effectue en temps linéaire.
+
+Pour généraliser cela à d'autres valeurs de&nbsp;$p$, on peut adapter l'algorithme de tri par insertion, en ne maintenant triés que les $p$ premiers éléments du tableau.
+
+Illustrons cela avec la recherche de la 5ème plus petite valeur d'un tableau de 13 éléments&nbsp;:
+
+<InsertSortBisBox countOfCards={13} />
+
+On peut remarquer qu'à l'issue de l'exécution de l'algorithme, les valeurs après la cinquième ne sont pas ordonnées, mais supérieures à cette dernière.
+
+Voici une implémentation de cette méthode. On l'a séparé en deux phases&nbsp;:
+
+1. on trie les $p$ premières valeurs&nbsp;;
+2. on parcourt le reste des valeurs en les insérant éventuellement à la bonne place parmi les&nbsp;$p$ premières.
+
+Notons que la numérotation des cases en Python commence à $0$, ce qui fait que la $p$-ème valeur correspond à la case d'indice $p - 1$.
+
+```python
+def p_eme(t, p):
+    # Phase I.
+    # on trie les p premieres valeurs
+    for i in range(1, p):
+        v = t[i]
+        j = i
+        k = i - 1
+        while k >= 0 and t[k] > v:
+            t[j] = t[k]
+            j = k
+            k = k - 1
+        t[j] = v
+    # Phase II.
+    # on parcourt le reste du tableau faisant en sorte
+    # d'avoir les p plus petites valeurs du tableau triées
+    # et dans les p premières cellules
+    for i in range(p, len(t)):
+        v = t[i]
+        j = i
+        k = p - 1 # différence avec partie I.
+        while k >= 0 and t[k] > v:
+            t[j] = t[k]
+            j = k
+            k = k - 1
+        t[j] = v
+    # La p-ème valeur se trouve à la bonne place.
+    return t[p - 1]
+```
+
+## Étude de la complexité
+
+Dans le pire des cas &mdash; si l'on prends par exemple un tableau classé par ordre décroissant &mdash; à chaque valeur dans la partie&nbsp;II, il faut décaler les $p$ premières valeurs pour mettre la nouvelle à la place, à l'indice&nbsp;$0$. On a donc une complexité en $\mathrm O(n p)$ et, pour un&nbsp;$p$ fixé indépendamment de&nbsp;$n$, l'algorithme est linéaire.
+
+Le réel problème arrive si $p$ dépend de $n$, par exemple si l'on veut déterminer la médiane du tableau, ou le 10ème percentile. Dans ce cas, pour $p = \lambda n$ avec $\lambda \in \mathopen]0, 1\mathclose[$, on obtient une complexité en $\mathrm O (n^2)$.
+
+Pour la complexité en moyenne, dans la phase II, si l'on a inspecté les $k$ premières valeurs du tableau (avec $k \geq p$), toute nouvelle valeur a une probabilité $\dfrac 1 k$ d'être en position
+
+Lors de la phase 1, au tour $m \geq 2$, la nouvelle valeur à une probabilité $\frac 1 m$ d'aller en position $k$ pour $1 \leq k \leq m$, ce qui donne comme nombre de comparaisons&nbsp;:
+
+$$
+\sum_{m = 2}^p \Biggl(\sum_{k = 1}^{m - 1} \frac k m + \frac {m - 1} m \Biggr) = \frac {p^2 + 3 p} 4 - H_p
+$$
+
+Pour la phase 2, on a ensuite un nombre moyen de comparaisons égal&nbsp;à&nbsp;:
+
+$$
+\sum_{m = p + 1}^n \Biggl(\frac {m - p} m + \sum_{k = 2}^p \frac k m + \frac p m\Biggr) = n - p + \frac {p^2 + p - 2} 2 \bigl(H_n - H_p\bigr)
+$$
+
+À nouveau, pour une valeur de $p$ fixée (indépendamment de $n$), on a au total du $\mathrm O(n)$. Mais pour $p = \lambda n$, la complexité reste de l'ordre de $\mathrm O\bigl(n^2\bigr) $, ce qui est moins efficace qu'avec un tri initial.
+
+# Adaptation du tri rapide
+
+Nous avons annoncé dans le titre de l'article que l'on peut résoudre cela en temps linéaire. Avant d'y arriver, réfléchissons à la manière d'améliorer la première méthode que nous avons vue, où l'on commence par trier le tableau avant de regarder la valeur à l'indice&nbsp;$p$.
+
+Clairement, il n'est pas nécessaire de trier le tableau en entier. En effet, si l'on reprend l'idée de QuickSort, et que l'on effectue une phase de partition de part et d'autre d'un pivot,
+
+- si le pivot est à l'indice&nbsp;$p$, alors on a trouvé la valeur recherchée&nbsp;;
+- sinon, soit la position du pivot est inférieure à&nbsp;$p$, auquel cas il faut continuer de chercher dans la partie du tableau _après_ le pivot, soit la position du pivot est supérieur à&nbsp;$p$, auquel cas on doit chercher dans le tableau _avant_ le pivot. À chaque fois, on ne s'intéresse qu'à un des côtés du tableau délimités par le pivot.
+
+En voici une illustration animée, où, comme précédemment, on cherche à déterminer le 5ème élément parmi 13&nbsp;:
+
+<QuickSortBisBox countOfCards={13} />
+
+Le programme correspondant est très simple. Contrairement à Quicksort, on peut se contenter d'une unique boucle `py§while`, puisqu'après avoir choisi un pivot, on ne doit traiter qu'un côté et non les deux&nbsp;:
+
+```python
+def mediane(tab, p):
+    gauche = 0
+    droite = len(tab) - 1
+    # gauche <= p - 1 <= droite
+    while True:
+        if gauche == droite:
+            return tab[p - 1]
+        pivot = partition(tab, gauche, droite)
+        if pivot == p - 1:
+            # un pivot est toujours à la bonne place
+            return tab[p - 1]
+        if pivot > p - 1:
+            # on continue de chercher à gauche du pivot
+            droite = pivot - 1
+        else:
+            # on continue de chercher à droite du pivot
+            gauche = pivot + 1
+```
+
+Reste à définir une fonction de partition. En voici une suivant le schéma de Lomuto&nbsp;:
+
+```python
+def partition(tab, gauche, droite):
+    pivot = tab[gauche]
+    i = gauche + 1
+    j = gauche + 1
+    # invariant de boucle:
+    # pour tout k tel que gauche + 1 <= k < i, tab[k] <= pivot
+    # pour tout k tel que i <= k < j, tab[k] > pivot
+    while j <= droite:
+        if tab[j] <= pivot:
+            tab[i], tab[j] = tab[j], tab[i]
+            i += 1
+        j += 1
+    tab[gauche], tab[i - 1] = tab[i - 1], tab[gauche]
+    return i - 1
+```
+
+## Étude de la complexité
+
+Comme pour Quicksort, l'un des problèmes de ce type d'approche est que l'on peut choisir un mauvais pivot, qui va couper le tableau en deux parts trop inégales, cause de la complexité en $\mathrm O(n^2)$ de QuickSort dans le pire des cas et qui, de même, peut conduire ici à une complexité en $\mathrm O(n^2)$.
+
+Néanmoins, rêvons un instant, et étudions la complexité que l'on obtiendrait l'on trouvait systématiquement le pivot au milieu de l'intervalle étudié.
+
+Comme la fonction de partition est linéaire en la taille de l'intervalle, la complexité total serait alors au plus (en négligeant les arrondis)&nbsp;:
+
+$$
+n + \frac n 2 + \frac n 4 + \frac n 8 + \ \cdots \ = 2 n
+$$
+
+Pour rendre ce «&nbsp;rêve&nbsp;» plus crédible, remarquons que l'on peut remplacer le facteur $\dfrac 1 2$ par n'importe quel réel $\lambda \in \bigl[0, 1\bigr[$ et toujours avoir une complexité linéaire, puisque&nbsp;:
+
+$$
+n + \lambda n + \lambda^2 n + \lambda^3 n + \ \cdots \ = \frac n {1 - \lambda}
+$$
+
+On aurait donc bien une complexité linéaire. Mais cet idéal est-il réellement atteignable&nbsp;?
+
+# Une solution
+
+En 1973, un groupe de chercheurs de l'université de Stanford présente dans l'article [Time Bounds for Selection](http://people.csail.mit.edu/rivest/BlumFloydPrattRivestTarjan-TimeBoundsForSelection.pdf) une amélioration de la méthode précédente pour avoir systématiquement (et plus seulement en rêve) une complexité linéaire pour le problème qui nous occupe.
+
+## Dramatis Person&aelig;
+
+Arrêtons-nous un instant sur les personnes impliquées dans cette histoire.
+
+Notons tout d'abord que l'adaptation de l'algorithme Quicksort au problème de la sélection, qui se nomme **Quickselect** est dûe à [Tony Hoare](https://fr.wikipedia.org/wiki/Charles_Antony_Richard_Hoare), qui n'est autre que l'inventeur de Quicksort. Il reçoit le [prix Turing](https://fr.wikipedia.org/wiki/Prix_Turing) en 1980, récompense parfois surnommée le _prix Nobel de l'informatique_, pour ses travaux sur l'analyse de programmes et la définition de ce que l'on appelle maintenant la [logique de Hoare](https://fr.wikipedia.org/wiki/Logique_de_Hoare).
+
+L'amélioration que nous allons étudier maintenant est aux chercheurs suivants&nbsp;:
+
+- [Manuel Blum](https://fr.wikipedia.org/wiki/Manuel_Blum), prix Turing 1995 pour ses travaux sur la complexité,
+- [Robert Tarjan](https://fr.wikipedia.org/wiki/Robert_Tarjan), prix Turing 1986 pour ses travaux sur les structures de données,
+- [Ronald Rivest](https://fr.wikipedia.org/wiki/Ronald_Rivest), prix Turing 2002 pour l'algorithme de [chiffrement RSA](https://fr.wikipedia.org/wiki/Chiffrement_RSA) qui permet les échanges de données sécurisées sur Internet et le commerce en ligne,
+- [Robert Floyd](https://fr.wikipedia.org/wiki/Robert_Floyd), prix Turing 1978 pour ses travaux sur l'analyse et la preuve de programmes informatiques (qui seront une source centrale d'inspiration à Tony Hoare pour les travaux qui lui vaudront le prix Turing). Il est aussi connu pour ses travaux sur les graphes, le traitement d'image.
+- [Vaughan Pratt](https://en.wikipedia.org/wiki/Vaughan_Pratt), enfin, qui a la particularité, dans cette équipe, de ne pas avoir eu le prix Turing, peut-être parce qu'il a fait trop de mathématiques.
+
+Bref, du beau monde.
+
+## La récurrence à la rescousse
+
+La solution pour s'assurer que l'on choisit un pivot suffisamment bon est la suivante&nbsp;:
+
+1. on découpe le tableau en blocs de 5 valeurs&nbsp;;
+2. on calcule la médiane de chaque bloc&nbsp;;
+3. on calcule la médiane des médianes ainsi trouvées.
+
+C'est cette médiane des médianes que l'on va utiliser comme pivot.
+
+Illustrons cela. Pour simplifier, nous avons 55 cartes, numérotées de&nbsp;1 à&nbsp;55. La médiane est donc&nbsp;28. L'animation se décompose ainsi&nbsp;:
+
+- chaque colonne de 5 cartes est triée&nbsp;;
+- on trie ensuite horizontalement les médianes obtenues pour chaque colonne&nbsp;;
+- on repère la médiane des médianes (en noir), les cartes inférieures à cette médiane des médianes (en rouge) et celles supérieures (en bleu).
+
+<MomBox countOfCards={55} />
+
+Bien sûr, cette animation est assez éloignée de la manipulation réelle du tableau dont on veut trouver la médiane, mais elle illustre la pertinence du choix de la médiane des médianes&nbsp;: à la fin, on remarque (et on se convainc facilement) que les cartes du quart en haut à gauche sont nécessairement rouges, et celles en bas à droite nécessairement bleues.
+
+Ainsi, à l'issue de la recherche de la médiane des médianes, si l'on n'a pas trouvé la bonne valeur, on va supprimer au moins un quart des cartes (un calcul un peu plus précis donne $3/10$ des cartes)&nbsp;: si la médiane des médianes a une position finale plus petite que la carte recherchée, on la supprime ainsi que les cartes qui lui sont inférieures (dans le cas où il peut y avoir des répétitions, cet argument reste valable, il suffit simplement d'adapter la méthode de partition pour en tenir compte, en utilisant la [méthode de partition en trois](https://en.wikipedia.org/wiki/Dutch_national_flag_problem) de Dijkstra).
+
+## Preuve de la complexité
+
+Si $C(n)$ désigne la complexité pour sélectionner un élément dans un tableau à&nbps;$n$ éléments, alors l'algorithme procède ainsi&nbsp;:
+
+1. on détermine les médianes des paquets de $5$ valeurs &ndash; en temps linéaire&nbsp;;
+2. on détermine la médiane des médianes &ndash; en $C(n/5)$&nbsp;;
+3. on partitionne le tableau en fonction de la médiane des médianes &ndash; en temps linéaire&nbsp;;
+4. si l'on n'a pas encore trouvé la bonne valeur, on élimine $3/10$ des valeurs et on continue avec les $7/10$ des valeurs restantes &ndash; en $C(7n/10)$.
+
+Si l'on note $c$ la constante pour déterminer les médianes des paquets de $5$ (autrement dit cette détermination a une complexité de $c n$ pour $n$ valeurs) et la partition, montrer que l'algorithme est linéaire revient à montrer qu'il existe une constante positive&nbsp;$\lambda$ (dépendant éventuellement de $c$) telle que si $C(n/5) \leq \lambda n / 5$ et $C(7n/10) \leq 7 \lambda n / 10$, alors $C(n) \leq \lambda n$.
+
+Mais ayant
+
+$$
+C(n) \leq c n + C\Bigl(\frac n 5\Bigr) + C\Bigl(\frac {7 n}{10}\Bigr) \leq c n + \Bigl(\frac 1 5 + \frac 7 {10}\Bigr) \lambda n,
+$$
+
+il suffit d'avoir
+
+$$
+c n + \Bigl(\frac 1 5 + \frac 7 {10}\Bigr) \lambda n \leq \lambda n
+$$
+
+La constante $\lambda = 10 c$ convient. On a donc&nbsp;:
+
+$$
+\forall \, n, \ C(n) \leq 10 c n,
+$$
+
+ce qui montre que la complexité obtenue est bien linéaire.
+
+## Et pourquoi pas par 3 ?
+
+Le choix de regrouper les valeurs par blocs de $5$ semble arbitraire, peut-on faire mieux&nbsp;? Tout d'abord, il est clair qu'il est préférable d'utiliser des blocs de taille impaire, pour avoir le même nombre de valeurs de part et d'autre de la médiane du bloc. On peut donc envisager des blocs de 3, 5, 7, … valeurs.
+
+Pour chaque bloc, on effectue un tri (éventuellement partiel, comme expliqué plus haut), mais dans ce cas, plus le bloc est gros, plus le tri est lent (en moyenne par valeur à trier). Il convient donc d'avoir le tri le plus petit possible.
+
+Dans ce cas, pourquoi ne pas faire des groupes de&nbsp;3 valeurs&nbsp;? Le problème est que dans ce cas, la complexité de l'algorithme n'est plus linéaire mais devient en $O(n \ln n)$.
+
+En effet, on a maintenant $n/3$ médianes dont il faut chercher la médiane, et ensuite on continue au besoin avec un nombre de cartes dont on peut seulement garantir qu'il est au moins égal à $2n/3$. L'inégalité précédente se réécrit alors&nbsp;:
+
+$$
+c n + \Bigl(\frac 1 3 + \frac 2 3\Bigr) \lambda n \leq \lambda n
+$$
+
+qui n'a pas de solution.
+
+Pour prouver le résultat proprement (et obtenir la complexité annoncée), on peut utiliser la [méthode d'Akra-Bazzi](https://fr.wikipedia.org/wiki/Théorème_d%27Akra-Bazzi), généralisation du [_Master theorem_](https://fr.wikipedia.org/wiki/Master_theorem), pour résoudre des équations de récurrence comme celles qui nous occupent.
+
+# Conclusion
+
+Si l'on pense en général qu'un algorithme sur des tableaux ayant une complexité linéaire en la taille du tableau repose sur un nombre borné de parcours dudit tableau, l'algorithme de sélection montre qu'il arrive que l'on rencontre des algorithmes bien plus sophistiqués (ayant ici une double récurrence).
+
+Pour finir, notons que les algorithmes que nous venons de présenter, si l'utilisation de la médiane des médianes permet un complexité linéaire dans le pire des cas, l'algorithme quickselect est lui plus rapide en moyenne.
+
+C'est une situation similaire à celle déjà vue concernant les algorithmes de tri, où l'on a deux algorithmes~: le tri par tas &ndash; optimal mais (un peu) lent &ndash; et le tri rapide &ndash; de complexité quadratique dans le pire des cas mais plus rapide en moyenne, et où une manière efficace d'avoir le meilleur des deux est d'utiliser l'algorithme [Introsort](https://fr.wikipedia.org/wiki/Introsort) qui commence avec le tri rapide et passe au tri par tas si cela dure trop longtemps.
+
+De façon similaire, pour l'algorithme de sélection, [Introselect](https://en.wikipedia.org/wiki/Introselect) combine les deux, en commençant avec Quickselect et en passant à la méthode de la médiane des médianes si la première méthode ne progresse pas assez vite. Cela garantie une complexité linéaire dans le pire des cas, tout en profitant de la vitesse supérieure de Quickselect dans la plupart des cas.
+
+# Annexe &ndash; Code en Python
+
+L'algorithme est divisé en trois fonctions&nbsp;:
+
+1. La fonction de tri par insertion pour les blocs&nbsp;:
+
+```python
+def insertion(t, debut, fin):
+    for i in range(debut + 1, fin):
+        v = t[i]
+        j = i - 1
+        while j >= debut and t[j] > v:
+            t[j + 1] = t[j]
+            j -= 1
+        t[j + 1] = v
+```
+
+2. La fonction de partition, qui implémente le 3-way partition de Dijkstra selon de schéma de Lomuto&nbsp;:
+
+```python
+def partition(t, debut, fin, pivot):
+    gauche = debut
+    milieu = debut
+    # invariant :
+    # pour debut <= k < gauche, t[k] < pivot
+    # pour gauche <= k < milieu, t[k] = pivot
+    # pour milieu <= k < droite, t[k] > pivot
+    # pour droite <= k < fin, cette valeur n'est pas triée.
+    for droite in range(debut, fin):
+        v = t[droite]
+        if v < pivot:
+            t[droite] = t[milieu]
+            t[milieu] = t[gauche]
+            t[gauche] = v
+            gauche += 1
+            milieu += 1
+        elif v == pivot:
+            t[droite] = t[milieu]
+            t[milieu] = v
+            milieu += 1
+    return gauche, milieu
+```
+
+3. La fonction de sélection proprement dite&nbsp;:
+
+```python
+def selection(t, debut, fin, p):
+    if fin < debut + 5:
+        insertion(t, debut, fin)
+        return t[debut + p]
+    # sélection des médianes des paquets de 5
+    d = debut
+    for f in range(debut + 5, fin, 5):
+        insertion(t, d, f)
+        d = f
+    insertion(t, d, fin)
+    # déplacement des médianes en début de tableau
+    i = debut
+    for j in range(debut + 2, fin, 5):
+        t[i], t[j] = t[j], t[i]
+        i += 1
+    pivot = selection(t, debut, i, (i - debut - 1) // 2)
+    # partition autour du pivot
+    gauche, milieu = partition(t, debut, fin, pivot)
+    if gauche > debut + p:
+        return selection(t, debut, gauche, p)
+    if milieu <= debut + p:
+        return selection(t, milieu, fin, p - milieu + debut)
+    return pivot
+```
+
+## Mesures effectives
+
