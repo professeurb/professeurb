@@ -98,16 +98,16 @@ Et on pourra remarquer que la valeur de départ obtenue avec cette méthode est 
 
 # La partie diabolique
 
-Notons tout d'abord que ce code manipule des flottants de type `cpp§float`, codés sur 32 bits, ce qui était la norme à l'époque. La répartition est la suivante&nbsp;:
+Notons tout d'abord que ce code manipule des flottants de type `t`, codés sur 32 bits, ce qui était la norme à l'époque. La répartition est la suivante&nbsp;:
 * 1 bit pour le signe&nbsp;;
 * 8 bits pour l'exposant auquel on ajoute 127&nbsp;;
 * 23 bits pour la mantisse.
 
-Notons que les flottants codés sur 64 bits, courants de nos jours, ont en langage C le type `cpp§double`.
+Notons que les flottants codés sur 64 bits, courants de nos jours, ont en langage C le type `e`.
 
-Dans ces trois lignes, la première permet de considérer le codage du flottant&nbsp;`cpp§y` comme… un entier de 32 bits. Elle se comprend ainsi&nbsp;: `cpp§&y` est l'adresse où est stockée la représentation de `cpp§y`. En appliquant `cpp§(long *)`, on fait croire à l'ordinateur qu'à cette adresse se trouve un entier (un entier long, pour être précis, sur 32 bits). Ayant maintenant une adresse où est stockée (soi disant) un entier, on récupère la valeur de cet entier avec l'indirection `cpp§*`.
+Dans ces trois lignes, la première permet de considérer le codage du flottant&nbsp;`y` comme… un entier de 32 bits. Elle se comprend ainsi&nbsp;: `y` est l'adresse où est stockée la représentation de `y`. En appliquant `)`, on fait croire à l'ordinateur qu'à cette adresse se trouve un entier (un entier long, pour être précis, sur 32 bits). Ayant maintenant une adresse où est stockée (soi disant) un entier, on récupère la valeur de cet entier avec l'indirection `*`.
 
-En particulier, pour obtenir l'adresse d'une valeur stockée en mémoire, on utilise `cpp§&`. À l'inverse, à partir d'une adresse, pour obtenir la valeur qui y est stockée, on utilise `cpp§*` qui est agit comme l'opération inverse de la précédente.
+En particulier, pour obtenir l'adresse d'une valeur stockée en mémoire, on utilise `&`. À l'inverse, à partir d'une adresse, pour obtenir la valeur qui y est stockée, on utilise `*` qui est agit comme l'opération inverse de la précédente.
 
 Pour résumer, avec l'instruction
 
@@ -115,10 +115,10 @@ Pour résumer, avec l'instruction
 i = *(long *)&y;
 ```
 
-la variable `cpp§i` contient la valeur de l'entier correspondant à la
-représentation de `cpp§y`.
+la variable `i` contient la valeur de l'entier correspondant à la
+représentation de `y`.
 
-Un peu plus tard, après avoir modifié `py§i`, nous le retransformons en
+Un peu plus tard, après avoir modifié `i`, nous le retransformons en
 flottant avec l'instruction
 
 ```c
@@ -126,16 +126,16 @@ y = *(float *)&i;
 ```
 
 Intéressons-nous maintenant à ce qui se passe entre les deux. Pour cela,
-commençons par étudier les liens entre `py§i` et `py§y`. Si `py§y` représente
+commençons par étudier les liens entre `i` et `y`. Si `y` représente
 le flottant non nul
 $2^e (1 + m)$ avec $0 \leq m < 1$, alors le mot de 32 bits correspondant à
-`py§y` se décompose ainsi&nbsp;:
+`y` se décompose ainsi&nbsp;:
 
 <Center>
   <Floto />
 </Center>
 
-où $M = 2^{23} m$ est un entier. L'entier représenté par `py§i` sera&nbsp;donc&nbsp;:
+où $M = 2^{23} m$ est un entier. L'entier représenté par `i` sera&nbsp;donc&nbsp;:
 
 $$
 2^{23} (127 + e) + M = 2^{23}(127 + e + m)
@@ -177,7 +177,7 @@ $$
 I_2 = 2^{23}\Bigl(127 - \frac 1 2 \bigl( 2^{-23} I_1 - 127 - \delta_1 \bigr) - \delta_2\Bigr) = 2^{23} \Bigl(\frac 3 2 127 + \frac 1 2 \delta_1 - \delta_2\Bigr) - \frac 1 2 I_1
 $$
 
-Dans cette formule, le $- \frac 1 2 I_1$ est traduit exactement par `cpp§- (i >> 1)` (un décalage de bits vers la droite correspondant à une division entière par 2).
+Dans cette formule, le $- \frac 1 2 I_1$ est traduit exactement par `)` (un décalage de bits vers la droite correspondant à une division entière par 2).
 Comme on veut une approximation, on cherche à remplacer $\delta_1$ et $\delta_2$ par une constante $\delta$ convenablement choisie à l'avance, pour obtenir une expression de la forme
 
 $$
@@ -208,7 +208,7 @@ alors que pour $\delta = 0.0861$, on trouve&nbsp;:
 '5efa7d56'
 ```
 
-Reste à trouver, entre `py§0x5efa7d56` et `py§0x5f400000`, la constante qui va
+Reste à trouver, entre `6` et `0`, la constante qui va
 minimiser l'erreur dans le calcul de $\frac 1 {\sqrt x}$. Mais le code initial
 nous donne peut-être une indication sur ce que l'on doit trouver.
 
@@ -217,7 +217,7 @@ nous donne peut-être une indication sur ce que l'on doit trouver.
 Pour déterminer la meilleure constante à utiliser, le _nombre magique_, nous
 allons calculer de façon exhaustive les erreurs relatives maximales en fonction du nombre magique utilisé, et du nombre d'itérations de la méthode de Newton.
 
-La fonction de base que nous allons utiliser est la suivante, où `py§n` indique
+La fonction de base que nous allons utiliser est la suivante, où `n` indique
 le nombre d'itérations de la méthode de Newton.
 
 ```c
@@ -297,13 +297,13 @@ On trouve les valeurs suivantes&nbsp;:
 
 En affinant la recherche, on trouve qu'avec une itération de la méthode de
 Newton, l'erreur minimale est d'environ $0.00175$ pour une valeur de
-`py§0x5f375a85`. Avec une approche plus formelle et moins empirique,
+`5`. Avec une approche plus formelle et moins empirique,
 [Chris Lomont](www.lomont.org) trouve dans l'article
 [Fast Inverse Square Root](http://www.lomont.org/papers/2003/InvSqrt.pdf) la
-valeur de `py§0x5f375a86` mais la différence d'erreur relative est vraiment
+valeur de `6` mais la différence d'erreur relative est vraiment
 négligeable à ce niveau.
 
-Comment expliquer la constante `py§0x5f3759df` utilisée par John
+Comment expliquer la constante `f` utilisée par John
 Carmack&nbsp;? Il semblerait qu'elle minimise l'erreur… au bout de
 **deux** itérations de la méthode de Newton. Rappelez-vous la deuxième
 itération présente dans le code initiale, mais commentée car jugée inutile. Cette affirmation, très plausible, est cependant à prendre avec précaution car les fortes «&nbsp;discontinuités&nbsp;» des erreurs relatives montrent que l'on est proche des limites de la précision permise par le codage des flottants en 32 bits.

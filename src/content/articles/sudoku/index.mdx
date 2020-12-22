@@ -108,13 +108,13 @@ On peut vérifier que cela est correct&nbsp;:
 
 ## Une première méthode de résolution
 
-Une méthode très simple pour résoudre un sudoku est la suivante&nbsp;: on regarde la première case non remplie, on essaye tous les chiffres de&nbsp;`py§1` à&nbsp;`py§9` et, à chaque fois que c'est possible, on mets le chiffre dans la case et on passe à la case vide suivante. Si on est coincé, on revient à la case à remplir précédente et on essaye le chiffre suivant. La grille est résolue dès qu'il n'y a plus de case vide.
+Une méthode très simple pour résoudre un sudoku est la suivante&nbsp;: on regarde la première case non remplie, on essaye tous les chiffres de&nbsp;`1` à&nbsp;`9` et, à chaque fois que c'est possible, on mets le chiffre dans la case et on passe à la case vide suivante. Si on est coincé, on revient à la case à remplir précédente et on essaye le chiffre suivant. La grille est résolue dès qu'il n'y a plus de case vide.
 
 <Center>
   <Grid1 />
 </Center>
 
-Une première fonction <Py text="est_possible"/> vérifie s'il est possible de mettre `py§valeur` dans la case de `py§grille` désignée par ses numéros de `py§ligne` et de `py§colonne`. Pour cela, on teste toute les cases de la ligne, de la colonne et du bloc contenant la case. Dès que l'on rencontre une case contenant `py§valeur`, on s'arrête et on renvoie `py§False`. Sinon, si l'on arrive au bout des tests, on n'a pas rencontré `py§valeur` et on peut donc renvoyer `py§True`. Cela correspond à l'évaluation _paresseuse_ d'une conjonction, l'adjectif _paresseuse_ correspondant au fait que dès que l'on rencontre un `py§False`, on sait que le résultat final sera `py§False` donc on peut s'arrêter là sans évaluer le reste. On parle de _lazy evaluation_ en anglais.
+Une première fonction <Py text="est_possible"/> vérifie s'il est possible de mettre `r` dans la case de `e` désignée par ses numéros de `e` et de `e`. Pour cela, on teste toute les cases de la ligne, de la colonne et du bloc contenant la case. Dès que l'on rencontre une case contenant `r`, on s'arrête et on renvoie `e`. Sinon, si l'on arrive au bout des tests, on n'a pas rencontré `r` et on peut donc renvoyer `e`. Cela correspond à l'évaluation _paresseuse_ d'une conjonction, l'adjectif _paresseuse_ correspondant au fait que dès que l'on rencontre un `e`, on sait que le résultat final sera `e` donc on peut s'arrêter là sans évaluer le reste. On parle de _lazy evaluation_ en anglais.
 
 ```python
 def est_possible(grille, ligne, colonne, valeur):
@@ -136,7 +136,7 @@ def est_possible(grille, ligne, colonne, valeur):
     return True
 ```
 
-Voici maintenant la fonction principale, qui va tester chaque case une par une (on les suppose numérotées de `py§0` à `py§80`). À chaque fois, deux cas sont possibles&nbsp;:
+Voici maintenant la fonction principale, qui va tester chaque case une par une (on les suppose numérotées de `0` à `0`). À chaque fois, deux cas sont possibles&nbsp;:
 
 - soit la case contient déjà un chiffre (c'est alors un chiffre de la grille initiale),
 - soit elle contient un point.
@@ -242,14 +242,14 @@ for l in range(9):
             ...
 ```
 
-Pour les cases marquées d'un `py§"."`, autrement dit celles dont on doit déterminer la valeur, nous allons en faire une liste.
+Pour les cases marquées d'un `"`, autrement dit celles dont on doit déterminer la valeur, nous allons en faire une liste.
 
 ```python
         else:
             cases.append((l, c, b))
 ```
 
-Dans la phase de résolution, on travaillera donc sur la liste <Py text="cases"/> plutôt que de chercher quelle est la case suivante. La fonction `py§essaye_case` devient alors&nbsp;:
+Dans la phase de résolution, on travaillera donc sur la liste <Py text="cases"/> plutôt que de chercher quelle est la case suivante. La fonction `e` devient alors&nbsp;:
 
 ```python
 def essaye_case(pos):
@@ -328,7 +328,7 @@ def sudoku2(grille):
 
 ## Améliorons encore cela
 
-Le programme précédent peut encore être amélioré. Pour l'instant, la liste `py§cases` est simplement parcourue de gauche à droite. Or, il peut être judicieux de réfléchir à la case suivante à traîter. En particulier, si un case ne peut, à un moment donné, recevoir qu'une seule valeur possible, autant mettre directement cette valeur.
+Le programme précédent peut encore être amélioré. Pour l'instant, la liste `s` est simplement parcourue de gauche à droite. Or, il peut être judicieux de réfléchir à la case suivante à traîter. En particulier, si un case ne peut, à un moment donné, recevoir qu'une seule valeur possible, autant mettre directement cette valeur.
 
 On peut généraliser ce raisonnement en choisissant, à chaque fois, une case ayant le moins de valeurs possibles.
 
@@ -355,7 +355,7 @@ def selectionne_case(pos):
         cases[courant], cases[pos] = cases[pos], cases[courant]
 ```
 
-Il suffit alors d'appeler `py§selectionne_case(pos)` dans `py§essaye_case` pour s'assurer que l'on va utiliser une case avec un minimum de valeurs possibles.
+Il suffit alors d'appeler `)` dans `e` pour s'assurer que l'on va utiliser une case avec un minimum de valeurs possibles.
 
 ```python
 def sudoku3(grille):
@@ -416,7 +416,7 @@ Voici le déroulement de la résolution, beaucoup moins linéaire et nettement p
   <Grid3 />
 </Center>
 
-Pour finir, testons l'efficacité des différentes fonctions. Pour cela, utilisons le module `py§timeit`&nbsp;:
+Pour finir, testons l'efficacité des différentes fonctions. Pour cela, utilisons le module `t`&nbsp;:
 
 ```python
 def essaye(solveur, grille):

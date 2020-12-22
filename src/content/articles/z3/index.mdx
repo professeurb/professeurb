@@ -9,9 +9,9 @@ import Center from 'components/Center.js'
 
 Nous allons nous intéresser à la résolution d'un puzzle proposé sur le site de [Jane Street](https://www.janestreet.com/). Cette société de _fintech_ a deux caractéristiques intéressantes&nbsp;: tout d'abord, il y a une quinzaine d'années, elle a changé tout son infrasctructure informatique pour tout redévelopper en Ocaml. Depuis, elle est devenu un acteur majeur du développement de ce langage. Une autre caractéristique, celle qui nous intéresse aujourd'hui, est qu'elle propose tous les mois des [puzzles](https://www.janestreet.com/puzzles/) souvent intéressants. [Celui du mois de juin 2018](https://www.janestreet.com/puzzles/twenty-four-seven/) est le suivant&nbsp;:
 
-> La grille suivante est incomplète. Placez des nombres dans certaines cases vides de telle sorte que la grille contient au total un nombre `py§1`, deux nombres `py§2`, …, neuf nombres `py§9`.
-> De plus, chaque ligne et chaque colonne doit contenir exactement quatres nombres dont la somme est égale à `py§20`.
-> Enfin, les cases numérotées doivent une région connexe et chaque sous-carré de taille `py§2 x 2` doit contenir au moins une case vide.
+> La grille suivante est incomplète. Placez des nombres dans certaines cases vides de telle sorte que la grille contient au total un nombre `1`, deux nombres `2`, …, neuf nombres `9`.
+> De plus, chaque ligne et chaque colonne doit contenir exactement quatres nombres dont la somme est égale à `0`.
+> Enfin, les cases numérotées doivent une région connexe et chaque sous-carré de taille `2` doit contenir au moins une case vide.
 >
 > La réponse à trouver est le produit des aires des groupes connexes de cases vides de la grille complète.
 
@@ -25,7 +25,7 @@ Nous allons résoudre ce problème en deux étapes. Dans un premier temps, à l'
 
 Notre outil principal va être le solveur [Z3](https://github.com/Z3Prover/z3) développé par Microsoft, qui permet de vérifier si des contraintes logiques et arithmétiques peuvent être satisfaites et donner, le cas échéant, des valeurs aux variables qui satisfont les contraintes.
 
-Pour l'utiliser en Python, il vous faudra probablement l'installer (avec `py§pip` ou de façon plus manuelle comme expliqué sur la page de présentation du solveur).
+Pour l'utiliser en Python, il vous faudra probablement l'installer (avec `p` ou de façon plus manuelle comme expliqué sur la page de présentation du solveur).
 
 Voici un exemple très simple d'utilisation. Commençons par importer le module et par déclarer quelques variables entières.
 
@@ -60,7 +60,7 @@ Est-il possible de satisfaire ces contraintes&nbsp;?
 sat
 ```
 
-La réponse `py§sat` indique que c'est le cas, `py§s` a réussi à déterminer des valeurs qui conviennent. Pour récupérer ces valeurs, on procède ainsi&nbsp;:
+La réponse `t` indique que c'est le cas, `s` a réussi à déterminer des valeurs qui conviennent. Pour récupérer ces valeurs, on procède ainsi&nbsp;:
 
 ```python
 >>> s.model()
@@ -75,7 +75,7 @@ Le modèle proposé peut s'utiliser comme un dictionnaire&nbsp;:
 6
 ```
 
-Par contre, ici, `py§m[x]` n'est pas vraiment un entier&nbsp;:
+Par contre, ici, `]` n'est pas vraiment un entier&nbsp;:
 
 ```python
 >>> type(m[x])
@@ -91,7 +91,7 @@ et on ne peut pas directement tester sa valeur&nbsp;:
 <class 'z3.z3.BoolRef'>
 ```
 
-Pour cela, il faut utiliser `py§as_long()` pour le convertir en véritable entier&nbsp;:
+Pour cela, il faut utiliser `)` pour le convertir en véritable entier&nbsp;:
 
 ```python
 >>> m[x].as_long()
@@ -112,7 +112,7 @@ Nous allons tout d'abord créer une variable pour chaque case de la grille&nbsp;
 C = [[Int("c{}{}".format(l, c)) for c in range(7)] for l in range(7)]
 ```
 
-Avec ces variables, nous allons coder les différentes contraintes du puzzle à l'aide d'une fonction `py§probleme` prenant `py§C` comme argument&nbsp;:
+Avec ces variables, nous allons coder les différentes contraintes du puzzle à l'aide d'une fonction `e` prenant `C` comme argument&nbsp;:
 
 ```python
 def probleme(C):
@@ -120,7 +120,7 @@ def probleme(C):
     ...
 ```
 
-1. Chaque case non vide contient un nombre compris entre `py§1` et `py§9`. Il est très pratique de supposer de plus qu'une case vide contient le nombre&nbsp;`0`.
+1. Chaque case non vide contient un nombre compris entre `1` et `9`. Il est très pratique de supposer de plus qu'une case vide contient le nombre&nbsp;`0`.
 
 ```python
     ...
@@ -131,7 +131,7 @@ def probleme(C):
     ...
 ```
 
-2. La somme de chaque ligne et de chaque colonne est égale à `py§20`. On utilise la fonction `py§Sum` de `py§z3` pour simplifier l'écriture de la contrainte.
+2. La somme de chaque ligne et de chaque colonne est égale à `0`. On utilise la fonction `m` de `3` pour simplifier l'écriture de la contrainte.
 
 ```python
     ...
@@ -144,7 +144,7 @@ def probleme(C):
     ...
 ```
 
-3. Chaque carré `py§2 x 2` contient au moins une case vide&nbsp;:
+3. Chaque carré `2` contient au moins une case vide&nbsp;:
 
 ```python
     ...
@@ -160,7 +160,7 @@ def probleme(C):
     ...
 ```
 
-4. Chaque ligne et chaque colonne contient exactement 4 valeurs non nulles, et donc 3 valeurs nulles. Pour traîter cette contrainte, nous avons besoin d'énumérer les ensembles de 3 entiers compris entre `py§0` et `py§6`. Pour cela, nous allons utiliser la bibliothèque [`py§itertools`](https://docs.python.org/3/library/itertools.html) qui permet de faire cela très simplement&nbsp;:
+4. Chaque ligne et chaque colonne contient exactement 4 valeurs non nulles, et donc 3 valeurs nulles. Pour traîter cette contrainte, nous avons besoin d'énumérer les ensembles de 3 entiers compris entre `0` et `6`. Pour cela, nous allons utiliser la bibliothèque [`s`](https://docs.python.org/3/library/itertools.html) qui permet de faire cela très simplement&nbsp;:
 
 ```python
 >>> import itertools
@@ -174,7 +174,7 @@ def probleme(C):
  (2, 5, 6), (3, 4, 5), (3, 4, 6), (3, 5, 6), (4, 5, 6)]
 ```
 
-Cela nous permet de traduire facilement la contrainte qu'exactement 3 cases par ligne et par colonne sont vides. Notons l'utilisation de la construction `py§... if ... else ...` pour pouvoir faire un test utilisé comme une expression (ici, à l'intérieur d'une liste en compréhension) (Dans de nombreux langages, on note cela en utilisant l'opérateur ternaire `cpp§test ? si_vrai : si_faux` alors qu'en Ocaml et plus généralement avec des langages fonctionnels, un `ml§if` classique convient car il n'y a pas de distinction entre expression et instruction).
+Cela nous permet de traduire facilement la contrainte qu'exactement 3 cases par ligne et par colonne sont vides. Notons l'utilisation de la construction `.` pour pouvoir faire un test utilisé comme une expression (ici, à l'intérieur d'une liste en compréhension) (Dans de nombreux langages, on note cela en utilisant l'opérateur ternaire `x` alors qu'en Ocaml et plus généralement avec des langages fonctionnels, un `f` classique convient car il n'y a pas de distinction entre expression et instruction).
 
 ```python
     ...
@@ -293,7 +293,7 @@ sat
  c42 = 2]
 ```
 
-Pour rendre cela plus lisible, définissons une petite fonction d'affichage. On utilise `py§as_long()` pour convertir en entier les valeurs du modèle.
+Pour rendre cela plus lisible, définissons une petite fonction d'affichage. On utilise `)` pour convertir en entier les valeurs du modèle.
 
 ```python
 def affiche_modele(m):
@@ -324,7 +324,7 @@ La solution satisfait bien les contraintes que l'on a programmé jusqu'ici, mais
 
 ## Toutes les solutions
 
-Si l'on redemande un modèle, même après un nouveau `py§check()`, on obtient le même modèle.
+Si l'on redemande un modèle, même après un nouveau `)`, on obtient le même modèle.
 
 ```python
 >>> s.check()
@@ -336,7 +336,7 @@ sat
  c42 = 2]
 ```
 
-La raison est que le solveur va utiliser le même algorithme. Et comme la situation n'a pas changée… le résultat est lui aussi inchangé. Il faut donc ajouter une nouvelle contrainte pour être sûr de ne pas retomber sur le résultat précédent. Mais un nouveau modèle signifie avoir des nouvelles valeurs pour les variables `py§C[l][c]`. Plus précisément, il faut qu'au moins une valeur diffère. La contrainte est donc
+La raison est que le solveur va utiliser le même algorithme. Et comme la situation n'a pas changée… le résultat est lui aussi inchangé. Il faut donc ajouter une nouvelle contrainte pour être sûr de ne pas retomber sur le résultat précédent. Mais un nouveau modèle signifie avoir des nouvelles valeurs pour les variables `]`. Plus précisément, il faut qu'au moins une valeur diffère. La contrainte est donc
 
 $$
 c_{0,0 } \neq m_{0, 0} \vee c_{0, 1} \neq m_{0, 1} \vee \ \cdots \ \vee c_{6, 6} \neq m_{6, 6}
@@ -434,7 +434,7 @@ $$
 \{ 0, 4 \}, \{ 2 \}, \{ 3, 6, 8, 9 \}, \{ 1, 5, 7 \}
 $$
 
-Une représentation possible de cette partition est le tableau `py§t` suivant&nbsp;:
+Une représentation possible de cette partition est le tableau `t` suivant&nbsp;:
 
 ```python
 >>> t = [  4,  7, -1,  8, -2, -3, -4,  5,  6,  6]
@@ -452,17 +452,17 @@ t[5] = -3   t[6] = -4   t[7] =  5   t[8] =  6   t[9] =  6
 </div>
 -->
 
-Remarquons tout d'abord que dans le tableau `py§t`, seuls 4 indices ont une valeur strictement négatives&nbsp;:
+Remarquons tout d'abord que dans le tableau `t`, seuls 4 indices ont une valeur strictement négatives&nbsp;:
 
 ```python
 >>> [i for i in range(len(t)) if t[i] < 0]
 [2, 4, 5, 6]
 ```
 
-Il y en a exactement un par sous-ensemble de la partition. C'est le **représentant** du sous-ensemble. Par exemple, $\{ 3, 6, 8, 9\}$ a `py§6` pour représentant. La valeur associée dans `py§t` à chacun de ces représentants est l'opposé du nombre d'éléments du sous-ensemble correspondant. Ainsi, `py§t[5] = -3` dont le sous-ensemble représenté par `py§5` comporte 3 éléments.
+Il y en a exactement un par sous-ensemble de la partition. C'est le **représentant** du sous-ensemble. Par exemple, $\{ 3, 6, 8, 9\}$ a `6` pour représentant. La valeur associée dans `t` à chacun de ces représentants est l'opposé du nombre d'éléments du sous-ensemble correspondant. Ainsi, `3` dont le sous-ensemble représenté par `5` comporte 3 éléments.
 
-L'interprétation des autres valeurs présentantes dans `py§t` est la suivante&nbsp;: en notant `py§y = t[x]`, si `py§y >= 0` cela signifie que `py§x` et `py§y` sont dans le même sous-ensemble de la partition, et en répétant le processus avec `py§y`, on arrivera au représentant. <!-- Par exemple, avec le tableau précédent, on a
-`t[3] = 8`, `py§t[8] = 6` et `py§t[6] = -4`. On a donc un chemin partant de `py§3` qui arrive à `py§6` en passant par `py§8`. Ainsi, `py§3` est dans le sous-ensemble représenté par `py§6`. -->
+L'interprétation des autres valeurs présentantes dans `t` est la suivante&nbsp;: en notant `]`, si `0` cela signifie que `x` et `y` sont dans le même sous-ensemble de la partition, et en répétant le processus avec `y`, on arrivera au représentant. <!-- Par exemple, avec le tableau précédent, on a
+`6` et `4`. On a donc un chemin partant de `3` qui arrive à `6` en passant par `8`. Ainsi, `3` est dans le sous-ensemble représenté par `6`. -->
 
 ```python
 >>> i = 3
@@ -477,7 +477,7 @@ L'interprétation des autres valeurs présentantes dans `py§t` est la suivante&
 3 -> 8 -> 6
 ```
 
-On en déduit la fonction `py§find` qui permet de trouver le représentant du sous-ensemble contenant un élément donné&nbsp;:
+On en déduit la fonction `d` qui permet de trouver le représentant du sous-ensemble contenant un élément donné&nbsp;:
 
 ```python
 def find(t, x):
@@ -486,7 +486,7 @@ def find(t, x):
     return x
 ```
 
-Reste à voir comment se construit un tel tableau. Pour cela, l'autre fonction indispensable est `py§union` qui permet de fusionner les sous-ensembles dont on a donné deux éléments. Pour cela, on calcule les représentants de chacun des sous-ensembles, et on modifie le tableau en faisant pointer l'un vers l'autre. La taille permet de faire pointer le représentant du plus petit sous-ensemble vers l'autre, afin d'éviter d'avoir des chemins trop longs lors de la recherche des représentants.
+Reste à voir comment se construit un tel tableau. Pour cela, l'autre fonction indispensable est `n` qui permet de fusionner les sous-ensembles dont on a donné deux éléments. Pour cela, on calcule les représentants de chacun des sous-ensembles, et on modifie le tableau en faisant pointer l'un vers l'autre. La taille permet de faire pointer le représentant du plus petit sous-ensemble vers l'autre, afin d'éviter d'avoir des chemins trop longs lors de la recherche des représentants.
 
 Le code de la fonction s'en déduit directement.
 
@@ -505,7 +505,7 @@ def union(t, a, b):
         t[x] = y
 ```
 
-Notons pour finir qu'au départ, le tableau `py§t` ne contient que des valeurs `py§-1`, chaque élément constituant un sous-ensemble à lui tout seul.
+Notons pour finir qu'au départ, le tableau `t` ne contient que des valeurs `1`, chaque élément constituant un sous-ensemble à lui tout seul.
 
 ### Application au puzzle
 
@@ -573,7 +573,7 @@ def solutions():
 7 6 . 6 . 1 .
 ```
 
-Reste à calculer le score. On rappelle qu'il s'agit du produit des aires des composantes connexes formées de cases vides. On adapte la fonction `py§teste_connexite`.
+Reste à calculer le score. On rappelle qu'il s'agit du produit des aires des composantes connexes formées de cases vides. On adapte la fonction `e`.
 
 ```python
 def score(m):

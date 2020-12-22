@@ -11,7 +11,7 @@ Règle primordiale de l'optimisation&nbsp;: **On ne cherche à optimiser que lor
 
 # Optimisation du tri par insertion
 
-Rappelons la structure de l'algorithme de tri par insertion. Il est composé de deux boucles, la boucle interne consistant en un parcours du tableau vers la gauche à partir de la position `py§i` pour savoir jusqu'où décaler la valeur `py§l[i]` en train d'être traitée.
+Rappelons la structure de l'algorithme de tri par insertion. Il est composé de deux boucles, la boucle interne consistant en un parcours du tableau vers la gauche à partir de la position `i` pour savoir jusqu'où décaler la valeur `]` en train d'être traitée.
 
 ```python
 def insertsort(l):
@@ -26,10 +26,10 @@ def insertsort(l):
 
 Le test de la boucle interne est en deux parties&nbsp;:
 
-- la condition `py§l[j] > v` pour déterminer si l'on doit continuer à décaler la valeur en cours de traitement&nbsp;
-- la condition `py§j >= 0` est une _garde_ pour s'assurer que l'on ne sort pas du tableau et donc que `py§l[j]`est bien défini.
+- la condition `v` pour déterminer si l'on doit continuer à décaler la valeur en cours de traitement&nbsp;
+- la condition `0` est une _garde_ pour s'assurer que l'on ne sort pas du tableau et donc que `]`est bien défini.
 
-Nous allons commencer par modifier le test de la boucle `py§while` pour en isoler les deux parties (en utilisant leurs négations, puisque le test pour rester dans la boucle devient deux tests pour sortir de la boucle).
+Nous allons commencer par modifier le test de la boucle `e` pour en isoler les deux parties (en utilisant leurs négations, puisque le test pour rester dans la boucle devient deux tests pour sortir de la boucle).
 
 ```python
 def insertsort1(l):
@@ -78,7 +78,7 @@ $$
 
 soit $24997500$ si $n = 10000$. Les résultats mesurés sont conformes à cette analyse.
 
-Intéressons-nous maintenant au résultat de la ligne 17, les 8 fois à l'on sort de la boucle à l'issue du test `py§j < 0`. Pour que cela arrive, il faut que la valeur en train d'être traitée, `py§v`, soit strictement inférieure à toutes les valeurs déjà vues. C'est un exercice classique de probabilités que de déterminer l'espérance du nombre de cas où cela se produit, c'est le nombre de records d'une permutation. Plus précisément, comme le premier record ne compte pas (on ne «&nbsp;trie&nbsp;» pas la première valeur du tableau), l'espérance est donc
+Intéressons-nous maintenant au résultat de la ligne 17, les 8 fois à l'on sort de la boucle à l'issue du test `0`. Pour que cela arrive, il faut que la valeur en train d'être traitée, `v`, soit strictement inférieure à toutes les valeurs déjà vues. C'est un exercice classique de probabilités que de déterminer l'espérance du nombre de cas où cela se produit, c'est le nombre de records d'une permutation. Plus précisément, comme le premier record ne compte pas (on ne «&nbsp;trie&nbsp;» pas la première valeur du tableau), l'espérance est donc
 $$
 \sum_{k = 2}^{n} \frac 1 k.
 $$
@@ -148,9 +148,9 @@ Line #      Hits         Time  Per Hit   % Time  Line Contents
 
 # Implémentation d'Introsort
 
-La bibliothèque standard de C++, la [Standard Template Library](https://fr.wikipedia.org/wiki/Standard_Template_Library) propose une implémentation dans les règles de l'art d'Introsort. On peut la trouver à [cette page](https://gcc.gnu.org/onlinedocs/gcc-4.7.2/libstdc++/api/a01462_source.html), avec la fonction `cpp§sort` ligne 5461, bien que les fonctions utilisées soient plutôt définies ligne 2327 et avant.
+La bibliothèque standard de C++, la [Standard Template Library](https://fr.wikipedia.org/wiki/Standard_Template_Library) propose une implémentation dans les règles de l'art d'Introsort. On peut la trouver à [cette page](https://gcc.gnu.org/onlinedocs/gcc-4.7.2/libstdc++/api/a01462_source.html), avec la fonction `t` ligne 5461, bien que les fonctions utilisées soient plutôt définies ligne 2327 et avant.
 
-Pour l'étudier, nous allons utiliser une traduction en Python disponible dans le fichier [introsort.py](./introsort.py). La porte d'entrée est la fonction `py§sort` définie ainsi&nbsp;:
+Pour l'étudier, nous allons utiliser une traduction en Python disponible dans le fichier [introsort.py](./introsort.py). La porte d'entrée est la fonction `t` définie ainsi&nbsp;:
 
 ```python
 def sort(l):
@@ -161,7 +161,7 @@ def sort(l):
     final_insertion_sort(l, 0, s)
 ```
 
-Après avoir vérifié que la liste contient au moins 2 éléments, elle appelle la fonction `py§introsort_loop` avec comme nombre maximal d'itérations `py§2 * int_log2(s)`. Ainsi, pour une liste de 10000 éléments, on peut faire au plus 26 appels récursifs d'`py§introsort_loop`.
+Après avoir vérifié que la liste contient au moins 2 éléments, elle appelle la fonction `p` avec comme nombre maximal d'itérations `)`. Ainsi, pour une liste de 10000 éléments, on peut faire au plus 26 appels récursifs d'`p`.
 
 Cette fonction pourrait être implémentée ainsi&nbsp;:
 ```python
@@ -185,7 +185,7 @@ def introsort_loop(l, first, last, depth):
     introsort_loop(l, first, cut, depth)
 ```
 
-Mais on peut utiliser une astuce qui consiste à remplacer l'un des appels récursifs finaux à `py§introsort_loop` par une boucle qui joue le même rôle. On obtient la version suivante, qui est celle retenue dans la STL&nbps;:
+Mais on peut utiliser une astuce qui consiste à remplacer l'un des appels récursifs finaux à `p` par une boucle qui joue le même rôle. On obtient la version suivante, qui est celle retenue dans la STL&nbps;:
 
 ```python
 def introsort_loop(l, first, last, depth):
@@ -204,7 +204,7 @@ Une étape de quicksort, c'est-à-dire
 1. le choix du pivot
 2. la répartition des éléments de part et d'autre du pivot
 
-s'effectue dans la fonction `py§unguarded_partition_pivot`… dont le nom suggère que l'on peut totalement se passer de gardes, de tests pour s'assurer que l'on ne sort pas du tableau. Voici son implémentation&nbsp;:
+s'effectue dans la fonction `t`… dont le nom suggère que l'on peut totalement se passer de gardes, de tests pour s'assurer que l'on ne sort pas du tableau. Voici son implémentation&nbsp;:
 
 ```python
 def unguarded_partition_pivot(l, first, last):
@@ -213,7 +213,7 @@ def unguarded_partition_pivot(l, first, last):
     return unguarded_partition(l, first + 1, last, l[first])
 ```
 
-Elle utilise une astuce évoquée précédemment, le choix du pivot comme médiane parmi trois valeurs&nbsp;: celle du début, celle du milieu et celle de la fin. Mais une astuce supplémentaire est utilisée ici. La fonction `py§move_median_to_first`, dont le code est légèrement fastidieux, effectue des tests pour toutes les permutations possibles des trois valeurs candidates pour le pivot, et utilise celle du milieu.
+Elle utilise une astuce évoquée précédemment, le choix du pivot comme médiane parmi trois valeurs&nbsp;: celle du début, celle du milieu et celle de la fin. Mais une astuce supplémentaire est utilisée ici. La fonction `t`, dont le code est légèrement fastidieux, effectue des tests pour toutes les permutations possibles des trois valeurs candidates pour le pivot, et utilise celle du milieu.
 
 ```python
 def move_median_first(l, a, b, c):
@@ -239,7 +239,7 @@ def move_median_first(l, a, b, c):
             l[a], l[b] = l[b], l[a]
 ```
 
-Le code de `py§unguarded_partition` est plus intéressant.
+Le code de `n` est plus intéressant.
 
 ```python
 def unguarded_partition(l, first, last, pivot):
@@ -255,7 +255,7 @@ def unguarded_partition(l, first, last, pivot):
         first += 1
 ```
 
-Comme son nom l'indique, elle ne contient pas de garde. Pour expliquer cela, on remarque qu'elle n'utilise que des inégalités strictes vis-à-vis du pivot. Or, comme la valeur du pivot se trouve en début de tableau, on est assuré de ne pas sortir du tableau «&nbsp;à gauche&nbsp;» en décrémentant `py§last`. Mais cela est vrai en général, et cette simplification peut s'effectuer pour n'importe quelle implémentation raisonnable de QuickSort.
+Comme son nom l'indique, elle ne contient pas de garde. Pour expliquer cela, on remarque qu'elle n'utilise que des inégalités strictes vis-à-vis du pivot. Or, comme la valeur du pivot se trouve en début de tableau, on est assuré de ne pas sortir du tableau «&nbsp;à gauche&nbsp;» en décrémentant `t`. Mais cela est vrai en général, et cette simplification peut s'effectuer pour n'importe quelle implémentation raisonnable de QuickSort.
 
 C'est l'absence de risque de sortie de tableau «&nbsp;à droite&nbsp;» qui est plus intéressante. Cela découle des points suivants&nbsp;:
 
@@ -265,7 +265,7 @@ C'est l'absence de risque de sortie de tableau «&nbsp;à droite&nbsp;» qui est
 
 Ainsi, il est impossible de sortir à droite, et donc aucune garde n'est nécessaire.
 
-Reste à étudier le tri par insertion final. D'après les fonctions `py§sort` et `py§introsort_loop`, il y a un unique appel à la fonction `py§final_insertion_sort` à la fin du tri, sur l'intégralité du tableau&nbsp;:
+Reste à étudier le tri par insertion final. D'après les fonctions `t` et `p`, il y a un unique appel à la fonction `t` à la fin du tri, sur l'intégralité du tableau&nbsp;:
 
 ```python
 def final_insertion_sort(l, first, last):
@@ -276,7 +276,7 @@ def final_insertion_sort(l, first, last):
         insertion_sort(l, first, last)
 ````
 
-La fonction `py§insertion_sort` ressemble à la fonction vue au début&nbsp;:
+La fonction `t` ressemble à la fonction vue au début&nbsp;:
 
 ```python
 def unguarded_linear_insert(l, last):
@@ -310,9 +310,9 @@ def unguarded_insertion_sort(l, first, last):
         unguarded_linear_insert(l, i)
 ```
 
-Si l'on regarde de plus près, un tri par insertion classique (avec garde) est appliqué au début du tableau jusqu'à la position `py§first + threshold` (ou avant si le tableau n'est pas assez grand), et la suite est trié… sans garde. Comme peut-on être sûr de ne pas y trouver de valeurs plus petite que ce qu'il y a avant, et qui doit donc se retrouver un début de tableau&nbsp;?
+Si l'on regarde de plus près, un tri par insertion classique (avec garde) est appliqué au début du tableau jusqu'à la position `d` (ou avant si le tableau n'est pas assez grand), et la suite est trié… sans garde. Comme peut-on être sûr de ne pas y trouver de valeurs plus petite que ce qu'il y a avant, et qui doit donc se retrouver un début de tableau&nbsp;?
 
-Cela vient du fait que le tri par insertion final a lieu, comme son nom l'indique, après la phase d'introsort. Or, dans cette phase, on s'arrête de trier dès que la taille du sous-tableau est inférieure au seuil `py§threshold`. Cela signifie que dans les `py§threshold` premières valeurs de tableau, à l'issue d'introsort, on est sûr de trouver un ancien pivot, c'est-à-dire une valeur qui est à sa place, et donc inférieure à tout ce qui suite. C'est pourquoi à partir de la position `py§first + threshold`, il n'y a pas besoin de test type garde, et on peut se contenter dans le tri par insertion de décaler chaque valeur vers la gauche jusqu'à s'arrêter.
+Cela vient du fait que le tri par insertion final a lieu, comme son nom l'indique, après la phase d'introsort. Or, dans cette phase, on s'arrête de trier dès que la taille du sous-tableau est inférieure au seuil `d`. Cela signifie que dans les `d` premières valeurs de tableau, à l'issue d'introsort, on est sûr de trouver un ancien pivot, c'est-à-dire une valeur qui est à sa place, et donc inférieure à tout ce qui suite. C'est pourquoi à partir de la position `d`, il n'y a pas besoin de test type garde, et on peut se contenter dans le tri par insertion de décaler chaque valeur vers la gauche jusqu'à s'arrêter.
 
 En conclusion, on voit que l'implémentation de la fonction de tri de la STL repose sur l'implémentation rigoureuse d'un certain nombre d'idées importantes&nbsp;:
 

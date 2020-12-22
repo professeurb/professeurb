@@ -5,8 +5,6 @@ tags: ["Graphes", "IPT Spé"]
 date: "2019-02-23"
 ---
 
-import { Md, Py } from "components/Lang.js";
-
 ## Fichiers annexes
 
 * [etats.csv](./data/etats.csv)
@@ -28,7 +26,7 @@ with open('etats.csv', 'r') as csvfile:
         print(line)
 ```
 
-**Question 1** Modifier cela pour obtenir une fonction <Py text='liste_etats()'/> qui retourne la liste remplie en listant le fichier [etats.csv](./data/etats.csv). On doit avoir, par exemple&nbsp;:
+**Question 1** Modifier cela pour obtenir une fonction `liste_etats()` qui retourne la liste remplie en listant le fichier [etats.csv](./data/etats.csv). On doit avoir, par exemple&nbsp;:
 
 ```python
 >>> etats = liste_etats()
@@ -36,9 +34,9 @@ with open('etats.csv', 'r') as csvfile:
 ['WY', 'Wyoming', 'Cheyenne', '41.1456', '-104.802']
 ```
 
-Comme les sommets du graphe vont correspondre aux états américain, on en déduit que notre graphe comporte 50 sommets, numérotés de <Py text='0'/> à <Py text='49'/>.
+Comme les sommets du graphe vont correspondre aux états américain, on en déduit que notre graphe comporte 50 sommets, numérotés de `0` à `49`.
 
-On a donc une liste d'adjacence des états, numérotés de <Py text='0'/> à <Py text='49'/>. Pour obtenir les arêtes, nous allons utiliser
+On a donc une liste d'adjacence des états, numérotés de `0` à `49`. Pour obtenir les arêtes, nous allons utiliser
 
 ```python
 from usa_adjacence import etats_adjacents
@@ -56,22 +54,22 @@ On a alors&nbsp;:
 ]
 ```
 
-Ainsi, les états adjacents à l'état numéro <Py text='0'/> sont les états numéro <Py text='23'/>, <Py text='41'/>, <Py text='9'/> et <Py text='8'/>.
+Ainsi, les états adjacents à l'état numéro `0` sont les états numéro `23`, `41`, `9` et `8`.
 
 **Question 2** Quels sont les noms des états limitrophes du Minnesota&nbsp;?
 
-**Question 3** Écrire une fonction <Py text='matrice_adjacence()'/> qui construit et retourne la matrice d'adjacence associée à <Py text='etats_adjacents'/>.
+**Question 3** Écrire une fonction `matrice_adjacence()` qui construit et retourne la matrice d'adjacence associée à `etats_adjacents`.
 
 ## Création d'un graphe pondéré
 
-Avec la liste <Py text='etats'/> que vous avez dû obtenir à partir du fichier [etats.csv](./data/etats.csv), on a par exemple&nbsp;:
+Avec la liste `etats` que vous avez dû obtenir à partir du fichier [etats.csv](./data/etats.csv), on a par exemple&nbsp;:
 
 ```python
 >>> etats[0]
 ['AL', 'Alabama', 'Montgomery', '32.3617', '-86.2792']
 ```
 
-En particulier, les composantes d'indice <Py text='3'/> et <Py text='4'/> (en comptant à partir de <Py text='0'/>) correspondent à la latitude et la longitude de la capitale de chaque état. Ici, Montgomery, capitale de l'Alabama, a pour coordonnées $32.3617^\circ$&nbsp;Nord et $86.2792^\circ$&nbsp;Ouest.
+En particulier, les composantes d'indice `3` et `4` (en comptant à partir de `0`) correspondent à la latitude et la longitude de la capitale de chaque état. Ici, Montgomery, capitale de l'Alabama, a pour coordonnées $32.3617^\circ$&nbsp;Nord et $86.2792^\circ$&nbsp;Ouest.
 
 Pour calculer la distance entre deux points du globe repérés par leurs latitudes $\varphi_i$ et leurs longitudes $\psi_i$, on utilise la formule suivante, dite de distance _orthodromique_&nbsp;:
 $$
@@ -79,11 +77,11 @@ d = R \arccos\bigl(\sin(\varphi_1) \sin(\varphi_2) + \cos(\varphi_1) \cos(\varph
 $$
 où $R$ désigne le rayon de la Terre. Pour simplifier, on suppose que la Terre est une sphère parfaite de rayon $6370,7$ kilomètres. On pourra remarquer que les latitudes et longitudes sont exprimés en degrés.
 
-**Question 4** Écrire une fonction <Py text='distance(lat1, lng1, lat2, lng2)'/> qui calcule la distance à la surface de la Terre entre deux points repérés par leurs latitudes et longitudes.
+**Question 4** Écrire une fonction `distance(lat1, lng1, lat2, lng2)` qui calcule la distance à la surface de la Terre entre deux points repérés par leurs latitudes et longitudes.
 
 > À titre indicatif, Austin (capitale du Texas) et Denver (capitale du Colorado) sont distantes d'environ 1240 kilomètres.
 
-**Question 5** Écrire une fonction <Py text='matrice_ponderee()'/> qui construit et retourne la représentation sous forme de matrice d'adjacence du graphe des états limitrophes pondéré par les distances entre capitales.
+**Question 5** Écrire une fonction `matrice_ponderee()` qui construit et retourne la représentation sous forme de matrice d'adjacence du graphe des états limitrophes pondéré par les distances entre capitales.
 
 ## Distance minimale entre deux capitales d'états
 
@@ -119,17 +117,17 @@ def dijkstra(graphe, source):
 
 ### Notes d'implémentation
 
-- Le graphe pondéré est représenté par une matrice d'adjacence <Py text='graphe'/>. En particulier, deux sommets <Py text='i'/> et <Py text='j'/> sont voisins si la distance entre les deux est finie, c'est-à-dire si <Py text='graphe[i][j] != inf'/>.
+- Le graphe pondéré est représenté par une matrice d'adjacence `graphe`. En particulier, deux sommets `i` et `j` sont voisins si la distance entre les deux est finie, c'est-à-dire si `graphe[i][j] != inf`.
 
-- Les distances d'un sommet à la source sont stockés dans une liste&nbsp;<Py text='d'/>. À l'initialisation, toutes ces distances sont à <Py text='inf'/> sauf la source qui est à une distance&nbsp;<Py text='0'/> d'elle-même.
+- Les distances d'un sommet à la source sont stockés dans une liste&nbsp;`d`. À l'initialisation, toutes ces distances sont à `inf` sauf la source qui est à une distance&nbsp;`0` d'elle-même.
 
-- La liste <Py text='front'/> contient les sommets à traîter. À l'initialisation, seule la source est à traîter.
+- La liste `front` contient les sommets à traîter. À l'initialisation, seule la source est à traîter.
 
 - Les sommets non encore découverts sont ceux pour lesquels on ne connaît pas de chemin jusqu'à la source. Autrement dit, ce sont ceux dont la distance à la source est infinie.
 
 ## Chemins minimisant les distances
 
-On souhaite modifier la fonction implémentant l'algorithme de Dijkstra en ajoutant un tableau <Py text='e'/> (pour _étape_) qui indique dans quelle direction partir pour rejoindre la source.
+On souhaite modifier la fonction implémentant l'algorithme de Dijkstra en ajoutant un tableau `e` (pour _étape_) qui indique dans quelle direction partir pour rejoindre la source.
 
 Ainsi, lors de la détermination des plus courts chemins vers la capitale de l'Alabama, si à la fin de l'algorithme, on obtient
 
@@ -142,15 +140,15 @@ Cela signifier que pour rejoindre la capitale de l'Alabama, en partant de Topeka
 
 **Question 7** Et une fois à Jefferson City, où faut-il aller ensuite&nbsp;?
 
-On pourra initialiser le tableau <Py text='e'/> de telle sorte que pour tout <Py text='i'/>, <Py text='e[i]'/> soit égal à <Py text='i'/>.
+On pourra initialiser le tableau `e` de telle sorte que pour tout `i`, `e[i]` soit égal à `i`.
 
-**Question 8** Lors de l'exécution de l'algorithme, à chaque diminution de la distance jusqu'à la source (à partir, éventuellement, d'une distance infinie si l'on découvre un sommet), comment modifier <Py text='e'/>&nbsp;?
+**Question 8** Lors de l'exécution de l'algorithme, à chaque diminution de la distance jusqu'à la source (à partir, éventuellement, d'une distance infinie si l'on découvre un sommet), comment modifier `e`&nbsp;?
 
-**Question 9** Modifier la fonction <Py text='dijkstra'/> pour prendre en compte le tableau&nbsp;<Py text='e'/>. Elle devra en particulier retourner deux tableaux&nbsp;: celui <Py text='d'/> des distances et celui <Py text='e'/> des étapes.
+**Question 9** Modifier la fonction `dijkstra` pour prendre en compte le tableau&nbsp;`e`. Elle devra en particulier retourner deux tableaux&nbsp;: celui `d` des distances et celui `e` des étapes.
 
 **Question 10**
 
-- À partir du tableau <Py text='e'/> obtenu à l'aide de la fonction <Py text='dijkstra'/> modifiée, écrire une fonction <Py text='itineraire(e, depart)'/> qui, étant donné le tableau <Py text='e'/> et le numéro de l'état de départ, retourne la liste des numéros états à traverser pour rejoindre la source. Si c'est impossible, on renverra la liste vide.
+- À partir du tableau `e` obtenu à l'aide de la fonction `dijkstra` modifiée, écrire une fonction `itineraire(e, depart)` qui, étant donné le tableau `e` et le numéro de l'état de départ, retourne la liste des numéros états à traverser pour rejoindre la source. Si c'est impossible, on renverra la liste vide.
 
 - On peut modifier cet fonction pour renvoyer une liste de chaînes de caractères indiquant la capitale d'état et l'état correspondant.
 
@@ -175,4 +173,4 @@ Avec Sacramento&nbsp;(CA) comme source, on veut par exemple&nbsp;:
 affiche_etapes(e)
 ```
 
-dans la boucle de la fonction <Py text='dijkstra'/>, après avoir importé la fonction du module <Py text='usa_affichage'/>.
+dans la boucle de la fonction `dijkstra`, après avoir importé la fonction du module `usa_affichage`.

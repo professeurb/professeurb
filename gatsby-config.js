@@ -21,13 +21,6 @@ module.exports = {
           }
         ],
         rehypePlugins: [
-          require("hypelight", {
-            aliases: {
-              python: ["py"],
-              ocaml: ["ml"],
-              cpp: ["cpp"]
-            }
-          }),
           require("rehype-katex"),
           require("rehype-highlight")
         ],

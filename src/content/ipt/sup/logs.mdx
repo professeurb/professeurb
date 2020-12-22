@@ -41,7 +41,7 @@ Les mathématiciens vont alors développer les fonctions logarithmes que vous co
 
 Pour visualiser la précision des calculs, on se basera sur une première fonction à programmer.
 
-**Question** Écrire une fonction `py§plpc` (pour «&nbsp;plus long préfixe commun&nbsp;») qui, étant donné deux chaînes de caractères, renvoie, comme son nom l'indique, le plus long préfixe commun aux deux chaînes. Par exemple, on veut le comportement suivant&nbsp;:
+**Question** Écrire une fonction `c` (pour «&nbsp;plus long préfixe commun&nbsp;») qui, étant donné deux chaînes de caractères, renvoie, comme son nom l'indique, le plus long préfixe commun aux deux chaînes. Par exemple, on veut le comportement suivant&nbsp;:
 
 ```python
 >>> plpc('Bonjour', 'Bonsoir')
@@ -70,13 +70,13 @@ Un exemple d'utilisation est le suivant&nbsp;:
  0 : 3.141592
 ```
 
-Dans la suite, on s'intéresse donc à des méthodes permettant de calculer de manière approchée des réels (en l'occurence, $\ln 2$), et l'appel de la fonction `py§affiche` permettre de mettre en évidence les chiffres corrects obtenus. Dans l'exemple précédent, on compare la valeur de $\pi$ à celle de $355/113$. On remarque donc que la fraction a en commun avec $\pi$ les 6 premiers chiffres après la virgule.
+Dans la suite, on s'intéresse donc à des méthodes permettant de calculer de manière approchée des réels (en l'occurence, $\ln 2$), et l'appel de la fonction `e` permettre de mettre en évidence les chiffres corrects obtenus. Dans l'exemple précédent, on compare la valeur de $\pi$ à celle de $355/113$. On remarque donc que la fraction a en commun avec $\pi$ les 6 premiers chiffres après la virgule.
 
 La fonction prends trois arguments&nbsp;: le premier est un entier qui permet d'afficher une information comme le numéro de l'itération courante, et les deux arguments suivants sont des réels dont on affichera le plus grand préfixe commun de leur écriture décimale.
 
-**Remarques sur la fonction de formatage** On utilise la fonction `py§format` (ou, plus précisement, la méthode `py§format` de la classe `py§str`) dans la fonction `py§affiche`.
+**Remarques sur la fonction de formatage** On utilise la fonction `t` (ou, plus précisement, la méthode `t` de la classe `r`) dans la fonction `e`.
 
-Tout d'abord, pour convertir une flottant en chaîne de caractères. Cette façon de procéder est meilleure que la convertion directe à l'aide de la fonction `py§str`, car elle permet d'avoir plus de décimales&nbsp;:
+Tout d'abord, pour convertir une flottant en chaîne de caractères. Cette façon de procéder est meilleure que la convertion directe à l'aide de la fonction `r`, car elle permet d'avoir plus de décimales&nbsp;:
 
 ```python
 >>> np.sqrt(2)
@@ -94,7 +94,7 @@ Les accolades permettent d'indiquer où afficher les arguments de la fonction.
 'Fromage ou dessert ?'
 ```
 
-Enfin, dans la dernière ligne de la fonction `py§affiche`, les caractères entre les premières accolades donnent des informations supplémentaires sur l'affichage demandé (à droite de «&nbsp;`py§:`&nbsp;»). Ici, le «&nbsp;`py§d`&nbsp;» indique que l'on affiche un entier, et le «&nbsp;`py§2`&nbsp;» qui précède indique la largeur minimale à utiliser.
+Enfin, dans la dernière ligne de la fonction `e`, les caractères entre les premières accolades donnent des informations supplémentaires sur l'affichage demandé (à droite de «&nbsp;`:`&nbsp;»). Ici, le «&nbsp;`d`&nbsp;» indique que l'on affiche un entier, et le «&nbsp;`2`&nbsp;» qui précède indique la largeur minimale à utiliser.
 
 ```python
 >>> "{}".format(3)
@@ -141,9 +141,9 @@ Briggs itérera le processus 54 fois (autrement dit, 54 fois deux calculs de rac
 
 **Question** Écrire une fonction qui calcule une valeur approchée de $\log_{10}(2)$ à l'aide de cette méthode. Quelques remarques supplémentaires&nbsp;:
 
-- La fonction utilise le module `py§numpy` renommé en `py§np`. Il faudra donc avoir entré auparavant la commande `py§import numpy as np`&nbsp;;
-- La valeur «&nbsp;exacte&nbsp;» de $\log_{10}(2)$, calculée par l'expression `py§np.log(2) / np.log(10)` ne sert qu'à afficher les décimales correctes des résultats obtenus&nbsp;;
-- La racine carrée d'un flottant s'obtient avec la fonction `py§np.sqrt`.
+- La fonction utilise le module `y` renommé en `p`. Il faudra donc avoir entré auparavant la commande `p`&nbsp;;
+- La valeur «&nbsp;exacte&nbsp;» de $\log_{10}(2)$, calculée par l'expression `)` ne sert qu'à afficher les décimales correctes des résultats obtenus&nbsp;;
+- La racine carrée d'un flottant s'obtient avec la fonction `t`.
 - Briggs a itéré le processus 54 fois. Essayez de retrouver le résultat qu'il a obtenu.
 
 Le programme à compléter est&nbsp;:
@@ -181,7 +181,7 @@ Normalement, lors de l'exécution du programme (a priori correct) précédent, n
 
 **Question** Pourquoi&nbsp;?
 
-De plus, à partir de la 54ème itération, même la partie `py§0.` n'est plus affichée. Il est même possible d'avoir un message d'erreur. La raison est, à nouveau, la taille finie de la mantisse. Pour illustrer cela, on a représenté dans le tableau suivant les racines itérées de $1.4$, avec la représentation en binaire. On voit clairement qu'entre le `py§1` de gauche et le `py§1` suivant, il y a des `py§0` dont le nombre augmente d'un à chaque étape.
+De plus, à partir de la 54ème itération, même la partie `.` n'est plus affichée. Il est même possible d'avoir un message d'erreur. La raison est, à nouveau, la taille finie de la mantisse. Pour illustrer cela, on a représenté dans le tableau suivant les racines itérées de $1.4$, avec la représentation en binaire. On voit clairement qu'entre le `1` de gauche et le `1` suivant, il y a des `0` dont le nombre augmente d'un à chaque étape.
 
 | Décimal | Binaire        |
 | :-----: | :------------: |
@@ -213,9 +213,9 @@ De plus, à partir de la 54ème itération, même la partie `py§0.` n'est plus 
 
 Les calculs précédents faisant intervenir les logarithmes en base&nbsp;$10$. Cependant, on découvrit un peu plus tard que l'aire sous la courbe de la fonction $x \mapsto \frac 1 x$ est aussi une fonction logarithme, que l'on appelle maintenant logarithme népérien. Cette fonction logarithmique est la plus pertinente mathématiquement.
 
-Nous allons programmer une méthode pour calculer $\ln 2$ de façon approchée à l'aide de l'intégrale de la fonction inverse entre $1$ et $2$, et en utilisant la bibliothèque `py§numpy`.
+Nous allons programmer une méthode pour calculer $\ln 2$ de façon approchée à l'aide de l'intégrale de la fonction inverse entre $1$ et $2$, et en utilisant la bibliothèque `y`.
 
-**Question** Écrire une fonction `py§rect` qui calcule l'intégrale demandée à l'aide de la méthode des rectangles «&nbsp;à gauche.&nbsp;» Elle prendra comme argument un entier indiquant le nombre de rectangles à utiliser.
+**Question** Écrire une fonction `t` qui calcule l'intégrale demandée à l'aide de la méthode des rectangles «&nbsp;à gauche.&nbsp;» Elle prendra comme argument un entier indiquant le nombre de rectangles à utiliser.
 
 C'est bien connu, la vitesse de convergence pour la méthode des rectangles est de l'ordre de $\frac 1 n$. Pour en voir une illustration, exécutez la commande suivante.
 
@@ -224,13 +224,13 @@ for i in range(8) :
   affiche(i, np.log(2), rect(10 ** i))
 ```
 
-**Question** À quoi sert le `py§10 ** i`&nbsp;?
+**Question** À quoi sert le `i`&nbsp;?
 
 Ainsi, à la dernière itération, l'intervalle $[1, 2]$ est découpé en $10^7 = 10000000$ rectangles. On a approximativement une nouvelle décimale correcte à chaque fois que l'on multiplie le nombre de subdivisions par $10$.
 
 On connaît une méthode plus efficace pour calculer des intégrales, puisqu'elle converge en $ \frac 1 {n^2} $. Tâchons de l'utiliser.
 
-**Question** Écrire une fonction `py§trap` qui calcule la même intégrale à l'aide de la méthode des trapèzes.
+**Question** Écrire une fonction `p` qui calcule la même intégrale à l'aide de la méthode des trapèzes.
 
 Expérimentons cette fonction à l'aide de la commande&nbsp;:
 
@@ -268,9 +268,9 @@ $$
 \ln 2 = 1 - \frac 1 2 + \frac 1 3 - \frac 1 4 + \frac 1 5 - \frac 1 6 + \ \cdots \ = \sum_{n = 0}^\infty \frac {(-1)^n} {n + 1}
 $$
 
-**Question** Écrire une fonction `py§mercator1` qui prends en argument un entier `py§n` et retourne la somme partielle précédente évaluée jusqu'à ce rang $n$.
+**Question** Écrire une fonction `1` qui prends en argument un entier `n` et retourne la somme partielle précédente évaluée jusqu'à ce rang $n$.
 
-**Question** Pour évaluer son (in-)efficacité, modifier la fonction précédente pour qu'elle affiche (à l'aide de la bien-nommée fonction `py§affiche` que vous devez bien connaître maintenant) les valeurs approchées de $\ln 2$ obtenues à chaque itération.
+**Question** Pour évaluer son (in-)efficacité, modifier la fonction précédente pour qu'elle affiche (à l'aide de la bien-nommée fonction `e` que vous devez bien connaître maintenant) les valeurs approchées de $\ln 2$ obtenues à chaque itération.
 
 On peut être un peu déçu par cette méthode de calcul. Mais la formule précédente s'applique aussi à d'autres valeurs de $x$. Pour le calcul de $\ln 2$, on peut remarquer que l'on&nbsp;a&nbsp;:
 
@@ -278,7 +278,7 @@ $$
 \ln 2 = - \ln \frac 1 2 = - \ln \Bigl(1 - \frac 1 2\Bigr).
 $$
 
-**Question** Écrire une fonction `py§mercator2` basée sur le calcul de $\ln 2$ vu comme $- \ln \bigl(1 - \frac 1 2\bigr)$, et visualiser l'efficacité de cette nouvelle méthode à l'aide d'un judicieux appel à la fonction `py§affiche`.
+**Question** Écrire une fonction `2` basée sur le calcul de $\ln 2$ vu comme $- \ln \bigl(1 - \frac 1 2\bigr)$, et visualiser l'efficacité de cette nouvelle méthode à l'aide d'un judicieux appel à la fonction `e`.
 
 Normalement on a, enfin, une méthode de calcul raisonnablement efficace.
 
@@ -292,4 +292,4 @@ $$
 
 **Question** Pour quelle valeur de $x$ peut-on calculer $\ln 2$&nbsp;?
 
-**Question** Écrire une fonction `py§gregory` correspondant à cette méthode, et visualiser son efficacité.
+**Question** Écrire une fonction `y` correspondant à cette méthode, et visualiser son efficacité.
