@@ -14,13 +14,13 @@ Dans cet article, nous nous intéressons à l'algorithme de recherche dichotomiq
 
 L'idée de base est simple&nbsp;:
 
-* On dispose d'un tableau `py§t` trié de valeurs, et on cherche à déterminer si une valeur `py§v` est présente dans le tableau. 
+* On dispose d'un tableau `t` trié de valeurs, et on cherche à déterminer si une valeur `v` est présente dans le tableau. 
 
 * Pour cela, on procède par _dichotomie_&nbsp;:
-    - On regarde l'élément du milieu du tableau et on le compare à `py§v`.
+    - On regarde l'élément du milieu du tableau et on le compare à `v`.
     - S'ils sont égaux, on a gagné, sinon, on poursuit la recherche dans la première ou la second moitié du tableau.
 
-* Si à la fin, on a réduit la portion du tableau au point qu'il ne contient plus aucun élément, la recherche s'arrête sur un echec&nbsp;: `py§v` n'est pas présent dans `py§t`.
+* Si à la fin, on a réduit la portion du tableau au point qu'il ne contient plus aucun élément, la recherche s'arrête sur un echec&nbsp;: `v` n'est pas présent dans `t`.
 
 Illustrons cela&nbsp;:
 
@@ -53,7 +53,7 @@ Un invariant de boucle procède de la même idée&nbsp;:
 - Si une propriété est vrai en entrant dans une boucle,
 - et si elle est préservée par le corps de la boucle (autrement dit si elle est vérifiée au début, elle l'est encore après exécution du corps de la boucle),
 
-alors elle vérifiée à chaque entrée de boucle… et aussi en sortant de la boucle (on parle ici d'une boucle `py§while`).
+alors elle vérifiée à chaque entrée de boucle… et aussi en sortant de la boucle (on parle ici d'une boucle `e`).
 
 ## La version classique de l'algorithme
 
@@ -76,7 +76,7 @@ def dichotomie(t, v):
     return False
 ```
 
-Les variables `py§a` et `py§b` représentent les bornes entre lesquels on recherche `py§v` dans `py§t`. Autrement dit, avec les notations de Python, on cherche `py§v` dans `py§t[a:b + 1]`. Comment exprimer cela proprement en termes d'invariants&nbsp?
+Les variables `a` et `b` représentent les bornes entre lesquels on recherche `v` dans `t`. Autrement dit, avec les notations de Python, on cherche `v` dans `]`. Comment exprimer cela proprement en termes d'invariants&nbsp?
 
 ### Preuve de correction
 
@@ -86,16 +86,16 @@ $$
 \mathtt v \in \mathtt t \implies \mathtt v \in \mathtt{t[a:b + 1]}
 $$
 
-Autrement dit, si `py§v` est présente dans `py§t`, alors c'est nécessairement entre les indices `py§a` et `py§b` (inclus).
+Autrement dit, si `v` est présente dans `t`, alors c'est nécessairement entre les indices `a` et `b` (inclus).
 
 Pour prouver qu'il s'agit bien d'un invariant de boucle, on va supposer que notre propriété est vérifiée au début du corps de la boucle, et on va prouver que c'est encore le cas à la fin.
 
-Après avoir défini `py§m`, examinons les tests successifs. Tout d'abord, si l'on a bien `py§t[m] == v`, alors on renvoie `py§True` ce qui est correct, ayant effectivement `py§m` dans `py§t`. Dans ce cas, l'invariant ne sert à rien puisque l'on a effectivement trouvé l'élément recherché.
+Après avoir défini `m`, examinons les tests successifs. Tout d'abord, si l'on a bien `v`, alors on renvoie `e` ce qui est correct, ayant effectivement `m` dans `t`. Dans ce cas, l'invariant ne sert à rien puisque l'on a effectivement trouvé l'élément recherché.
 
 Maintenant, deux cas sont possibles&nbsp;:
 
-- si `py§t[m] < v`, puisque `py§t` est trié, la valeur `py§v` ne peut pas être présente dans `py§t[a:m + 1]`. Ainsi, si `py§v in t[a:b + 1]`, alors nécessairement `py§v in t[m + 1:b + 1]`. Ainsi, en posant `py§a = m + 1`, on a `py§v in t[a:b + 1]`.
-- Sinon, sachant de plus que `py§t[m] != v`, cela signifie que `py§t[m] > v` et donc que si `py§v in t[a:b + 1]`, alors `py§v in t[a:m]`. Ainsi, en posant `py§b = m - 1`, on a `py§v in t[a:b + 1]`.
+- si `v`, puisque `t` est trié, la valeur `v` ne peut pas être présente dans `]`. Ainsi, si `]`, alors nécessairement `]`. Ainsi, en posant `1`, on a `]`.
+- Sinon, sachant de plus que `v`, cela signifie que `v` et donc que si `]`, alors `]`. Ainsi, en posant `1`, on a `]`.
 
 Dans tous les cas, à la fin de l'exécution de la boucle (si l'on y est toujours), la propriété
 
@@ -107,7 +107,7 @@ est encore vérifiée. C'est donc bien un invariant de la boucle.
 
 Ce que l'on vient de prouver correspond à la phase d'hérédité d'une démonstration par récurrence. Pour terminer ce type de démonstration, il faut aussi une phase d'initialisation. Ainsi, si notre hypothèse de récurrence est vérifiée pour un certain rang, et qu'elle est préservée en passant d'un rang au suivant, alors elle est vérifiée pour tous les rangs suivants.
 
-De même, vérifions que notre invariant est vérifié avant d'entrer dans la boucle. À ce moment, on a `py§a == 0` et `py§b == len(t) - 1` et donc `py§t[a:b + 1] == t[0:len(t)] == t`. Notre invariant correspond alors à la tautologie
+De même, vérifions que notre invariant est vérifié avant d'entrer dans la boucle. À ce moment, on a `0` et `1` et donc `t`. Notre invariant correspond alors à la tautologie
 
 $$
 \mathtt v \in \mathtt t \implies \mathtt v \in \mathtt{t},
@@ -115,17 +115,17 @@ $$
 
 il est donc bien vérifié.
 
-Pour résumer, notre propriété est vérifiée en entrée de boucle et c'est un invariant de la boucle. En conséquent, elle reste vérifiée en sortant de la boucle (quelque soit le nombre d'itérations effectué). De plus, à ce moment, on a `py§a > b` et donc `py§t[a:b + 1] = []` et on peut donc affirmer que `py§v in t => v in []`.
+Pour résumer, notre propriété est vérifiée en entrée de boucle et c'est un invariant de la boucle. En conséquent, elle reste vérifiée en sortant de la boucle (quelque soit le nombre d'itérations effectué). De plus, à ce moment, on a `b` et donc `]` et on peut donc affirmer que `]`.
 
-Comme `py§v in []` est nécessairement faux, puisque la liste vide ne contient aucune valeur, on en déduit que `py§v not in t`&nbsp;: on peut conclure qu'en sortie de boucle, `py§v` n'est pas présent dans la liste.
+Comme `]` est nécessairement faux, puisque la liste vide ne contient aucune valeur, on en déduit que `t`&nbsp;: on peut conclure qu'en sortie de boucle, `v` n'est pas présent dans la liste.
 
-Comme annoncé précédemment, notre invariant de boucle ne sert pas à montrer la correction en cas de succés (puisque l'on a effectivement trouvé un indice `py§m` tel que `py§t[m] == v`) mais en cas d'échec&nbsp;: bien que l'on n'a pas inspecté toutes les valeurs de `py§t`, on a prouvé que `py§v` n'est pas présent dans `py§t`. On a cherché aux bons endroits et puisque l'on n'a pas trouvé cette valeur, cela signifie qu'elle n'y est pas.
+Comme annoncé précédemment, notre invariant de boucle ne sert pas à montrer la correction en cas de succés (puisque l'on a effectivement trouvé un indice `m` tel que `v`) mais en cas d'échec&nbsp;: bien que l'on n'a pas inspecté toutes les valeurs de `t`, on a prouvé que `v` n'est pas présent dans `t`. On a cherché aux bons endroits et puisque l'on n'a pas trouvé cette valeur, cela signifie qu'elle n'y est pas.
 
 ### Terminaison
 
 Insistons sur le fait que la présence d'un invariant de boucle ne présume en rien de la terminaison de l'algorithme&nbsp;; il ne prouve pas que l'on va sortir de la boucle. Par contre, si l'on sort de la boucle, alors le résultat est correct.
 
-Pour la terminaison, prouvons que si au début d'une itération, `py§a` et `py§b` sont tels que $b - a \leq 2^n - 2$ pour un certain entier&nbsp;$n$, alors à la fin de l'itération, on&nbsp;a
+Pour la terminaison, prouvons que si au début d'une itération, `a` et `b` sont tels que $b - a \leq 2^n - 2$ pour un certain entier&nbsp;$n$, alors à la fin de l'itération, on&nbsp;a
 $$
 b - a \leq 2^{n - 1} - 2
 $$
@@ -135,19 +135,19 @@ $$
 m - a = \Bigl\lfloor \dfrac {b - a} 2 \Bigr\rfloor \qquad \mathrm{et} \qquad b - m = \Bigl\lceil \dfrac {b - a} 2 \Bigr\rceil
 $$
 
-et, par croissance de $\lfloor \ \cdot \ \rfloor$ et $\lceil \ \cdot \ \rceil$, si $ b - a \leq 2^n - 2$, alors $m - a$ et $b - m$ sont tous les deux inférieurs ou égaux à $2^{n - 1} - 1$. Ainsi, dans tous les cas, après l'affectation `py§a = m + 1` ou `py§b = m - 1`, on a bien
+et, par croissance de $\lfloor \ \cdot \ \rfloor$ et $\lceil \ \cdot \ \rceil$, si $ b - a \leq 2^n - 2$, alors $m - a$ et $b - m$ sont tous les deux inférieurs ou égaux à $2^{n - 1} - 1$. Ainsi, dans tous les cas, après l'affectation `1` ou `1`, on a bien
 
 $$
 b - a \leq 2^{n - 1} - 2
 $$
 
-L'exposant de $2$ dans la majoration décroit donc de&nbsp;$1$ à chaque itération, etaprès un nombre suffisamment grand d'itérations, l'écart `py§b - a` va donc devenir négatif, ce qui est incompatible avec la condition de boucle `py§b >= a`.
+L'exposant de $2$ dans la majoration décroit donc de&nbsp;$1$ à chaque itération, etaprès un nombre suffisamment grand d'itérations, l'écart `a` va donc devenir négatif, ce qui est incompatible avec la condition de boucle `a`.
 
 Ainsi, on est sûr de sortir de la boucle, l'algorithme termine.
 
 ### Analyse de complexité
 
-La preuve précédente de terminaison nous permet de déterminer la complexité au pire des cas de l'algorithme. En effet, le corps de la boucle est en $O(1)$ et si $\ell - 1 \leq 2^n - 2$ (avec $\ell$ la longueur de `py§t`), alors on effectue au maximum `py§n` itérations successives avec
+La preuve précédente de terminaison nous permet de déterminer la complexité au pire des cas de l'algorithme. En effet, le corps de la boucle est en $O(1)$ et si $\ell - 1 \leq 2^n - 2$ (avec $\ell$ la longueur de `t`), alors on effectue au maximum `n` itérations successives avec
 $$
 n = \bigl\lceil \log_2(\ell + 1) \bigr\rceil = \bigl\lfloor \log_2(\ell) + 1\bigr\rfloor
 $$
@@ -155,7 +155,7 @@ La complexité au pire des cas est donc en $O(\log_2 \ell)$.
 
 ## Une autre version
 
-Dans la version «&nbsp;classique&nbsp;» de l'algorithme, on effectue deux tests par itération, puisque l'on effectue le test d'égalité à chaque fois. On peut accélerer l'algorithme en ne faisant qu'un unique test d'égalité, en sortie de boucle. Elle décrite [ici](https://en.wikipedia.org/wiki/Binary_search_algorithm#Alternative_procedure) et peut s'écrire ainsi en Python (avec un peu de _refactoring_, puisque la variable `py§a` correspond à `py§L` du code original tandis que `py§b` correspond à `py§R + 1`)&nbsp;:
+Dans la version «&nbsp;classique&nbsp;» de l'algorithme, on effectue deux tests par itération, puisque l'on effectue le test d'égalité à chaque fois. On peut accélerer l'algorithme en ne faisant qu'un unique test d'égalité, en sortie de boucle. Elle décrite [ici](https://en.wikipedia.org/wiki/Binary_search_algorithm#Alternative_procedure) et peut s'écrire ainsi en Python (avec un peu de _refactoring_, puisque la variable `a` correspond à `L` du code original tandis que `b` correspond à `1`)&nbsp;:
 
 ```python
 def dicho2(t, v):
@@ -180,9 +180,9 @@ Cette fois-ci, l'invariant de boucle est
 $$ \mathtt v \in \mathtt t \implies \mathtt v \in \mathtt{t[a:b]} $$
 et les preuves de correction et de terminaison sont similaires à la version classique (voire plus faciles).
 
-Concernant la complexité, dans `py§dicho2`, on ne fait qu'un test par itération au lieu de 2 dans `py§dicho` mais globalement, `py§dicho2` fait plus d'itérations que `py§dicho`. En particulier, en cas de succés, dans `py§dicho` on s'arrête tout de suite alors que dans `py§dicho2`, la boucle continue jusqu'à n'avoir plus qu'un seul élément dans l'encadrement.
+Concernant la complexité, dans `2`, on ne fait qu'un test par itération au lieu de 2 dans `o` mais globalement, `2` fait plus d'itérations que `o`. En particulier, en cas de succés, dans `o` on s'arrête tout de suite alors que dans `2`, la boucle continue jusqu'à n'avoir plus qu'un seul élément dans l'encadrement.
 
-Néanmoins, `py§dicho2` est en général entre $15$ et $20\%$ plus rapide, comme l'illustre le test suivant&nbsp;:
+Néanmoins, `2` est en général entre $15$ et $20\%$ plus rapide, comme l'illustre le test suivant&nbsp;:
 
 ```python
 >>> import timeit
@@ -200,7 +200,7 @@ Néanmoins, `py§dicho2` est en général entre $15$ et $20\%$ plus rapide, comm
 3.2702691959998447
 ```
 
-Si il y a beaucoup de succés et peu d'échecs, `py§dicho2` reste plus rapide que `py§dicho`. Pour illustrer cela, considérons le cas extrême où `py§l1` et `py§l2` contiennent toutes les valeurs d'un intervalle donné d'entiers.
+Si il y a beaucoup de succés et peu d'échecs, `2` reste plus rapide que `o`. Pour illustrer cela, considérons le cas extrême où `1` et `2` contiennent toutes les valeurs d'un intervalle donné d'entiers.
 
 ```python
 >>> l1 = [x + 1 for x in range(1000000)]
@@ -215,14 +215,14 @@ Si il y a beaucoup de succés et peu d'échecs, `py§dicho2` reste plus rapide q
 4.5058743929998855
 ```
 
-La raison est simple&nbsp;: si l'on suppose que la recherche des différents éléments du tableau est équiprobable (on ne s'intéresse ici qu'aux succés, pour lesquels le nombre d'itérations varie sensiblement), alors dans `py§dicho`, une valeur va être accessible après une itération, deux valeurs au bout de deux itérations, quatres valeurs au bout de trois itérations et, plus généralement, $2^{k - 1}$ valeurs au bout de $k$ itérations. Si le tableau contient $2^n - 1$ éléments (ce qui correspond à un arbre binaire complet, ou parfait selon la terminologie utilisée), le nombre moyen d'itérations en cas de succés est donc&nbsp;:
+La raison est simple&nbsp;: si l'on suppose que la recherche des différents éléments du tableau est équiprobable (on ne s'intéresse ici qu'aux succés, pour lesquels le nombre d'itérations varie sensiblement), alors dans `o`, une valeur va être accessible après une itération, deux valeurs au bout de deux itérations, quatres valeurs au bout de trois itérations et, plus généralement, $2^{k - 1}$ valeurs au bout de $k$ itérations. Si le tableau contient $2^n - 1$ éléments (ce qui correspond à un arbre binaire complet, ou parfait selon la terminologie utilisée), le nombre moyen d'itérations en cas de succés est donc&nbsp;:
 $$
 \frac 1 {2^n - 1} \sum_{k = 1}^n k 2^{k - 1} = \frac {n 2^n - 2^n + 1}{2^n - 1} \geq n - 1
 $$
 
-Le gain de s'arrêter plus tôt en cas de succès ne fait gagner en moyenne qu'au plus une itération pour `py§dicho` par rapport à `py§dicho2`, ce qui ne compense pas la différence du nombre de tests par itération.
+Le gain de s'arrêter plus tôt en cas de succès ne fait gagner en moyenne qu'au plus une itération pour `o` par rapport à `2`, ce qui ne compense pas la différence du nombre de tests par itération.
 
-Notons que l'on peut encore accélérer la fonction `py§dicho2`. La cible est le `py§+ 1` du test de boucle `py§b > a + 1`. En effet, après calcul de `py§m`, cela revient à `py§m != a` (à vous de voir pourquoi). On peut donc écrire&nbsp;:
+Notons que l'on peut encore accélérer la fonction `2`. La cible est le `1` du test de boucle `1`. En effet, après calcul de `m`, cela revient à `a` (à vous de voir pourquoi). On peut donc écrire&nbsp;:
 
 ```python
 def dicho2bis(t, v):
@@ -266,7 +266,7 @@ Comme indiqué au début de l'article, l'implémentation de la recherche dichoto
 
 Pour finir, en dépit de tout le soin apporté aux preuves de correction de boucle et de terminaison, les fonctions que j'ai présentées sont incorrectes… dans la plupart des langages de programmation. Bien sûr, la grande majorité des cas, elles retourneront le bon résultat mais, dans l'absolu, il peut arriver que ce ne soit pas le cas.
 
-Le problème vient de l'addition des indices `py§a` et `py§b` pour en trouver calculer la moyenne. En général, `py§a` et `py§b` sont des pointeurs, des adresses mémoires. Et leur somme peut dépasser la taille de représentation des adresses. En effet, ce n'est pas parce que `py§a` et `py§b` sont représentables en 64 bits que `py§a + b` l'est aussi. Il peut y avoir un dépassement. Dans ce cas (qui peut arriver en pratique), le résultat obtenu en effectuant `py§(a + b) // 2` ne correspondra pas à la moyenne attendue.
+Le problème vient de l'addition des indices `a` et `b` pour en trouver calculer la moyenne. En général, `a` et `b` sont des pointeurs, des adresses mémoires. Et leur somme peut dépasser la taille de représentation des adresses. En effet, ce n'est pas parce que `a` et `b` sont représentables en 64 bits que `b` l'est aussi. Il peut y avoir un dépassement. Dans ce cas (qui peut arriver en pratique), le résultat obtenu en effectuant `2` ne correspondra pas à la moyenne attendue.
 
 Cette erreur est restée pendant plusieurs décennies dans divers bibliothèques (en Java, notamment) avant d'être détectée, comme raconté [ici](https://ai.googleblog.com/2006/06/extra-extra-read-all-about-it-nearly.html) en anglais.
 

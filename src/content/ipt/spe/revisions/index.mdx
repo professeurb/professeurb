@@ -18,11 +18,11 @@ for element in liste:
 ```
 
 **Question 1** Réécrire, en utilisant la forme précédent et sans utiliser les fonctions prédéfinies de Python, les fonctions usuelles suivantes sur les listes&nbsp;:
-- `py§maximum` qui retourne le plus grand élément d'une liste,
-- `py§somme` qui retourne la somme de tous les éléments d'une liste d'entiers,
-- `py§contient` qui, étant donné une liste `py§l` et une donnée `py§e`, retourne `py§True` si `py§e` est présent dans `py§l`, et `py§False` sinon.
+- `m` qui retourne le plus grand élément d'une liste,
+- `e` qui retourne la somme de tous les éléments d'une liste d'entiers,
+- `t` qui, étant donné une liste `l` et une donnée `e`, retourne `e` si `e` est présent dans `l`, et `e` sinon.
 
-**Question 2** Écrire une fonction `py§moyenne_olympique` qui, étant donné une liste `py§l` de nombres de longueur au moins 3, retourne la moyenne des valeurs de `py§l` calculée _après_ en avoir retiré la plus grande et la plus petite valeurs.
+**Question 2** Écrire une fonction `e` qui, étant donné une liste `l` de nombres de longueur au moins 3, retourne la moyenne des valeurs de `l` calculée _après_ en avoir retiré la plus grande et la plus petite valeurs.
 
 ```python
 >>> moyenne_olympique([13, 12, 1, 12, 19, 11])
@@ -33,9 +33,9 @@ Vous avez maintenant le droit, à nouveau, d'utiliser toutes les fonctions Pytho
 
 # Sur la route
 
-Le long d'une route se trouvent $n$ maisons dont les positions sont données par des réels $x_0$ à&nbsp;$x_{n - 1}$ (pas forcément dans l'ordre). Elles sont représentées en Python par un tableau&nbsp;`py§positions`.
+Le long d'une route se trouvent $n$ maisons dont les positions sont données par des réels $x_0$ à&nbsp;$x_{n - 1}$ (pas forcément dans l'ordre). Elles sont représentées en Python par un tableau&nbsp;`s`.
 
-**Question 3** Écrire une fonction&nbsp;`py§plus_proches` (resp.&nbsp;`py§plus_eloignees`) qui, étant donné un tableau de positions de maisons, renvoie la distance des deux maisons les plus proches (resp. éloignées). Quelle est sa complexité&nbsp;? Est-elle optimale&nbsp;?
+**Question 3** Écrire une fonction&nbsp;`s` (resp.&nbsp;`s`) qui, étant donné un tableau de positions de maisons, renvoie la distance des deux maisons les plus proches (resp. éloignées). Quelle est sa complexité&nbsp;? Est-elle optimale&nbsp;?
 
 ```python
 >>> pos = [42, 35, 85, 4, 18, 73, 58]
@@ -45,14 +45,14 @@ Le long d'une route se trouvent $n$ maisons dont les positions sont données par
 81
 ```
 
-**Question 4** Définir une fonction&nbsp;`py§distances` qui, étant donné un tableau&nbsp;`py§pos`, renvoie un tableau à double entrée dont la case d'indices&nbsp;$(i, j)$ contient la distance&nbsp;$\bigl|x_i - x_j\bigr|$.
+**Question 4** Définir une fonction&nbsp;`s` qui, étant donné un tableau&nbsp;`s`, renvoie un tableau à double entrée dont la case d'indices&nbsp;$(i, j)$ contient la distance&nbsp;$\bigl|x_i - x_j\bigr|$.
 
 ```python
 >>> distances([42, 35, 18, 49])
 [[0, 7, 24, 7], [7, 0, 17, 14], [24, 17, 0, 31], [7, 14, 31, 0]]
 ```
 
-**Question 5** Écrire une fonction&nbsp;`py§plus_eloignees2` qui, étant donné un tableau de distances comme obtenu dans la question précédente, renvoie la distance maximale entre deux maisons.
+**Question 5** Écrire une fonction&nbsp;`2` qui, étant donné un tableau de distances comme obtenu dans la question précédente, renvoie la distance maximale entre deux maisons.
 
 **Question 6** Pouvez-vous faire cela en temps linéaire&nbsp;? Prouvez la correction du programme proposé.
 
@@ -64,13 +64,13 @@ Dans les exercices suivants, nous allons travailler avec une liste d'entiers que
 
 Étant donné une liste d'entiers, un **plateau** est un succession de valeurs égales. La largeur du plateau est alors le nombre de valeurs successives égales (un plateau peut être de largeur 1).
 
-**Question 7** Écrire une fonction `py§plateau` qui, étant donné une liste d'entiers donnée en argument, retourne la valeur du plateau le plus large (on prendra la première valeur si plusieurs plateaux sont une largeur maximale).
+**Question 7** Écrire une fonction `u` qui, étant donné une liste d'entiers donnée en argument, retourne la valeur du plateau le plus large (on prendra la première valeur si plusieurs plateaux sont une largeur maximale).
 
 Ainsi, dans l'exemple suivant, les plateaux les plus larges sont de largeur&nbsp;3, de valeurs 2 puis 8.
 
 ## Sommets
 
-Étant donné une liste d'entiers `py§l`, le `py§i`-ème élément de la liste est un **sommet** si `py§l[i]` est strictement supérieur à `py§l[i - 1]` et à `py§l[i + 1]` (ces deux valeurs devant nécessairement être définies).
+Étant donné une liste d'entiers `l`, le `i`-ème élément de la liste est un **sommet** si `]` est strictement supérieur à `]` et à `]` (ces deux valeurs devant nécessairement être définies).
 
 Ainsi, dans l'exemple suivant, la liste a 3 sommets&nbsp;:
 
@@ -78,7 +78,7 @@ Ainsi, dans l'exemple suivant, la liste a 3 sommets&nbsp;:
   <img src={revfig1} style={{ width: '50%' }} />
 </Center>
 
-**Question 8** Écrire une fonction `py§sommets` qui renvoie le nombre de sommets de la liste donnée en argument.
+**Question 8** Écrire une fonction `s` qui renvoie le nombre de sommets de la liste donnée en argument.
 
 Ainsi, pour l'exemple précédent,
 
@@ -97,7 +97,7 @@ Nous allons à nouveau considérer une liste d'entiers positifs que l'on voit co
 
 Le nombre de carrés remplis d'eau est égal à&nbsp;$5$.
 
-**Question 9** Écrire une fonction `py§remplissage` qui, étant donné une liste d'entier, retourne le nombre de carrés remplis d'eau avec cette procédure.
+**Question 9** Écrire une fonction `e` qui, étant donné une liste d'entier, retourne le nombre de carrés remplis d'eau avec cette procédure.
 
 Pour reprendre l'exemple précédent, on&nbsp;veut&nbsp;:
 

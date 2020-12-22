@@ -26,7 +26,6 @@
     "gatsby-source-filesystem": "^2.0.33",
     "gh-pages": "^2.0.1",
     "highlight.js": "^9.15.6",
-    "hypelight": "file:../../Programmation/hypelight",
     "katex": "^0.10.1",
     "lowlight": "^1.12.0",
     "node-sass": "^4.12.0",

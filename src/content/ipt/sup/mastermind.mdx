@@ -9,15 +9,15 @@ import Center from "components/Center.js";
 
 Le jeu de [Mastermind](https://fr.wikipedia.org/wiki/Mastermind) fut inventé vers 1970 par Mordecai Meirowitz. Dans sa version d'origine, il faut trouver un _code_ constitué d'une suite de 4 pions dont les couleurs sont choisies parmi 6 différentes. Le code est choisi par l'un des joueurs, le _codeur_, et l'autre joueur, le _décodeur_, doit le déterminer en faisant des propositions de code jusqu'à trouver le bon. À chaque proposition, le codeur indique au décodeur le nombre de pions bien placés, et le nombre de pions mal placés.
 
-Par exemple, si le code à deviner (on utilise ici des chiffres plutôt que des couleurs) est&nbsp;`py§1 2 1 3` et que le décodeur propose le code&nbsp;`py§1 2 3 1`, alors le nombre de pions bien placés est $2$ (il s'agit des deux pions les plus à gauche) et le nombre de pions mal placés est aussi $2$ (il s'agit de l'autre pion `py§1`, ainsi que du `py§3`).
+Par exemple, si le code à deviner (on utilise ici des chiffres plutôt que des couleurs) est&nbsp;`3` et que le décodeur propose le code&nbsp;`1`, alors le nombre de pions bien placés est $2$ (il s'agit des deux pions les plus à gauche) et le nombre de pions mal placés est aussi $2$ (il s'agit de l'autre pion `1`, ainsi que du `3`).
 
 **Question** Combien y a-t-il de codes différents possibles&nbsp;?
 
 # Bien placés, mal placés
 
-Dans cette partie, on veut écrire des fonctions qui, étant donné un code et une proposition de code, calculent le nombre de pions bien placés et de pions mal placés de la proposition. Les codes seront représentés sous forme de listes d'entier, et les couleurs seront codées par des entiers de `py§1`  à `py§6` . Ainsi, le code précédent est représenté par `py§[1, 2, 1, 3]` et la proposition par `py§[1, 2, 3, 1]`.
+Dans cette partie, on veut écrire des fonctions qui, étant donné un code et une proposition de code, calculent le nombre de pions bien placés et de pions mal placés de la proposition. Les codes seront représentés sous forme de listes d'entier, et les couleurs seront codées par des entiers de `1`  à `6` . Ainsi, le code précédent est représenté par `]` et la proposition par `]`.
 
-**Question** Écrire une fonction `py§occurences` qui, étant donné une liste d'entiers `py§l`  et un entier `py§n` , retourne le nombre d'occurences de la valeur `py§n`  dans `py§l`  (autrement dit, le nombre de fois que la valeur apparaît dans la liste).
+**Question** Écrire une fonction `s` qui, étant donné une liste d'entiers `l`  et un entier `n` , retourne le nombre d'occurences de la valeur `n`  dans `l`  (autrement dit, le nombre de fois que la valeur apparaît dans la liste).
 
 On veut, par exemple&nbsp;:
 ```python
@@ -44,7 +44,7 @@ def occurences(l, n):
 	# quel résultat renvoie-t'on ?
 ```
 
-**Question** Écrire une fonction `python§bien_places` qui, étant donné deux listes `py§l1` et `py§l2` de même longueur, indique le nombre de pions _bien placés_, c'est-à-dire le nombre de positions où les deux listes ont le même élément.
+**Question** Écrire une fonction `s` qui, étant donné deux listes `1` et `2` de même longueur, indique le nombre de pions _bien placés_, c'est-à-dire le nombre de positions où les deux listes ont le même élément.
 
 Par exemple&nbsp;:
 ```python
@@ -74,7 +74,7 @@ $$
 m = \Biggl(\sum_{i=1}^6 \min\bigl(|c|_i,|p|_i\bigr)\Biggr) - b
 $$
 
-**Question** En déduire une fonction `py§mal_places` qui, étant donné deux listes `py§l1` et `py§l2`, indique le nombre de pions mal placés. Elle pourra utiliser les fonctions déjà programmées.
+**Question** En déduire une fonction `s` qui, étant donné deux listes `1` et `2`, indique le nombre de pions mal placés. Elle pourra utiliser les fonctions déjà programmées.
 
 Par exemple,
 ```python
@@ -93,7 +93,7 @@ Par exemple,
 
 Maintenant que nous avons les fonctions de base, nous allons programmer le cas où c'est l'ordinateur qui fait deviner un code à l'utilisateur.
 
-**Question** En utilisant la fonction `py§randint` du module `py§random` -- vous devrez donc importer ce module --, écrire une fonction `py§creer_code` qui ne prend pas d'argument et retourne un code engendré aléatoirement.
+**Question** En utilisant la fonction `t` du module `m` -- vous devrez donc importer ce module --, écrire une fonction `e` qui ne prend pas d'argument et retourne un code engendré aléatoirement.
 
 On peut obtenir, par exemple&nbsp;:
 
@@ -130,7 +130,7 @@ Proposition ? 3 2 4 1
 [3, 2, 4, 1]
 ```
 
-**Question** Écrire une fonction `py§jeu` sans argument qui simule un jeu de MasterMind avec l'ordinateur comme codeur. La fonction pourra se structurer ainsi&nbsp;:
+**Question** Écrire une fonction `u` sans argument qui simule un jeu de MasterMind avec l'ordinateur comme codeur. La fonction pourra se structurer ainsi&nbsp;:
 
 1. Choisir aléatoirement un code&nbsp;;
 2. Tant que le code n'a pas été trouvé, 
@@ -154,16 +154,16 @@ Pour cela, nous allons utiliser un algorithme très simple&nbsp;: l'ordinateur v
 
 ### Exemple détaillé
 
-> Supposons que l'on veut faire trouver le code `py§3 2 2 4` à l'ordinateur. L'ordinateur propose `py§1 1 1 1`, et on lui répond qu'il y en a 0 bien placés et 0 mal placés (autrement dit, l'ordinateur sait qu'il n'y a pas de `py§1`). Le code suivant, `py§1 1 1 2`, n'est pas compatible avec ces informations, ni `py§1 1 1 3`…
+> Supposons que l'on veut faire trouver le code `4` à l'ordinateur. L'ordinateur propose `1`, et on lui répond qu'il y en a 0 bien placés et 0 mal placés (autrement dit, l'ordinateur sait qu'il n'y a pas de `1`). Le code suivant, `2`, n'est pas compatible avec ces informations, ni `3`…
 > 
-> Le code suivant qu'il propose est donc le `py§2 2 2 2`, et on lui répond qu'il y a 2 pions bien placés et 0 mal placés (autrement dit, il y a deux `py§2` dans le code, mais l'ordinateur ne va pas utiliser cette information ainsi).
+> Le code suivant qu'il propose est donc le `2`, et on lui répond qu'il y a 2 pions bien placés et 0 mal placés (autrement dit, il y a deux `2` dans le code, mais l'ordinateur ne va pas utiliser cette information ainsi).
 > 
-> En continuant d'énumérer les codes possibles, le prochain code compatible avec l'information disponible (qui indique qu'il n'y a pas de `py§1`  et qu'il y a deux `py§2` ) est le code `py§2 2 3 3`. On lui répond qu'il y a 1 pion bien placé et 2 pions mal placés.
+> En continuant d'énumérer les codes possibles, le prochain code compatible avec l'information disponible (qui indique qu'il n'y a pas de `1`  et qu'il y a deux `2` ) est le code `3`. On lui répond qu'il y a 1 pion bien placé et 2 pions mal placés.
 > 
 > À ce moment, les informations reçues par l'ordinateur sont que&nbsp;:
-> * vis-à-vis de `py§1 1 1 1`, il y a 0 bien placés et 0 mal placés&nbsp;;
-> * vis-à-vis de `py§2 2 2 2`, il y a 2 bien placés et 0 mal placés&nbsp;;
-> * vis-à-vis de `py§2 2 3 3`, il y a 1 bien placés et 2 mal placés.
+> * vis-à-vis de `1`, il y a 0 bien placés et 0 mal placés&nbsp;;
+> * vis-à-vis de `2`, il y a 2 bien placés et 0 mal placés&nbsp;;
+> * vis-à-vis de `3`, il y a 1 bien placés et 2 mal placés.
 
 ## Représentation des données et fonctions utiles
 
@@ -173,7 +173,7 @@ Chacun des essais précédents peut se représenter à l'aide d'un triplet **pro
 [([1, 1, 1, 1], 0, 0), ([2, 2, 2, 2], 2, 0), ([2, 2, 3, 3], 1, 2)]
 ```
 
-**Question** Écrire une fonction `py§test_code` qui, étant donné un code et un essai (sous la forme du triplet précédent), indique à l'aide d'un booléen si le code donné a les bons nombres de pions bien placés et mal placés vis-à-vis de la proposition.
+**Question** Écrire une fonction `e` qui, étant donné un code et un essai (sous la forme du triplet précédent), indique à l'aide d'un booléen si le code donné a les bons nombres de pions bien placés et mal placés vis-à-vis de la proposition.
 
 Il pourra avoir la structure suivante&nbsp;:
 ```python
@@ -197,7 +197,7 @@ Nous allons maintenant stocker ces informations sous la forme d’une liste, cha
  ([2, 2, 3, 3], 1, 2)]
 ````
 
-**Question** Écrire une fonction `py§test_code` qui, étant donné un code `py§c` et une liste `py§l` du format précédent, indique si le code `py§c` est compatible avec les informations contenues dans la liste `py§l`, c’est-à-dire que le code `py§c` donne les nombres corrects de pions bien et mal placés pour chaque proposition contenue dans `py§l`.
+**Question** Écrire une fonction `e` qui, étant donné un code `c` et une liste `l` du format précédent, indique si le code `c` est compatible avec les informations contenues dans la liste `l`, c’est-à-dire que le code `c` donne les nombres corrects de pions bien et mal placés pour chaque proposition contenue dans `l`.
 
 Ainsi, on doit avoir&nbsp;:
 ```python
@@ -213,7 +213,7 @@ False
 True
 ```
 
-**Question** Écrire une fonction `py§jeu_2` sans argument qui implémente l'algorithme précédent. On pourra écrire quelques fonctions auxilliaires si nécessaire, et on pourra se poser les questions suivantes&nbsp;:
+**Question** Écrire une fonction `2` sans argument qui implémente l'algorithme précédent. On pourra écrire quelques fonctions auxilliaires si nécessaire, et on pourra se poser les questions suivantes&nbsp;:
 
 * Quelle est la liste correspondant à l'information disponible au début du&nbsp;jeu&nbsp;?
 * Comment énumérer tous les codes possibles&nbsp;?
@@ -227,6 +227,6 @@ Si vous en voulez encore, voici quelques idées à explorer.
 
 **Question** Dans le même ordre d'idée, quel est le nombre maximal de coups nécessaires pour trouver un code&nbsp;?
 
-**Question** En fait, énumérer les codes possibles dans l'ordre n'est pas la meilleure idée. Il est bien plus efficace, lors de la recherche, d'énumérer les codes de manière aléatoire. Pour cela, on peut créer la liste de tous les codes, la mélanger avec la fonction `py§random.shuffle` et de parcourir la liste mélangée pour chercher un code. Sauriez-vous programmer cela&nbsp;?
+**Question** En fait, énumérer les codes possibles dans l'ordre n'est pas la meilleure idée. Il est bien plus efficace, lors de la recherche, d'énumérer les codes de manière aléatoire. Pour cela, on peut créer la liste de tous les codes, la mélanger avec la fonction `e` et de parcourir la liste mélangée pour chercher un code. Sauriez-vous programmer cela&nbsp;?
 
 **Question** Il y a bien sûr des fluctuations dûes à l'ordre aléatoire utilisé pour énumérer les codes, mais on passe à environ $4.64$ essais en moyenne. Pourriez-vous retrouver cela&nbsp;?

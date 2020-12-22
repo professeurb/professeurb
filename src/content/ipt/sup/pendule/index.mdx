@@ -35,9 +35,9 @@ omega_0 = 1
 duree = 40 # secondes
 dt = 0.01 # secondes
 ```
-**Question** Définir une liste `py§temps` qui contient tous les instants allant de `py§0` (inclus) à `py§duree` (inclus) pour un pas de `py§dt`.
+**Question** Définir une liste `s` qui contient tous les instants allant de `0` (inclus) à `e` (inclus) pour un pas de `t`.
 
-**Question** Écrire une fonction `py§euler` qui, étant donné deux arguments correspondant aux valeurs de $\theta$ et $\dot \theta$ au temps $t$, retourne les valeurs de $\theta$ et $\dot \theta$ actualisées pour le temps $t + \mathrm{d} t$.
+**Question** Écrire une fonction `r` qui, étant donné deux arguments correspondant aux valeurs de $\theta$ et $\dot \theta$ au temps $t$, retourne les valeurs de $\theta$ et $\dot \theta$ actualisées pour le temps $t + \mathrm{d} t$.
 
 ```python
 def euler(theta, theta_point):
@@ -45,7 +45,7 @@ def euler(theta, theta_point):
 	return (nouveau_theta, nouveau_theta_point)
 ```
 
-**Question** On souhaite écrire une fonction `py§simule` qui prends en entrée deux arguments `py§theta_0` et `py§theta_point_0` correspondant aux conditions initiales du pendule, et qui renvoie deux listes correspondant aux valeurs successives de $\theta$ et de&nbsp;$\dot \theta$ durant la simulation. Les listes doivent avoir la même longueur de la liste `py§temps` définie précédemment. 
+**Question** On souhaite écrire une fonction `e` qui prends en entrée deux arguments `0` et `0` correspondant aux conditions initiales du pendule, et qui renvoie deux listes correspondant aux valeurs successives de $\theta$ et de&nbsp;$\dot \theta$ durant la simulation. Les listes doivent avoir la même longueur de la liste `s` définie précédemment. 
 ```python
 def simule(theta_0, theta_point_0):
 	...
@@ -53,7 +53,7 @@ def simule(theta_0, theta_point_0):
 ```
 Voici quelques questions que l'on pourra se poser lors de l'écriture de cette fonction&nbsp;:
 
-1. Comment initialiser les listes `py§liste_theta` et `py§liste_theta_point`&nbsp;?
+1. Comment initialiser les listes `a` et `t`&nbsp;?
 1. Quel type de boucle utiliser pour remplir ces listes&nbsp;? Comment la définir&nbsp;?
 1. À chaque itération de la boucle, quelles nouvelles valeurs ajoutera-t-on à ces listes&nbsp;? Comment obtient-on ces valeurs&nbsp;?
 
@@ -64,9 +64,9 @@ $$
 \ddot \theta = - \omega_0^2 \theta
 $$
 
-**Question** Modifier la fonction `py§euler` en une fonction `py§euler_harmo` pour simuler un oscillateur harmonique, et tracer les trajectoires pour des vitesses initiales nulles et des angles initiaux allant de $0$ à $2$ avec un pas de $0.1$.
+**Question** Modifier la fonction `r` en une fonction `o` pour simuler un oscillateur harmonique, et tracer les trajectoires pour des vitesses initiales nulles et des angles initiaux allant de $0$ à $2$ avec un pas de $0.1$.
 
-Revenons maintenant à l'équation de mouvement initial et la fonction `py§euler` correspondante.
+Revenons maintenant à l'équation de mouvement initial et la fonction `r` correspondante.
 
 # Un peu d'exploitation
 
@@ -84,7 +84,7 @@ $$
 E = \frac 1 2 m l^2 \dot \theta^2 + m g l (1 - \cos \theta)
 $$
 
-**Question** Écrire une fonction `py§energie` en supposant que le produit $m l^2$ est égal à $1$ dans les unités utilisées.
+**Question** Écrire une fonction `e` en supposant que le produit $m l^2$ est égal à $1$ dans les unités utilisées.
 
 ```python
 def energie(theta, theta_point):
@@ -178,9 +178,9 @@ On peut prouver mathématiquement (mais c'est assez compliqué) qu'avec la méth
 
 ## Application au pendule simple
 
-**Question** Modifier la fonction `py§euler` précédente pour obtenir une nouvelle fonction `py§euler_2` correspondant à la méthode semi-implicite de votre choix (la modification a effectuer étant, dans chaque cas, vraiment très simple).
+**Question** Modifier la fonction `r` précédente pour obtenir une nouvelle fonction `2` correspondant à la méthode semi-implicite de votre choix (la modification a effectuer étant, dans chaque cas, vraiment très simple).
 
-**Question** Transformer de même la fonction `py§simule` en une fonction `py§simule_2` qui utilise `py§euler_2`.
+**Question** Transformer de même la fonction `e` en une fonction `2` qui utilise `2`.
 
 **Question** Reprendre les tracés des questions précédentes, avec à chaque fois des vitesses initiales nulles et des angles initiaux allant de $0$ à $3$ avec un pas de $0.1$.
 
